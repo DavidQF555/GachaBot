@@ -13,6 +13,11 @@ public class SaveCommand extends Command {
 		Bot.saveUserData();
 		m.getChannel().sendMessage(m.getAuthor().getAsMention() + " Saved all data").queue();
 	}
+	
+	@Override
+	public void onPrivateMessage(Message m) {
+		onCommand(m);
+	}
 
 	@Override
 	public boolean hasPermission(Message m) {
