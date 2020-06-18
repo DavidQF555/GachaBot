@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.david.gachabot.*;
 import com.github.doomsdayrs.jikan4java.types.main.anime.Anime;
+import com.github.doomsdayrs.jikan4java.types.main.anime.character_staff.AnimeCharacter;
 import com.github.doomsdayrs.jikan4java.types.support.related.*;
 
 import net.dv8tion.jda.api.entities.Message;
@@ -30,7 +31,7 @@ public class AddAnimeCommand extends Command {
 			m.getChannel().sendMessage(m.getAuthor().getAsMention() + " ```Everything is already added```").queue();
 			return;
 		}
-		Bot.addBestCharactersFromAnime(all);
+		addBestCharactersFromAnime(all);
 		String out = m.getAuthor().getAsMention() + " Added the following series: ```";
 		for(Anime an : uniq) {
 			Bot.anime.add(an.mal_id);
@@ -103,5 +104,48 @@ public class AddAnimeCommand extends Command {
 				}
 		}
 		return vis;
+	}
+	
+	private static void addBestCharactersFromAnime(List<Anime> an){
+		List<AnimeCharacter> pos = new ArrayList<AnimeCharacter>();
+		for(Anime a : an) {
+			List<AnimeCharacter> chs = Util.animeCharacters(a);
+			int count = 0;
+			check:
+			for(AnimeCharacter c : chs) {
+				for(AnimeCharacter check : pos) {
+					if(c.mal_id == check.mal_id) {
+						continue check;
+					}
+				}
+				pos.add(c);
+				count ++;
+				if(count >= 5) {
+					break;
+				}
+			}
+		}
+		List<com.github.doomsdayrs.jikan4java.types.main.character.Character> chars = new ArrayList<com.github.doomsdayrs.jikan4java.types.main.character.Character>();
+		double cut = 0;
+		for(AnimeCharacter ac : pos) {
+			com.github.doomsdayrs.jikan4java.types.main.character.Character c = Util.getCharacter(ac.mal_id);
+			if(c.member_favorites > 100) {
+				chars.add(c);
+				cut += c.member_favorites;
+			}
+		}
+		cut /= chars.size();
+		List<com.github.doomsdayrs.jikan4java.types.main.character.Character> out = new ArrayList<com.github.doomsdayrs.jikan4java.types.main.character.Character>();
+		while(out.size() < 3 && !chars.isEmpty()) {
+			for(int i = chars.size() - 1; i >= 0; i --) {
+				com.github.doomsdayrs.jikan4java.types.main.character.Character c = chars.get(i);
+				if(c.member_favorites >= cut) {
+					out.add(c);
+					chars.remove(i);
+				}
+			}
+			cut *= 0.9;
+		}
+		Bot.updateExistingCharactersList(out);
 	}
 }

@@ -7,8 +7,6 @@ import javax.security.auth.login.LoginException;
 
 import com.david.gachabot.commands.*;
 import com.github.doomsdayrs.jikan4java.core.Connector;
-import com.github.doomsdayrs.jikan4java.types.main.anime.Anime;
-import com.github.doomsdayrs.jikan4java.types.main.anime.character_staff.AnimeCharacter;
 
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.User;
@@ -201,7 +199,7 @@ public class Bot {
 	}
 
 	//updates without looking for MAL page changes
-	private static void updateExistingCharactersList(List<com.github.doomsdayrs.jikan4java.types.main.character.Character> add) {
+	public static void updateExistingCharactersList(List<com.github.doomsdayrs.jikan4java.types.main.character.Character> add) {
 		List<Integer> chars = new ArrayList<Integer>();
 		double totalInv = 0;
 		for(int id : characters.keySet()) {
@@ -228,46 +226,5 @@ public class Bot {
 			characters.put(c.mal_id, new LocalCharacterData(c.mal_id, c.member_favorites, rate, c.image_url, c.name));
 		}
 		System.out.println("Finished updating character list");
-	}
-
-	public static void addBestCharactersFromAnime(List<Anime> an){
-		List<AnimeCharacter> pos = new ArrayList<AnimeCharacter>();
-		for(Anime a : an) {
-			List<AnimeCharacter> cs = Util.animeCharacters(a);
-			if(cs.size() >= 6) {
-				cs = cs.subList(0, 5);
-			}
-			check: 
-				for(AnimeCharacter c : cs) {
-					for(AnimeCharacter p : pos) {
-						if(c.mal_id == p.mal_id) {
-							continue check;
-						}
-					}
-					pos.add(c);
-				}
-		}
-		List<com.github.doomsdayrs.jikan4java.types.main.character.Character> chars = new ArrayList<com.github.doomsdayrs.jikan4java.types.main.character.Character>();
-		double cut = 0;
-		for(AnimeCharacter ac : pos) {
-			com.github.doomsdayrs.jikan4java.types.main.character.Character c = Util.getCharacter(ac.mal_id);
-			if(c.member_favorites > 100) {
-				chars.add(c);
-				cut += c.member_favorites;
-			}
-		}
-		cut /= chars.size();
-		List<com.github.doomsdayrs.jikan4java.types.main.character.Character> out = new ArrayList<com.github.doomsdayrs.jikan4java.types.main.character.Character>();
-		while(out.size() < 3 && !chars.isEmpty()) {
-			for(int i = chars.size() - 1; i >= 0; i --) {
-				com.github.doomsdayrs.jikan4java.types.main.character.Character c = chars.get(i);
-				if(c.member_favorites >= cut) {
-					out.add(c);
-					chars.remove(i);
-				}
-			}
-			cut *= 0.9;
-		}
-		updateExistingCharactersList(out);
 	}
 }
