@@ -39,6 +39,7 @@ public class Bot {
 		updateCharactersList(null);
 
 		commands.add(new ShutdownCommand());
+		commands.add(new SaveCommand());
 		commands.add(new AddAnimeCommand());
 		commands.add(new CharacterListCommand());
 		commands.add(new GachaRollCommand());
