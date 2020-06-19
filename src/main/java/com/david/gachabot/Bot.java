@@ -17,8 +17,8 @@ public class Bot {
 	public final static Set<Integer> anime = new HashSet<Integer>();
 	public final static Map<Integer, LocalCharacterData> characters = new HashMap<Integer, LocalCharacterData>();
 	public final static Map<Long, Map<Integer, CharacterInstanceData>> userData = new HashMap<Long, Map<Integer, CharacterInstanceData>>();
+	public final static Connector connector = new Connector();
 	public static JDA jda;
-	public static Connector connector = new Connector();
 	public static User owner;
 
 	public static void main(String[] args) {
@@ -234,20 +234,21 @@ public class Bot {
 	private static void adjustRates() {
 		System.out.println("Adjusting rates");
 		double cut = 2.5 / characters.size();
-		ArrayList<LocalCharacterData> high = new ArrayList<LocalCharacterData>();
+		List<LocalCharacterData> high = new ArrayList<LocalCharacterData>();
 		for(LocalCharacterData data : characters.values()) {
 			if(data.getRate() > cut) {
 				high.add(data);
 			}
 		}
-		ArrayList<LocalCharacterData> newHigh = (ArrayList<LocalCharacterData>) high.clone();
-		while(!newHigh.isEmpty()) {
+		ArrayList<LocalCharacterData> newHigh = new ArrayList<LocalCharacterData>();
+		do {
 			newHigh.clear();
 			for(LocalCharacterData data : high) {
 				while(data.getRate() > cut) {
-					double change = data.getRate() * 0.1 / (characters.size() - high.size());
+					double per = 0.1 / (characters.size() - high.size());
 					for(LocalCharacterData low : characters.values()) {
 						if(!high.contains(low)) {
+							double change = per * low.getRate();
 							data.setRate(data.getRate() - change);
 							low.setRate(low.getRate() + change);
 							if(low.getRate() > cut && !newHigh.contains(low)) {
@@ -258,6 +259,6 @@ public class Bot {
 				}
 			}
 			high = (ArrayList<LocalCharacterData>) newHigh.clone();
-		}
+		} while(!newHigh.isEmpty());
 	}
 }
