@@ -195,6 +195,7 @@ public class Bot {
 			data.setImageUrl(c.image_url);
 			data.setName(c.name);
 		}
+		adjustRates();
 		System.out.println("Finished updating character list");
 	}
 
@@ -216,15 +217,47 @@ public class Bot {
 					}
 					totalInv += 1.0 / add.get(i).member_favorites;
 				}
+		for(com.github.doomsdayrs.jikan4java.types.main.character.Character c : add) {
+			double rate = 1.0 / c.member_favorites / totalInv;
+			characters.put(c.mal_id, new LocalCharacterData(c.mal_id, c.member_favorites, rate, c.image_url, c.name));
+		}
 		}
 		for(int id : characters.keySet()) {
 			LocalCharacterData data = characters.get(id);
 			data.setRate(1.0 / data.getMemberFavorites() / totalInv); 
 		}
-		for(com.github.doomsdayrs.jikan4java.types.main.character.Character c : add) {
-			double rate = 1.0 / c.member_favorites / totalInv;
-			characters.put(c.mal_id, new LocalCharacterData(c.mal_id, c.member_favorites, rate, c.image_url, c.name));
-		}
+		adjustRates();
 		System.out.println("Finished updating character list");
+	}
+
+	@SuppressWarnings("unchecked")
+	private static void adjustRates() {
+		System.out.println("Adjusting rates");
+		double cut = 2.5 / characters.size();
+		ArrayList<LocalCharacterData> high = new ArrayList<LocalCharacterData>();
+		for(LocalCharacterData data : characters.values()) {
+			if(data.getRate() > cut) {
+				high.add(data);
+			}
+		}
+		ArrayList<LocalCharacterData> newHigh = (ArrayList<LocalCharacterData>) high.clone();
+		while(!newHigh.isEmpty()) {
+			newHigh.clear();
+			for(LocalCharacterData data : high) {
+				while(data.getRate() > cut) {
+					double change = data.getRate() * 0.1 / (characters.size() - high.size());
+					for(LocalCharacterData low : characters.values()) {
+						if(!high.contains(low)) {
+							data.setRate(data.getRate() - change);
+							low.setRate(low.getRate() + change);
+							if(low.getRate() > cut && !newHigh.contains(low)) {
+								newHigh.add(low);
+							}
+						}
+					}
+				}
+			}
+			high = (ArrayList<LocalCharacterData>) newHigh.clone();
+		}
 	}
 }
