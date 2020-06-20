@@ -105,25 +105,35 @@ public class AddAnimeCommand extends Command {
 		}
 		return vis;
 	}
-	
+
 	private static void addBestCharactersFromAnime(List<Anime> an){
 		List<AnimeCharacter> pos = new ArrayList<AnimeCharacter>();
+		double avg = 0;
+		int aired = 0;
+		for(Anime a : an) {
+			if(!a.status.equals("Not yet aired")) {
+				avg += a.popularity;
+				aired ++;
+			}
+		}
+		avg /= aired;
+		double limit = avg / 150000 / an.size() + 5;
 		for(Anime a : an) {
 			List<AnimeCharacter> chs = Util.animeCharacters(a);
 			int count = 0;
 			check:
-			for(AnimeCharacter c : chs) {
-				for(AnimeCharacter check : pos) {
-					if(c.mal_id == check.mal_id) {
-						continue check;
+				for(AnimeCharacter c : chs) {
+					for(AnimeCharacter check : pos) {
+						if(c.mal_id == check.mal_id) {
+							continue check;
+						}
+					}
+					pos.add(c);
+					count ++;
+					if(count >= limit) {
+						break;
 					}
 				}
-				pos.add(c);
-				count ++;
-				if(count >= 5) {
-					break;
-				}
-			}
 		}
 		List<com.github.doomsdayrs.jikan4java.types.main.character.Character> chars = new ArrayList<com.github.doomsdayrs.jikan4java.types.main.character.Character>();
 		double cut = 0;
@@ -135,8 +145,9 @@ public class AddAnimeCommand extends Command {
 			}
 		}
 		cut /= chars.size();
+		double charMin = avg / 500000 + 2;
 		List<com.github.doomsdayrs.jikan4java.types.main.character.Character> out = new ArrayList<com.github.doomsdayrs.jikan4java.types.main.character.Character>();
-		while(out.size() < 3 && !chars.isEmpty()) {
+		while(out.size() < charMin && !chars.isEmpty()) {
 			for(int i = chars.size() - 1; i >= 0; i --) {
 				com.github.doomsdayrs.jikan4java.types.main.character.Character c = chars.get(i);
 				if(c.member_favorites >= cut) {
@@ -144,7 +155,7 @@ public class AddAnimeCommand extends Command {
 					chars.remove(i);
 				}
 			}
-			cut *= 0.9;
+			cut *= 0.95;
 		}
 		Bot.updateExistingCharactersList(out);
 	}
