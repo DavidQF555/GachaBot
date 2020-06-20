@@ -26,11 +26,6 @@ public class RetrieveUserCharacterListCommand extends Command {
 	}
 
 	@Override
-	public void onPrivateMessage(Message m) {
-		onCommand(m);
-	}
-
-	@Override
 	public String getDescription() {
 		return "Retrieves the user's character list";
 	}

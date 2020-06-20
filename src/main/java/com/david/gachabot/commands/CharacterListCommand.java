@@ -20,11 +20,6 @@ public class CharacterListCommand extends Command {
 	}
 
 	@Override
-	public void onPrivateMessage(Message m) {
-		onCommand(m);
-	}
-
-	@Override
 	public String getActivatingName() {
 		return "characters";
 	}

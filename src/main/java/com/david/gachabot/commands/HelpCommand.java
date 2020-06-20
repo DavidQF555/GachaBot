@@ -20,13 +20,6 @@ public class HelpCommand extends Command {
 		return "help";
 	}
 
-
-	@Override
-	public void onPrivateMessage(Message m) {
-		onCommand(m);
-	}
-
-
 	@Override
 	public String getDescription() {
 		return "Retrieves a list and description of all commands";

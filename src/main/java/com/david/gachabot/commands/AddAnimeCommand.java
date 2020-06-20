@@ -41,11 +41,6 @@ public class AddAnimeCommand extends Command {
 	}
 
 	@Override
-	public void onPrivateMessage(Message m) {
-		onCommand(m);
-	}
-
-	@Override
 	public boolean correctFormat(Message m) {
 		if(m.getContentRaw().indexOf(" ") != -1) {
 			return true;

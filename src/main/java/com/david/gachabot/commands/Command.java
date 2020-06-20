@@ -9,7 +9,7 @@ public abstract class Command {
 	public void onCommand(Message m) {}
 
 	public void onPrivateMessage(Message m) {
-		m.getChannel().sendMessage(m.getAuthor().getAsMention() + " Cannot use this command in private chat").queue();
+		onCommand(m);
 	}
 
 	public boolean hasPermission(Message m) {

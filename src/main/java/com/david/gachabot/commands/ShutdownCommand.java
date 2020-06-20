@@ -26,11 +26,6 @@ public class ShutdownCommand extends Command {
 	}
 
 	@Override
-	public void onPrivateMessage(Message m) {
-		onCommand(m);
-	}
-
-	@Override
 	public String getDescription() {
 		return "Shuts down this bot";
 	}
