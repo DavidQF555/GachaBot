@@ -63,6 +63,11 @@ public class AddAnimeCommand extends Command {
 	public String getActivatingName() {
 		return "addanime";
 	}
+	
+	@Override
+	public List<String> getAlternativeNames() {
+		return new ArrayList<String>(Arrays.asList("aa"));
+	}
 
 	@Override
 	public String getDescription() {

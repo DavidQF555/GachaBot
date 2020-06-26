@@ -1,5 +1,9 @@
 package com.david.gachabot.commands;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.david.gachabot.Bot;
 
 import net.dv8tion.jda.api.entities.Message;
@@ -22,7 +26,12 @@ public class RetrieveUserCharacterListCommand extends Command {
 
 	@Override
 	public String getActivatingName() {
-		return "ml";
+		return "mylist";
+	}
+	
+	@Override
+	public List<String> getAlternativeNames() {
+		return new ArrayList<String>(Arrays.asList("ml"));
 	}
 
 	@Override

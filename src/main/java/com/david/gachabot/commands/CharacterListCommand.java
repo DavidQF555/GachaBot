@@ -1,5 +1,9 @@
 package com.david.gachabot.commands;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.david.gachabot.*;
 
 import net.dv8tion.jda.api.entities.Message;
@@ -27,6 +31,11 @@ public class CharacterListCommand extends Command {
 	@Override
 	public String getDescription() {
 		return "Retrieves a list of all characters";
+	}
+	
+	@Override
+	public List<String> getAlternativeNames() {
+		return new ArrayList<String>(Arrays.asList("c"));
 	}
 
 	private String getRoundedPercent(double d, int decDigits) {

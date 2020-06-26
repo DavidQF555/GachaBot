@@ -37,6 +37,11 @@ public class GachaRollCommand extends Command {
 	public String getActivatingName() {
 		return "roll";
 	}
+	
+	@Override
+	public List<String> getAlternativeNames() {
+		return new ArrayList<String>(Arrays.asList("r"));
+	}
 
 	@Override
 	public String getDescription() {

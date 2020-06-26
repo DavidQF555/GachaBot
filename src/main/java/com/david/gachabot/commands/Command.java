@@ -1,5 +1,7 @@
 package com.david.gachabot.commands;
 
+import java.util.*;
+
 import com.david.gachabot.Reference;
 
 import net.dv8tion.jda.api.entities.*;
@@ -22,6 +24,10 @@ public abstract class Command {
 
 	public String getFormat() {
 		return Reference.COMMAND + getActivatingName();	
+	}
+	
+	public List<String> getAlternativeNames() {
+		return new ArrayList<String>();
 	}
 
 	public abstract String getActivatingName();
