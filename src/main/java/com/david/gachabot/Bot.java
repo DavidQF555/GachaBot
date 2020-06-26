@@ -60,9 +60,12 @@ public class Bot {
 	public static void saveUserData() {
 		FileOutputStream fos = null;
 		try {
-			fos = new FileOutputStream("src/main/resources/userdata.txt");
+			fos = new FileOutputStream("userdata.txt");
 		} 
-		catch (FileNotFoundException e) {}
+		catch (FileNotFoundException e) {
+			System.out.println("Could not find userdata.txt");
+			return;
+		}
 		ObjectOutputStream oos = null;
 		try {
 			oos = new ObjectOutputStream(fos);
@@ -77,9 +80,12 @@ public class Bot {
 	public static void saveAnimeList() {
 		FileOutputStream fos = null;
 		try {
-			fos = new FileOutputStream("src/main/resources/animelist.txt");
+			fos = new FileOutputStream("animelist.txt");
 		} 
-		catch (FileNotFoundException e) {}
+		catch (FileNotFoundException e) {
+			System.out.println("Could not find animelist.txt");
+			return;
+		}
 		ObjectOutputStream oos = null;
 		try {
 			oos = new ObjectOutputStream(fos);
@@ -94,9 +100,12 @@ public class Bot {
 	public static void saveCharacterList() {
 		FileOutputStream fos = null;
 		try {
-			fos = new FileOutputStream("src/main/resources/characterlist.txt");
+			fos = new FileOutputStream("characterlist.txt");
 		} 
-		catch (FileNotFoundException e) {}
+		catch (FileNotFoundException e) {
+			System.out.println("Could not find characterlist.txt");
+			return;
+		}
 		ObjectOutputStream oos = null;
 		try {
 			oos = new ObjectOutputStream(fos);
@@ -112,9 +121,12 @@ public class Bot {
 	private static void readUserData() {
 		FileInputStream fis = null;
 		try {
-			fis = new FileInputStream("src/main/resources/userdata.txt");
+			fis = new FileInputStream("userdata.txt");
 		} 
-		catch (FileNotFoundException e) {}
+		catch (FileNotFoundException e) {
+			System.out.println("Could not find userdata.txt");
+			return;
+		}
 		ObjectInputStream ois = null;
 		try {
 			ois = new ObjectInputStream(fis);
@@ -132,9 +144,12 @@ public class Bot {
 	private static void readAnimeList() {
 		FileInputStream fis = null;
 		try {
-			fis = new FileInputStream("src/main/resources/animelist.txt");
+			fis = new FileInputStream("animelist.txt");
 		} 
-		catch (FileNotFoundException e) {}
+		catch (FileNotFoundException e) {
+			System.out.println("Could not find animelist.txt");
+			return;
+		}
 		ObjectInputStream ois = null;
 		try {
 			ois = new ObjectInputStream(fis);
@@ -152,9 +167,12 @@ public class Bot {
 	private static void readCharacterList() {
 		FileInputStream fis = null;
 		try {
-			fis = new FileInputStream("src/main/resources/characterlist.txt");
+			fis = new FileInputStream("characterlist.txt");
 		} 
-		catch (FileNotFoundException e) {}
+		catch (FileNotFoundException e) {
+			System.out.println("Could not find characterlist.txt");
+			return;
+		}
 		ObjectInputStream ois = null;
 		try {
 			ois = new ObjectInputStream(fis);
