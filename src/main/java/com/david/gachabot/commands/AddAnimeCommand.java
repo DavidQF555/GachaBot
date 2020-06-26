@@ -3,6 +3,7 @@ package com.david.gachabot.commands;
 import java.util.*;
 
 import com.david.gachabot.*;
+import com.david.gachabot.data.LocalAnimeData;
 import com.github.doomsdayrs.jikan4java.types.main.anime.Anime;
 import com.github.doomsdayrs.jikan4java.types.main.anime.character_staff.AnimeCharacter;
 import com.github.doomsdayrs.jikan4java.types.support.related.*;

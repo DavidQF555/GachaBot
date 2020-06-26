@@ -6,6 +6,7 @@ import java.util.*;
 import javax.security.auth.login.LoginException;
 
 import com.david.gachabot.commands.*;
+import com.david.gachabot.data.*;
 import com.github.doomsdayrs.jikan4java.core.Connector;
 import com.github.doomsdayrs.jikan4java.types.main.character.Animeography;
 

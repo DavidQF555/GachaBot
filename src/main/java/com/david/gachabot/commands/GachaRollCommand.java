@@ -3,6 +3,7 @@ package com.david.gachabot.commands;
 import java.util.*;
 
 import com.david.gachabot.*;
+import com.david.gachabot.data.*;
 
 import net.dv8tion.jda.api.entities.Message;
 

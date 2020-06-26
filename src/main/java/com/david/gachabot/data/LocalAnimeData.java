@@ -1,4 +1,4 @@
-package com.david.gachabot;
+package com.david.gachabot.data;
 
 import java.io.Serializable;
 
