@@ -1,8 +1,6 @@
 package com.david.gachabot.commands;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import com.david.gachabot.Bot;
 

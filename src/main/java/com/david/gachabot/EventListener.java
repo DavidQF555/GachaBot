@@ -39,6 +39,7 @@ public class EventListener extends ListenerAdapter {
 					else {
 						event.getChannel().sendMessage(event.getAuthor().getAsMention() + "\n```You do not have permission to use this command```").queue();
 					}
+					break;
 				}
 			}
 		}
@@ -62,6 +63,7 @@ public class EventListener extends ListenerAdapter {
 					else {
 						event.getChannel().sendMessage(event.getAuthor().getAsMention() + "\n```You do not have permission to use this command```").queue();
 					}
+					break;
 				}
 			}
 		}

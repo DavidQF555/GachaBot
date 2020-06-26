@@ -1,9 +1,5 @@
 package com.david.gachabot.commands;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.david.gachabot.*;
 
 import net.dv8tion.jda.api.entities.Message;
@@ -15,7 +11,7 @@ public class SaveCommand extends Command {
 		Bot.saveAnimeList();
 		Bot.saveCharacterList();
 		Bot.saveUserData();
-		m.getChannel().sendMessage(m.getAuthor().getAsMention() + " Saved all data").queue();
+		m.getChannel().sendMessage(m.getAuthor().getAsMention() + " ```Saved all data```").queue();
 	}
 
 	@Override
@@ -29,11 +25,6 @@ public class SaveCommand extends Command {
 	@Override
 	public String getActivatingName() {
 		return "save";
-	}
-	
-	@Override
-	public List<String> getAlternativeNames() {
-		return new ArrayList<String>(Arrays.asList("s"));
 	}
 
 	@Override
