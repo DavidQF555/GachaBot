@@ -1,19 +1,31 @@
 package com.david.gachabot;
 
-public class LocalCharacterData {
+import java.io.Serializable;
+import java.util.*;
 
+public class LocalCharacterData implements Serializable {
+
+	private static final long serialVersionUID = 3;
+	private final int set;
 	private final int id;
 	private double rate;
 	private String name;
 	private String image_url;
 	private int member_favorites;
+	private Set<Integer> animeography;
 
-	public LocalCharacterData(int id, int member_favorites, double rate, String image_url, String name) {
+	public LocalCharacterData(int set, int id, int member_favorites, double rate, String image_url, String name) {
+		this.set = set;
 		this.id = id;
 		this.rate = rate;
 		this.name = name;
 		this.image_url = image_url;
 		this.member_favorites = member_favorites;
+		animeography = new HashSet<Integer>();
+	}
+
+	public int getSet() {
+		return set;
 	}
 
 	public int getID() {
@@ -34,6 +46,10 @@ public class LocalCharacterData {
 
 	public int getMemberFavorites() {
 		return member_favorites;
+	}
+
+	public Set<Integer> getAnimeography(){
+		return animeography;
 	}
 
 	public void setRate(double rate) {

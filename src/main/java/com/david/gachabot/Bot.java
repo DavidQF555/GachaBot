@@ -7,6 +7,7 @@ import javax.security.auth.login.LoginException;
 
 import com.david.gachabot.commands.*;
 import com.github.doomsdayrs.jikan4java.core.Connector;
+import com.github.doomsdayrs.jikan4java.types.main.character.Animeography;
 
 import net.dv8tion.jda.api.*;
 import net.dv8tion.jda.api.entities.User;
@@ -14,10 +15,11 @@ import net.dv8tion.jda.api.entities.User;
 public class Bot {
 
 	public final static Set<Command> commands = new HashSet<Command>();
-	public final static Set<Integer> anime = new HashSet<Integer>();
-	public final static Map<Integer, LocalCharacterData> characters = new HashMap<Integer, LocalCharacterData>();
-	public final static Map<Long, Map<Integer, CharacterInstanceData>> userData = new HashMap<Long, Map<Integer, CharacterInstanceData>>();
+	public static Map<Integer, LocalAnimeData> anime = new HashMap<Integer, LocalAnimeData>();
+	public static Map<Integer, LocalCharacterData> characters = new HashMap<Integer, LocalCharacterData>();
+	public static Map<Long, UserData> userData = new HashMap<Long, UserData>();
 	public final static Connector connector = new Connector();
+	public static int current;
 	public static JDA jda;
 	public static User owner;
 
@@ -31,10 +33,20 @@ public class Bot {
 		}
 		owner = jda.retrieveUserById(Reference.OWNER_ID).complete();
 		jda.addEventListener(new EventListener());
+
 		readAnimeList();
 		readCharacterList();
 		readUserData();
-		updateCharactersList(null);
+		updateCharactersList();
+
+		int max = Integer.MIN_VALUE;
+		for(LocalAnimeData data : anime.values()) {
+			int set = data.getSet();
+			if(set > current) {
+				max = set;
+			}
+		}
+		current = max;
 
 		commands.add(new ShutdownCommand());
 		commands.add(new SaveCommand());
@@ -46,127 +58,136 @@ public class Bot {
 	}
 
 	public static void saveUserData() {
-		PrintWriter pw = null;
+		FileOutputStream fos = null;
 		try {
-			pw = new PrintWriter(new BufferedWriter(new FileWriter("userdata.txt")));
+			fos = new FileOutputStream("userdata.txt");
+		} 
+		catch (FileNotFoundException e) {
+			System.out.println("Could not find userdata.txt");
+			return;
 		}
-		catch (Exception e) {}
-		for(long id : userData.keySet()) {
-			for(CharacterInstanceData data : userData.get(id).values()) {
-				pw.println(data.getOwnerId() + " " + data.getCharacterId() + " " + data.getStars() + " " + data.getLevel() + " " + data.getExperience());	
-			}
-		}
-		pw.close();
-		System.out.println("Saved user data");
+		ObjectOutputStream oos = null;
+		try {
+			oos = new ObjectOutputStream(fos);
+			oos.writeObject(userData);
+			oos.close();
+			fos.close();
+		} 
+		catch (IOException e) {}
+		System.out.println("Saved User Data");
 	}
 
 	public static void saveAnimeList() {
-		PrintWriter pw = null;
+		FileOutputStream fos = null;
 		try {
-			pw = new PrintWriter(new BufferedWriter(new FileWriter("animelist.txt")));
+			fos = new FileOutputStream("animelist.txt");
 		} 
-		catch (Exception e) {}
-		for(int id : anime) {
-			pw.println(id);
+		catch (FileNotFoundException e) {
+			System.out.println("Could not find animelist.txt");
+			return;
 		}
-		pw.close();
-		System.out.println("Saved anime list");
+		ObjectOutputStream oos = null;
+		try {
+			oos = new ObjectOutputStream(fos);
+			oos.writeObject(anime);
+			oos.close();
+			fos.close();
+		} 
+		catch (IOException e) {}
+		System.out.println("Saved Anime List");
 	}
 
 	public static void saveCharacterList() {
-		PrintWriter pw = null;
+		FileOutputStream fos = null;
 		try {
-			pw = new PrintWriter(new BufferedWriter(new FileWriter("characterlist.txt")));
+			fos = new FileOutputStream("characterlist.txt");
 		} 
-		catch (Exception e) {}
-		for(int id : characters.keySet()) {
-			LocalCharacterData data = characters.get(id);
-			pw.println(data.getID() + " " + data.getMemberFavorites() + " " + data.getRate() + " " + data.getImageUrl() + " " + data.getName());
+		catch (FileNotFoundException e) {
+			System.out.println("Could not find characterlist.txt");
+			return;
 		}
-		pw.close();
-		System.out.println("Saved character list");
+		ObjectOutputStream oos = null;
+		try {
+			oos = new ObjectOutputStream(fos);
+			oos.writeObject(characters);
+			oos.close();
+			fos.close();
+		} 
+		catch (IOException e) {}
+		System.out.println("Saved Character List");
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void readUserData() {
-		System.out.println("Reading user data");
-		BufferedReader br = null;
+		FileInputStream fis = null;
 		try {
-			br = new BufferedReader(new FileReader("userdata.txt"));
-		}
+			fis = new FileInputStream("userdata.txt");
+		} 
 		catch (FileNotFoundException e) {
-			System.out.println("userdata.txt could not be found");
-			System.exit(0);
+			System.out.println("Could not find userdata.txt");
+			return;
 		}
+		ObjectInputStream ois = null;
 		try {
-			while(true) {
-				String[] ar = br.readLine().split(" ");
-				long id = Long.parseLong(ar[0]);
-				if(!userData.containsKey(id)) {
-					userData.put(id, new HashMap<Integer, CharacterInstanceData>());
-				}
-				int chId = Integer.parseInt(ar[1]);
-				userData.get(id).put(chId, new CharacterInstanceData(id, chId, Integer.parseInt(ar[2]), Integer.parseInt(ar[3]), Integer.parseInt(ar[4])));
+			ois = new ObjectInputStream(fis);
+			Map<Long, UserData> data = (Map<Long, UserData>) ois.readObject();
+			ois.close();
+			fis.close();
+			if(data != null) {
+				userData = data;
 			}
-		}
-		catch(Exception e) {}
-		try {
-			br.close();
 		}
 		catch (Exception e) {}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void readAnimeList() {
-		System.out.println("Reading anime list");
-		BufferedReader br = null;
+		FileInputStream fis = null;
 		try {
-			br = new BufferedReader(new FileReader("animelist.txt"));
-		}
+			fis = new FileInputStream("animelist.txt");
+		} 
 		catch (FileNotFoundException e) {
-			System.out.println("animelist.txt could not be found");
-			System.exit(0);
+			System.out.println("Could not find animelist.txt");
+			return;
 		}
+		ObjectInputStream ois = null;
 		try {
-			while(true) {
-				anime.add(Integer.parseInt(br.readLine()));
+			ois = new ObjectInputStream(fis);
+			Map<Integer, LocalAnimeData> data = (Map<Integer, LocalAnimeData>) ois.readObject();
+			ois.close();
+			fis.close();
+			if(data != null) {
+				anime = data;
 			}
-		}
-		catch(Exception e) {}
-		try {
-			br.close();
 		}
 		catch (Exception e) {}
 	}
 
+	@SuppressWarnings("unchecked")
 	private static void readCharacterList() {
-		System.out.println("Reading character list");
-		BufferedReader br = null;
+		FileInputStream fis = null;
 		try {
-			br = new BufferedReader(new FileReader("characterlist.txt"));
-		}
+			fis = new FileInputStream("characterlist.txt");
+		} 
 		catch (FileNotFoundException e) {
-			System.out.println("characterlist.txt could not be found");
-			System.exit(0);
+			System.out.println("Could not find characterlist.txt");
+			return;
 		}
+		ObjectInputStream ois = null;
 		try {
-			while(true) {
-				String[] ar = br.readLine().split(" ");
-				int id = Integer.parseInt(ar[0]);
-				String name = "";
-				for(int i = 4; i < ar.length; i ++) {
-					name += ar[i] + " ";
-				}
-				characters.put(id, new LocalCharacterData(id, Integer.parseInt(ar[1]), Double.parseDouble(ar[2]), ar[3], name.substring(0, name.length() - 1)));
+			ois = new ObjectInputStream(fis);
+			Map<Integer, LocalCharacterData> data = (Map<Integer, LocalCharacterData>) ois.readObject();
+			ois.close();
+			fis.close();
+			if(data != null) {
+				characters = data;
 			}
-		}
-		catch(Exception e) {}
-		try {
-			br.close();
 		}
 		catch (Exception e) {}
 	}
 
 	//updates by getting new data from MAL page
-	private static void updateCharactersList(List<com.github.doomsdayrs.jikan4java.types.main.character.Character> add) {
+	private static void updateCharactersList() {
 		System.out.println("Updating character list");
 		List<com.github.doomsdayrs.jikan4java.types.main.character.Character> chars = new ArrayList<com.github.doomsdayrs.jikan4java.types.main.character.Character>();
 		double totalInv = 0;
@@ -175,18 +196,6 @@ public class Bot {
 			totalInv += 1.0 / c.member_favorites;
 			chars.add(c);
 		}
-		if(add != null) {
-			check:
-				for(com.github.doomsdayrs.jikan4java.types.main.character.Character c : add) {
-					for(com.github.doomsdayrs.jikan4java.types.main.character.Character ch : chars) {
-						if(c.mal_id == ch.mal_id) {
-							continue check;
-						}
-					}
-					totalInv += 1.0 / c.member_favorites;
-					chars.add(c);
-				}
-		}
 		for(com.github.doomsdayrs.jikan4java.types.main.character.Character c : chars) {
 			double rate = 1.0 / c.member_favorites / totalInv;
 			LocalCharacterData data = characters.get(c.mal_id);
@@ -194,12 +203,15 @@ public class Bot {
 			data.setRate(rate);
 			data.setImageUrl(c.image_url);
 			data.setName(c.name);
+			for(Animeography a : c.animeography) {
+				data.getAnimeography().add(a.mal_id);
+			}
 		}
 		adjustRates();
 		System.out.println("Finished updating character list");
 	}
 
-	//updates without looking for MAL page changes
+	//updates without looking for MAL page changes, all in add must be from the same series
 	public static void updateExistingCharactersList(List<com.github.doomsdayrs.jikan4java.types.main.character.Character> add) {
 		List<Integer> chars = new ArrayList<Integer>();
 		double totalInv = 0;
@@ -207,22 +219,38 @@ public class Bot {
 			chars.add(id);
 			totalInv += 1.0 / characters.get(id).getMemberFavorites();
 		}
+		int set = current;
 		if(add != null) {
 			check:
 				for(int i = add.size() - 1; i >= 0; i --) {
 					for(int id : chars) {
 						if(add.get(i).mal_id == id) {
+							set = characters.get(id).getSet();
 							continue check;
+						}
+						else if(set == current) {
+							animeography: 
+								for(Animeography a : add.get(i).animeography) {
+									for(int al : characters.get(id).getAnimeography()) {
+										if(a.mal_id == al) {
+											set = characters.get(id).getSet();
+											break animeography;
+										}
+									}
+								}
 						}
 					}
 					totalInv += 1.0 / add.get(i).member_favorites;
 				}
 		for(com.github.doomsdayrs.jikan4java.types.main.character.Character c : add) {
 			double rate = 1.0 / c.member_favorites / totalInv;
-			characters.put(c.mal_id, new LocalCharacterData(c.mal_id, c.member_favorites, rate, c.image_url, c.name));
+			LocalCharacterData data = characters.put(c.mal_id, new LocalCharacterData(set, c.mal_id, c.member_favorites, rate, c.image_url, c.name));
+			for(Animeography a : c.animeography) {
+				data.getAnimeography().add(a.mal_id);
+			}
 		}
 		}
-		for(int id : characters.keySet()) {
+		for(int id : chars) {
 			LocalCharacterData data = characters.get(id);
 			data.setRate(1.0 / data.getMemberFavorites() / totalInv); 
 		}

@@ -15,6 +15,7 @@ public class EventListener extends ListenerAdapter {
 		Bot.saveAnimeList();
 		Bot.saveCharacterList();
 		Bot.saveUserData();
+		System.out.println("Shutting Down");
 		System.exit(0);
 	}
 

@@ -11,7 +11,7 @@ public class RetrieveUserCharacterListCommand extends Command {
 		long id = m.getAuthor().getIdLong();
 		if(Bot.userData.containsKey(id)) {
 			String out = m.getAuthor().getAsMention() + " You own the following: ```";
-			for(int chId : Bot.userData.get(id).keySet()) {
+			for(int chId : Bot.userData.get(id).getCharacters().keySet()) {
 				out += "\n" + Bot.characters.get(chId).getName();
 			}
 			m.getChannel().sendMessage(out + "```").queue();

@@ -17,9 +17,9 @@ public class GachaRollCommand extends Command {
 			if(roll < chance) {
 				long userId = m.getAuthor().getIdLong();
 				if(!Bot.userData.containsKey(userId)) {
-					Bot.userData.put(userId, new HashMap<Integer, CharacterInstanceData>());
+					Bot.userData.put(userId, new UserData(userId, new HashMap<Integer, CharacterInstanceData>()));
 				}
-				Map<Integer, CharacterInstanceData> chData = Bot.userData.get(userId);
+				Map<Integer, CharacterInstanceData> chData = Bot.userData.get(userId).getCharacters();
 				if(chData.containsKey(data.getID())) {
 					CharacterInstanceData inst = chData.get(data.getID());
 					inst.setStars(inst.getStars() + 1);
