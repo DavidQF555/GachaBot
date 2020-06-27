@@ -17,9 +17,6 @@ public class GachaRollCommand extends Command {
 			chance += data.getRate();
 			if(roll < chance) {
 				long userId = m.getAuthor().getIdLong();
-				if(!Bot.userData.containsKey(userId)) {
-					Bot.userData.put(userId, new UserData(userId, new HashMap<Integer, CharacterInstanceData>()));
-				}
 				Map<Integer, CharacterInstanceData> chData = Bot.userData.get(userId).getCharacters();
 				if(chData.containsKey(data.getID())) {
 					CharacterInstanceData inst = chData.get(data.getID());
@@ -35,10 +32,15 @@ public class GachaRollCommand extends Command {
 	}
 
 	@Override
+	public boolean allowInBattle() {
+		return false;
+	}
+
+	@Override
 	public String getActivatingName() {
 		return "roll";
 	}
-	
+
 	@Override
 	public List<String> getAlternativeNames() {
 		return new ArrayList<String>(Arrays.asList("r"));

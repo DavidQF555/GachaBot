@@ -1,8 +1,9 @@
 package com.david.gachabot;
 
-import java.util.List;
+import java.util.*;
 
 import com.david.gachabot.commands.Command;
+import com.david.gachabot.data.*;
 
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.ShutdownEvent;
@@ -23,21 +24,31 @@ public class EventListener extends ListenerAdapter {
 
 	@Override
 	public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
+		User user = event.getAuthor();
+		long id = user.getIdLong();
 		Message m = event.getMessage();
 		String s = m.getContentRaw().toLowerCase();
-		if(!event.getAuthor().isBot()) {
+		if(!user.isBot()) {
 			for(Command c : Bot.commands) {
 				if(s.startsWith(Reference.COMMAND) && (s.substring(Reference.COMMAND.length()).startsWith(c.getActivatingName()) || startsWith(s.substring(Reference.COMMAND.length()), c.getAlternativeNames()))) {
 					if(c.hasPermission(m)) {
-						if(c.correctFormat(m)) {
+						UserData data = Bot.userData.get(id);
+						if(data == null) {
+							data = new UserData(id, new HashMap<Integer, CharacterInstanceData>());
+							Bot.userData.put(id, data);
+						}
+						if(!c.allowInBattle() && data.getBattleOpponent() != null) {
+							event.getChannel().sendMessage(user.getAsMention() + "```This command cannot be used while in battle").queue();
+						}
+						else if(c.correctFormat(m)) {
 							c.onCommand(m);
 						}
 						else {
-							event.getChannel().sendMessage(event.getAuthor().getAsMention() + "\n```Incorrect format. Correct Format: " + c.getFormat() + "```").queue();
+							event.getChannel().sendMessage(user.getAsMention() + "\n```Incorrect format. Correct Format: " + c.getFormat() + "```").queue();
 						}
 					}
 					else {
-						event.getChannel().sendMessage(event.getAuthor().getAsMention() + "\n```You do not have permission to use this command```").queue();
+						event.getChannel().sendMessage(user.getAsMention() + "\n```You do not have permission to use this command```").queue();
 					}
 					break;
 				}
@@ -47,21 +58,31 @@ public class EventListener extends ListenerAdapter {
 
 	@Override
 	public void onPrivateMessageReceived(PrivateMessageReceivedEvent event) {
+		User user = event.getAuthor();
+		long id = user.getIdLong();
 		Message m = event.getMessage();
 		String s = m.getContentRaw().toLowerCase();
-		if(!event.getAuthor().isBot()) {
+		if(!user.isBot()) {
 			for(Command c : Bot.commands) {
 				if(s.startsWith(Reference.COMMAND) && (s.substring(Reference.COMMAND.length()).startsWith(c.getActivatingName()) || startsWith(s.substring(Reference.COMMAND.length()), c.getAlternativeNames()))) {
 					if(c.hasPermission(m)) {
-						if(c.correctFormat(m)) {
+						UserData data = Bot.userData.get(id);
+						if(data == null) {
+							data = new UserData(id, new HashMap<Integer, CharacterInstanceData>());
+							Bot.userData.put(id, data);
+						}
+						if(!c.allowInBattle() && data.getBattleOpponent() != null) {
+							event.getChannel().sendMessage(user.getAsMention() + "```This command cannot be used while in battle").queue();
+						}
+						else if(c.correctFormat(m)) {
 							c.onPrivateMessage(m);
 						}
 						else {
-							event.getChannel().sendMessage(event.getAuthor().getAsMention() + "\n```Incorrect format. Correct Format: " + c.getFormat() + "```").queue();
+							event.getChannel().sendMessage(user.getAsMention() + "\n```Incorrect format. Correct Format: " + c.getFormat() + "```").queue();
 						}
 					}
 					else {
-						event.getChannel().sendMessage(event.getAuthor().getAsMention() + "\n```You do not have permission to use this command```").queue();
+						event.getChannel().sendMessage(user.getAsMention() + "\n```You do not have permission to use this command```").queue();
 					}
 					break;
 				}

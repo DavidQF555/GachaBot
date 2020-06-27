@@ -51,10 +51,14 @@ public class Bot {
 
 		commands.add(new ShutdownCommand());
 		commands.add(new SaveCommand());
+		
 		commands.add(new AddAnimeCommand());
 		commands.add(new CharacterListCommand());
 		commands.add(new GachaRollCommand());
 		commands.add(new RetrieveUserCharacterListCommand());
+		commands.add(new TeamChangeCommand());
+		commands.add(new RetrieveTeamCommand());
+		
 		commands.add(new HelpCommand());
 	}
 

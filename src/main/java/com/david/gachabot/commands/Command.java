@@ -29,6 +29,10 @@ public abstract class Command {
 	public List<String> getAlternativeNames() {
 		return new ArrayList<String>();
 	}
+	
+	public boolean allowInBattle() {
+		return true;
+	}
 
 	public abstract String getActivatingName();
 
