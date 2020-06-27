@@ -27,7 +27,7 @@ public class EventListener extends ListenerAdapter {
 		String s = m.getContentRaw().toLowerCase();
 		if(!event.getAuthor().isBot()) {
 			for(Command c : Bot.commands) {
-				if(s.startsWith(Reference.COMMAND + c.getActivatingName()) || startsWith(s.substring(Reference.COMMAND.length()), c.getAlternativeNames())) {
+				if(s.startsWith(Reference.COMMAND) && (s.substring(Reference.COMMAND.length()).startsWith(c.getActivatingName()) || startsWith(s.substring(Reference.COMMAND.length()), c.getAlternativeNames()))) {
 					if(c.hasPermission(m)) {
 						if(c.correctFormat(m)) {
 							c.onCommand(m);
@@ -51,7 +51,7 @@ public class EventListener extends ListenerAdapter {
 		String s = m.getContentRaw().toLowerCase();
 		if(!event.getAuthor().isBot()) {
 			for(Command c : Bot.commands) {
-				if(s.startsWith(Reference.COMMAND + c.getActivatingName()) || startsWith(s.substring(Reference.COMMAND.length()), c.getAlternativeNames())) {
+				if(s.startsWith(Reference.COMMAND) && (s.substring(Reference.COMMAND.length()).startsWith(c.getActivatingName()) || startsWith(s.substring(Reference.COMMAND.length()), c.getAlternativeNames()))) {
 					if(c.hasPermission(m)) {
 						if(c.correctFormat(m)) {
 							c.onPrivateMessage(m);
