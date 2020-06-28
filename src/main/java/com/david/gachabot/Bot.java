@@ -34,6 +34,7 @@ public class Bot {
 		}
 		owner = jda.retrieveUserById(Reference.OWNER_ID).complete();
 		jda.addEventListener(new EventListener());
+		jda.addEventListener(new BattleListener());
 
 		readAnimeList();
 		readCharacterList();
@@ -48,6 +49,10 @@ public class Bot {
 			}
 		}
 		current = max;
+		
+		for(UserData data : userData.values()) {
+			data.setBattleOpponent(null);
+		}
 
 		commands.add(new ShutdownCommand());
 		commands.add(new SaveCommand());
@@ -58,6 +63,7 @@ public class Bot {
 		commands.add(new RetrieveUserCharacterListCommand());
 		commands.add(new TeamChangeCommand());
 		commands.add(new RetrieveTeamCommand());
+		commands.add(new StartBattleCommand());
 		
 		commands.add(new HelpCommand());
 	}

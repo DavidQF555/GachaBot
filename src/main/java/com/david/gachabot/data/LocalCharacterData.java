@@ -13,6 +13,9 @@ public class LocalCharacterData implements Serializable {
 	private String image_url;
 	private int member_favorites;
 	private Set<Integer> animeography;
+	private int baseHP;
+	private int baseDefense;
+	private int baseAttack;
 
 	public LocalCharacterData(int set, int id, int member_favorites, double rate, String image_url, String name) {
 		this.set = set;
@@ -22,6 +25,12 @@ public class LocalCharacterData implements Serializable {
 		this.image_url = image_url;
 		this.member_favorites = member_favorites;
 		animeography = new HashSet<Integer>();
+		
+		int totalBase = member_favorites;
+		baseHP = (int) (Math.random() * totalBase * 0.7 + totalBase / 10.0);
+		totalBase -= baseHP;
+		baseAttack = (int) (Math.random() * totalBase * 0.9 + totalBase / 10.0);
+		baseDefense = totalBase - baseAttack;
 	}
 
 	public int getSet() {
@@ -51,6 +60,18 @@ public class LocalCharacterData implements Serializable {
 	public Set<Integer> getAnimeography(){
 		return animeography;
 	}
+	
+	public int getBaseHP() {
+		return baseHP;
+	}
+	
+	public int getBaseDefense() {
+		return baseDefense;
+	}
+	
+	public int getBaseAttack() {
+		return baseAttack;
+	}
 
 	public void setRate(double rate) {
 		this.rate = rate;
@@ -66,5 +87,17 @@ public class LocalCharacterData implements Serializable {
 
 	public void setMemberFavorites(int fav) {
 		member_favorites = fav;
+	}
+	
+	public void setBaseHP(int hp) {
+		baseHP = hp;
+	}
+	
+	public void setBaseDefense(int def) {
+		baseDefense = def;
+	}
+	
+	public void setBaseAttack(int att) {
+		baseAttack = att;
 	}
 }

@@ -33,4 +33,8 @@ public class UserData implements Serializable {
 	public List<Integer> getTeam(){
 		return team;
 	}
+	
+	public void setBattleOpponent(UserData d) {
+		battleOpponent = d;
+	}
 }

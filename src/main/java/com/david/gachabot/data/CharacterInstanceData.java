@@ -2,6 +2,8 @@ package com.david.gachabot.data;
 
 import java.io.Serializable;
 
+import com.david.gachabot.Bot;
+
 public class CharacterInstanceData implements Serializable {
 
 	private static final long serialVersionUID = 1;
@@ -41,6 +43,21 @@ public class CharacterInstanceData implements Serializable {
 
 	public int getExperience() {
 		return exp;
+	}
+
+	public int getHP() {
+		int base = Bot.characters.get(character_id).getBaseHP();
+		return (int) (base + base * 0.1 * level);
+	}
+
+	public int getDefense() {
+		int base = Bot.characters.get(character_id).getBaseDefense();
+		return (int) (base + base * 0.1 * level);
+	}
+
+	public int getAttack() {
+		int base = Bot.characters.get(character_id).getBaseAttack();
+		return (int) (base + base * 0.1 * level);
 	}
 
 	public void setOwnerId(long id) {
