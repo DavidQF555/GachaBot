@@ -68,7 +68,7 @@ public class BattleListener extends ListenerAdapter {
 							damage = 1;
 						}
 						out2[0] -= damage;
-						ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " ```" + Bot.characters.get(char1.getCharacterId()).getName() + " has dealt " + damage + " damage to " + Bot.characters.get(char2.getCharacterId()).getName() + "```").queue();
+						ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + Bot.characters.get(char1.getCharacterId()).getName() + " has dealt " + damage + " damage to " + Bot.characters.get(char2.getCharacterId()).getName()).queue();
 						boolean lose1 = true;
 						boolean lose2 = true;
 						for(int i = 0; i < stats2.size(); i ++) {
@@ -97,13 +97,13 @@ public class BattleListener extends ListenerAdapter {
 						}
 						if(lose1 || lose2) {
 							if(lose1 && lose2) {
-								ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " ```You have tied!```").queue();
+								ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " You have tied!").queue();
 							}
 							else if(lose1) {
-								ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " ```" + u2.getName() + " wins!```").queue();
+								ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + u2.getName() + " wins!").queue();
 							}
 							else if(lose2) {
-								ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " ```" + u1.getName() + " wins!```").queue();
+								ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + u1.getName() + " wins!").queue();
 							}
 							battleData.remove(data);
 							user1.setBattleOpponent(null);
@@ -120,13 +120,13 @@ public class BattleListener extends ListenerAdapter {
 								else {
 									data.setUser2Out(i + 1);
 								}
-								ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " ```" + u1.getName() + " has swapped to " + Bot.characters.get(user1Characters.get(i).getCharacterId()).getName() + "```").queue();
+								ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + u1.getName() + " has swapped to " + Bot.characters.get(user1Characters.get(i).getCharacterId()).getName()).queue();
 								break;
 							}
 						}
 					}
 					else if(emote.equals(Reference.WAIT_CODEPOINTS) && out1[3] > 0) {
-						ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " ```" + u1.getName() + " has waited```").queue();
+						ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + u1.getName() + " has waited").queue();
 					}
 					else {
 						return;

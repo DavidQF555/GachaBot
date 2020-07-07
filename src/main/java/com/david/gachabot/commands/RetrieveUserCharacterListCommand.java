@@ -19,7 +19,7 @@ public class RetrieveUserCharacterListCommand extends Command {
 			m.getChannel().sendMessage(out + "```").queue();
 			return;
 		}
-		m.getChannel().sendMessage(m.getAuthor().getAsMention() + " ```You have nothing```").queue();
+		m.getChannel().sendMessage(m.getAuthor().getAsMention() + " You have nothing").queue();
 	}
 
 	@Override

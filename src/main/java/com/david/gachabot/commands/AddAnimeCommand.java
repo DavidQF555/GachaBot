@@ -26,7 +26,7 @@ public class AddAnimeCommand extends Command {
 			}
 		}
 		if(uniq.isEmpty()) {
-			m.getChannel().sendMessage(m.getAuthor().getAsMention() + " ```Everything is already added```").queue();
+			m.getChannel().sendMessage(m.getAuthor().getAsMention() + " Everything is already added").queue();
 			return;
 		}
 		Bot.current ++;

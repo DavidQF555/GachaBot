@@ -11,7 +11,7 @@ public class SaveCommand extends Command {
 		Bot.saveAnimeList();
 		Bot.saveCharacterList();
 		Bot.saveUserData();
-		m.getChannel().sendMessage(m.getAuthor().getAsMention() + " ```Saved all data```").queue();
+		m.getChannel().sendMessage(m.getAuthor().getAsMention() + " Saved all data").queue();
 	}
 
 	@Override

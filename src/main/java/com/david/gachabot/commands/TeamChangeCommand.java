@@ -26,15 +26,15 @@ public class TeamChangeCommand extends Command {
 					if(data.getName().equalsIgnoreCase(name)) {
 						if(userData.getCharacters().keySet().contains(data.getID())) {
 							team.add(data.getID());
-							m.getChannel().sendMessage(user.getAsMention() + " ```Added " + data.getName() + " to your team```").queue();
+							m.getChannel().sendMessage(user.getAsMention() + " Added `" + data.getName() + "` to your team").queue();
 						}
 						else {
-							m.getChannel().sendMessage(user.getAsMention() + " ```You do not have " + data.getName() + "```").queue();
+							m.getChannel().sendMessage(user.getAsMention() + " You do not have `" + data.getName() + "`").queue();
 						}
 						return;
 					}
 				}
-				m.getChannel().sendMessage(user.getAsMention() + " ```Could not find " + name + "```").queue();
+				m.getChannel().sendMessage(user.getAsMention() + " Could not find `" + name + "`").queue();
 			}
 			else {
 				m.getChannel().sendMessage(user.getAsMention() + " ```Your team is already full```").queue();
@@ -51,14 +51,14 @@ public class TeamChangeCommand extends Command {
 					String dataName = Bot.characters.get(team.get(i)).getName();
 					if(dataName.equalsIgnoreCase(name)) {
 						team.remove(i);
-						m.getChannel().sendMessage(user.getAsMention() + " ```Removed " + dataName + " from your team```").queue();
+						m.getChannel().sendMessage(user.getAsMention() + " Removed `" + dataName + "` from your team").queue();
 						return;
 					}
 				}
-				m.getChannel().sendMessage(user.getAsMention() + " ```Could not find " + name + " on your team```").queue();
+				m.getChannel().sendMessage(user.getAsMention() + " Could not find `" + name + "` on your team").queue();
 			}
 			else {
-				m.getChannel().sendMessage(user.getAsMention() + " ```Your team is already empty```").queue();
+				m.getChannel().sendMessage(user.getAsMention() + " Your team is already empty").queue();
 			}
 		}
 	}
