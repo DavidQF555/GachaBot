@@ -19,7 +19,7 @@ public class StartBattleCommand extends Command {
 		User u2 = null;
 		UserData user2 = null;
 		for(Member mem : m.getGuild().getMembers()) {
-			if(mem.getNickname().equalsIgnoreCase(name) || mem.getEffectiveName().equalsIgnoreCase(name)) {
+			if(mem.getEffectiveName().equalsIgnoreCase(name) || (mem.getNickname() != null && mem.getNickname().equalsIgnoreCase(name))) {
 				u2 = mem.getUser();
 				user2 = Bot.userData.get(mem.getIdLong());
 			}
@@ -32,11 +32,11 @@ public class StartBattleCommand extends Command {
 			m.getChannel().sendMessage(u1.getAsMention() + " ```" + u2.getName() + " has not started using GachaBot yet```").queue();
 			return;
 		}
-		Message mes = m.getChannel().sendMessage(u1.getAsMention() + u2.getAsMention() + " ```A battle has started between " + u1.getName() + " and " + u2.getName() + "! " + u1.getName() + "has the first move!```").complete();
-		mes.addReaction(Reference.ATTACK_CODEPOINTS);
-		mes.addReaction(Reference.WAIT_CODEPOINTS);
+		Message mes = m.getChannel().sendMessage(u1.getAsMention() + u2.getAsMention() + " ```A battle has started between " + u1.getName() + " and " + u2.getName() + "! " + u1.getName() + " has the first move!```").complete();
+		mes.addReaction(Reference.ATTACK_CODEPOINTS).queue();
+		mes.addReaction(Reference.WAIT_CODEPOINTS).queue();
 		for(int i = 0; i < user1.getTeam().size(); i ++) {
-			m.addReaction(Reference.SWAP_CODEPOINTS.get(i));
+			mes.addReaction(Reference.SWAP_CODEPOINTS.get(i)).queue();
 		}
 		user1.setBattleOpponent(user2);
 		user2.setBattleOpponent(user1);
