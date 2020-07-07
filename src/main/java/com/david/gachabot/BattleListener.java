@@ -63,9 +63,9 @@ public class BattleListener extends ListenerAdapter {
 						return;
 					}
 					if(emote.equals(Reference.ATTACK_CODEPOINTS) && out1[3] > 0) {
-						int damage = out1[1] - out2[2];
-						if(damage < 0) {
-							damage = 99999;
+						int damage = (int) (out1[1] / 10.0 + 1.0 * out1[1] / out2[2] + 0.5);
+						if(damage <= 0) {
+							damage = 1;
 						}
 						out2[0] -= damage;
 						ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " ```" + Bot.characters.get(char1.getCharacterId()).getName() + " has dealt " + damage + " damage to " + Bot.characters.get(char2.getCharacterId()).getName() + "```").queue();
