@@ -38,17 +38,17 @@ public class EventListener extends ListenerAdapter {
 							Bot.userData.put(id, data);
 						}
 						if(!c.allowInBattle() && data.getBattleOpponent() != null) {
-							event.getChannel().sendMessage(user.getAsMention() + "```This command cannot be used while in battle").queue();
+							event.getChannel().sendMessage(user.getAsMention() + " This command cannot be used while in battle").queue();
 						}
 						else if(c.correctFormat(m)) {
 							c.onCommand(m);
 						}
 						else {
-							event.getChannel().sendMessage(user.getAsMention() + "\n```Incorrect format. Correct Format: " + c.getFormat() + "```").queue();
+							event.getChannel().sendMessage(user.getAsMention() + " Incorrect format. Correct Format: `" + c.getFormat() + "`").queue();
 						}
 					}
 					else {
-						event.getChannel().sendMessage(user.getAsMention() + "\n```You do not have permission to use this command```").queue();
+						event.getChannel().sendMessage(user.getAsMention() + " You do not have permission to use this command").queue();
 					}
 					break;
 				}
@@ -72,17 +72,17 @@ public class EventListener extends ListenerAdapter {
 							Bot.userData.put(id, data);
 						}
 						if(!c.allowInBattle() && data.getBattleOpponent() != null) {
-							event.getChannel().sendMessage(user.getAsMention() + "```This command cannot be used while in battle").queue();
+							event.getChannel().sendMessage(user.getAsMention() + " This command cannot be used while in battle").queue();
 						}
 						else if(c.correctFormat(m)) {
 							c.onPrivateMessage(m);
 						}
 						else {
-							event.getChannel().sendMessage(user.getAsMention() + "\n```Incorrect format. Correct Format: " + c.getFormat() + "```").queue();
+							event.getChannel().sendMessage(user.getAsMention() + " Incorrect format. Correct Format: `" + c.getFormat() + "`").queue();
 						}
 					}
 					else {
-						event.getChannel().sendMessage(user.getAsMention() + "\n```You do not have permission to use this command```").queue();
+						event.getChannel().sendMessage(user.getAsMention() + " You do not have permission to use this command").queue();
 					}
 					break;
 				}
