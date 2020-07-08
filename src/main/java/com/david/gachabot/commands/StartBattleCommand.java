@@ -32,15 +32,17 @@ public class StartBattleCommand extends Command {
 			m.getChannel().sendMessage(u1.getAsMention() + " " + u2.getName() + " has not started using GachaBot yet").queue();
 			return;
 		}
-		Message mes = m.getChannel().sendMessage(u1.getAsMention() + u2.getAsMention() + " A battle has started between " + u1.getName() + " and " + u2.getName() + "! " + u1.getName() + " has the first move!").complete();
+		BattleData data = new BattleData(user1, 1, user2, 1, null);
+		Message mes = m.getChannel().sendMessage(BattleListener.generateBattleMessage(data, "A battle has started between " + u1.getName() + " and " + u2.getName() + "! " + u1.getName() + " gets the first move!")).complete();
+		data.setMessage(mes);
 		mes.addReaction(Reference.ATTACK_CODEPOINTS).queue();
 		mes.addReaction(Reference.WAIT_CODEPOINTS).queue();
-		for(int i = 0; i < user1.getTeam().size(); i ++) {
+		for(int i = 1; i < user1.getTeam().size(); i ++) {
 			mes.addReaction(Reference.SWAP_CODEPOINTS.get(i)).queue();
 		}
 		user1.setBattleOpponent(user2);
 		user2.setBattleOpponent(user1);
-		BattleListener.battleData.add(new BattleData(user1, 1, user2, 1, mes));
+		BattleListener.battleData.add(data);
 	}
 
 	@Override

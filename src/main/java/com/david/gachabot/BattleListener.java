@@ -4,6 +4,7 @@ import java.util.*;
 
 import com.david.gachabot.data.*;
 
+import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -131,7 +132,7 @@ public class BattleListener extends ListenerAdapter {
 					else {
 						return;
 					}
-					Message m = ch.sendMessage(u2.getAsMention() + "What do you do?").complete();
+					Message m = ch.sendMessage(generateBattleMessage(data, u2.getName() + "'s turn")).complete();
 					if(out2[3] > 0) {
 						m.addReaction(Reference.ATTACK_CODEPOINTS).queue();
 						m.addReaction(Reference.WAIT_CODEPOINTS).queue();
@@ -147,5 +148,24 @@ public class BattleListener extends ListenerAdapter {
 				}
 			}
 		}
+	}
+
+	public static MessageEmbed generateBattleMessage(BattleData data, String desc) {
+		UserData user1 = data.getUser1();
+		UserData user2 = data.getUser2();
+		String u1 = Bot.jda.getUserById(user1.getID()).getName();
+		String u2 = Bot.jda.getUserById(user2.getID()).getName();
+		int outID1 = user1.getTeam().get(data.getUser1Out() - 1);
+		int outID2 = user2.getTeam().get(data.getUser2Out() - 1);
+		LocalCharacterData out1 = Bot.characters.get(outID1);
+		LocalCharacterData out2 = Bot.characters.get(outID2);
+		int[] stats1 = data.getUser1Stats().get(user1.getCharacters().get(outID1));
+		int[] stats2 = data.getUser2Stats().get(user2.getCharacters().get(outID2));
+		EmbedBuilder eb = new EmbedBuilder()
+				.setTitle("Battle between " + u1 + " and " + u2)
+				.addField(u1 + "'s " + out1.getName(), "HP: " + stats1[0] + "\nAttack: " + stats1[1] + "\nDefense: " + stats1[2], true)
+				.addField(u2 + "'s " + out2.getName(), "HP: " + stats2[0] + "\nAttack: " + stats2[1] + "\nDefense: " + stats2[2], true)
+				.setDescription(desc);
+		return eb.build();
 	}
 }
