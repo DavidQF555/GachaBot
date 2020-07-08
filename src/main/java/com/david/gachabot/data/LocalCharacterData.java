@@ -90,6 +90,7 @@ public class LocalCharacterData implements Serializable {
 
 	public void setMemberFavorites(int fav) {
 		member_favorites = fav;
+		updateStats();
 	}
 
 	public void setBaseHP(int hp) {
@@ -102,5 +103,14 @@ public class LocalCharacterData implements Serializable {
 
 	public void setBaseAttack(int att) {
 		baseAttack = att;
+	}
+	
+	public void updateStats() {
+		int total = baseHP + baseAttack + baseDefense;
+		double hp = baseHP * 1.0 / total;
+		double att = baseAttack * 1.0 / total;
+		baseHP = (int) (member_favorites * hp);
+		baseAttack = (int) (member_favorites * att);
+		baseDefense = member_favorites - baseHP - baseAttack;
 	}
 }
