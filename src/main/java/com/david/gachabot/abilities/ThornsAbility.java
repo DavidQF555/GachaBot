@@ -8,9 +8,8 @@ public class ThornsAbility extends AbilityAbstract {
 	private static final long serialVersionUID = 8;
 
 	@Override
-	public int onDefend(int damage, int[] attack, List<int[]> attackTeam, int[] defend, List<int[]> defendTeam) {
+	public void defenseEffect(int damage, int[] attack, List<int[]> attackTeam, int[] defend, List<int[]> defendTeam) {
 		attack[0] -= 0.1 * damage;
-		return damage;
 	}
 
 	@Override

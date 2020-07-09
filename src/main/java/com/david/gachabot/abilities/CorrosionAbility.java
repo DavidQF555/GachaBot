@@ -8,9 +8,8 @@ public class CorrosionAbility extends AbilityAbstract {
 	private static final long serialVersionUID = 9;
 
 	@Override
-	public int onAttack(int[] attack, List<int[]> attackTeam, int[] defend, List<int[]> defendTeam) {
+	public void attackEffect(int damage, int[] attack, List<int[]> attackTeam, int[] defend, List<int[]> defendTeam) {
 		defend[2] *= 0.9;
-		return super.onAttack(attack, attackTeam, defend, defendTeam);
 	}
 
 	@Override

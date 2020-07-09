@@ -8,14 +8,12 @@ public class CleaveAbility extends AbilityAbstract {
 	private static final long serialVersionUID = 7;
 
 	@Override
-	public int onAttack(int[] attack, List<int[]> attackTeam, int[] defend, List<int[]> defendTeam) {
-		int damage = super.onAttack(attack, attackTeam, defend, defendTeam);
+	public void attackEffect(int damage, int[] attack, List<int[]> attackTeam, int[] defend, List<int[]> defendTeam) {
 		for(int[] stats : defendTeam) {
 			if(!stats.equals(defend)) {
 				stats[0] -= 0.05 * damage;
 			}
 		}
-		return damage;
 	}
 
 	@Override

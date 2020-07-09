@@ -2,6 +2,7 @@ package com.david.gachabot;
 
 import java.util.*;
 
+import com.david.gachabot.abilities.AbilityAbstract;
 import com.david.gachabot.data.*;
 
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -63,11 +64,15 @@ public class BattleListener extends ListenerAdapter {
 					else {
 						return;
 					}
-					LocalCharacterData data1 = Bot.characters.get(char1.getCharacterId());
-					LocalCharacterData data2 = Bot.characters.get(char2.getCharacterId());
 					if(emote.equals(Reference.ATTACK_CODEPOINTS) && out1[3] > 0) {
-						int damage = data2.getAbility().onDefend(data1.getAbility().onAttack(out1, stats1, out2, stats2), out1, stats1, out2, stats2);
+						LocalCharacterData data1 = Bot.characters.get(char1.getCharacterId());
+						LocalCharacterData data2 = Bot.characters.get(char2.getCharacterId());
+						AbilityAbstract ab1 = data1.getAbility();
+						AbilityAbstract ab2 = data2.getAbility();
+						int damage = ab1.calculateDamage(out1, stats1, out2, stats2, ab2);
 						out2[0] -= damage;
+						ab1.attackEffect(damage, out1, stats1, out2, stats2);
+						ab2.defenseEffect(damage, out1, stats1, out2, stats2);
 						ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + data1.getName() + " has dealt " + damage + " damage to " + data2.getName()).queue();
 						boolean lose1 = true;
 						boolean lose2 = true;
