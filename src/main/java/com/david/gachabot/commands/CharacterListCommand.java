@@ -70,7 +70,11 @@ public class CharacterListCommand extends CommandAbstract {
 		}
 		out += div;
 		List<LocalCharacterData> d = new ArrayList<LocalCharacterData>(Bot.characters.values());
-		for(int i = (page - 1) * PAGE_ENTRIES; i < page * PAGE_ENTRIES; i ++) {
+		int max = page * PAGE_ENTRIES;
+		if(max > d.size()) {
+			max = d.size();
+		}
+		for(int i = (page - 1) * PAGE_ENTRIES; i < max; i ++) {
 			LocalCharacterData data = d.get(i);
 			String name = data.getName();
 			while(name.length() < NAME_LENGTH) {
