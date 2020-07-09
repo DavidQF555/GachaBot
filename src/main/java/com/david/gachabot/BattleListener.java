@@ -63,13 +63,15 @@ public class BattleListener extends ListenerAdapter {
 					else {
 						return;
 					}
+					LocalCharacterData data1 = Bot.characters.get(char1.getCharacterId());
+					LocalCharacterData data2 = Bot.characters.get(char2.getCharacterId());
 					if(emote.equals(Reference.ATTACK_CODEPOINTS) && out1[3] > 0) {
-						int damage = (int) (out1[1] / 10.0 + 1.0 * out1[1] / out2[2] + 0.5);
+						int damage = data2.getAbility().onDefend(data1.getAbility().onAttack(out1, stats1, out2, stats2), out1, stats1, out2, stats2);
 						if(damage <= 0) {
 							damage = 1;
 						}
 						out2[0] -= damage;
-						ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + Bot.characters.get(char1.getCharacterId()).getName() + " has dealt " + damage + " damage to " + Bot.characters.get(char2.getCharacterId()).getName()).queue();
+						ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + data1.getName() + " has dealt " + damage + " damage to " + data2.getName()).queue();
 						boolean lose1 = true;
 						boolean lose2 = true;
 						for(int i = 0; i < stats2.size(); i ++) {

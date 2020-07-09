@@ -5,6 +5,7 @@ import java.util.*;
 
 import javax.security.auth.login.LoginException;
 
+import com.david.gachabot.abilities.*;
 import com.david.gachabot.commands.*;
 import com.david.gachabot.data.*;
 import com.github.doomsdayrs.jikan4java.core.Connector;
@@ -16,6 +17,7 @@ import net.dv8tion.jda.api.entities.User;
 public class Bot {
 
 	public final static Set<Command> commands = new HashSet<Command>();
+	public final static List<Ability> abilities = new ArrayList<Ability>();
 	public static Map<Integer, LocalAnimeData> anime = new HashMap<Integer, LocalAnimeData>();
 	public static Map<Integer, LocalCharacterData> characters = new HashMap<Integer, LocalCharacterData>();
 	public static Map<Long, UserData> userData = new HashMap<Long, UserData>();
@@ -49,14 +51,13 @@ public class Bot {
 			}
 		}
 		current = max;
-		
+
 		for(UserData data : userData.values()) {
 			data.setBattleOpponent(null);
 		}
 
 		commands.add(new ShutdownCommand());
 		commands.add(new SaveCommand());
-		
 		commands.add(new AddAnimeCommand());
 		commands.add(new CharacterListCommand());
 		commands.add(new GachaRollCommand());
@@ -64,8 +65,9 @@ public class Bot {
 		commands.add(new TeamChangeCommand());
 		commands.add(new RetrieveTeamCommand());
 		commands.add(new StartBattleCommand());
-		
 		commands.add(new HelpCommand());
+
+		abilities.add(new ArmorPierceAbility());
 	}
 
 	public static void saveUserData() {
