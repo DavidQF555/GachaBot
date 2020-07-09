@@ -14,7 +14,8 @@ public class CharacterListCommand extends Command {
 	private static int HP_LENGTH = 7;
 	private static int ATTACK_LENGTH = 7;
 	private static int DEFENSE_LENGTH = 7;
-	
+	private static int ABILITY_LENGTH = 15;
+
 	@Override
 	public void onCommand(Message m) {
 		String out = m.getAuthor().getAsMention() + " The following are all the characters: ```";
@@ -38,9 +39,13 @@ public class CharacterListCommand extends Command {
 		while(descDef.length() < DEFENSE_LENGTH) {
 			descDef += " ";
 		}
-		out += "\n" + descName.substring(0, NAME_LENGTH) + " " + descRate.substring(0, RATE_LENGTH) + " " + descHP.substring(0, HP_LENGTH) + " " + descAtt.substring(0, ATTACK_LENGTH) + " " + descDef.substring(0, DEFENSE_LENGTH);
+		String descAb = "Ability";
+		while(descAb.length() < ABILITY_LENGTH) {
+			descAb += " ";
+		}
+		out += "\n" + descName.substring(0, NAME_LENGTH) + " " + descRate.substring(0, RATE_LENGTH) + " " + descHP.substring(0, HP_LENGTH) + " " + descAtt.substring(0, ATTACK_LENGTH) + " " + descDef.substring(0, DEFENSE_LENGTH) + " " + descAb.substring(0, ABILITY_LENGTH);
 		String div = "";
-		while(div.length() < NAME_LENGTH + RATE_LENGTH + HP_LENGTH + ATTACK_LENGTH + DEFENSE_LENGTH + 4) {
+		while(div.length() < NAME_LENGTH + RATE_LENGTH + HP_LENGTH + ATTACK_LENGTH + DEFENSE_LENGTH + ABILITY_LENGTH + 5) {
 			div += "-";
 		}
 		out += "\n" + div;
@@ -65,7 +70,11 @@ public class CharacterListCommand extends Command {
 			while(defense.length() < DEFENSE_LENGTH) {
 				defense += " ";
 			}
-			out += "\n" + name.substring(0, NAME_LENGTH) + " " + rate.substring(0, RATE_LENGTH) + " " + hp.substring(0, HP_LENGTH) + " " + attack.substring(0, ATTACK_LENGTH) + " " + defense.substring(0, DEFENSE_LENGTH);
+			String ability = data.getAbility().getName();
+			while(ability.length() < ABILITY_LENGTH) {
+				ability += " ";
+			}
+			out += "\n" + name.substring(0, NAME_LENGTH) + " " + rate.substring(0, RATE_LENGTH) + " " + hp.substring(0, HP_LENGTH) + " " + attack.substring(0, ATTACK_LENGTH) + " " + defense.substring(0, DEFENSE_LENGTH) + " " + ability.substring(0, ABILITY_LENGTH);
 		}
 		m.getChannel().sendMessage(out + "```").queue();
 	}
@@ -79,7 +88,7 @@ public class CharacterListCommand extends Command {
 	public String getDescription() {
 		return "Retrieves a list of all characters";
 	}
-	
+
 	@Override
 	public List<String> getAlternativeNames() {
 		return new ArrayList<String>(Arrays.asList("c"));

@@ -67,9 +67,6 @@ public class BattleListener extends ListenerAdapter {
 					LocalCharacterData data2 = Bot.characters.get(char2.getCharacterId());
 					if(emote.equals(Reference.ATTACK_CODEPOINTS) && out1[3] > 0) {
 						int damage = data2.getAbility().onDefend(data1.getAbility().onAttack(out1, stats1, out2, stats2), out1, stats1, out2, stats2);
-						if(damage <= 0) {
-							damage = 1;
-						}
 						out2[0] -= damage;
 						ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + data1.getName() + " has dealt " + damage + " damage to " + data2.getName()).queue();
 						boolean lose1 = true;

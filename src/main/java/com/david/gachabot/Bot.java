@@ -68,6 +68,8 @@ public class Bot {
 		commands.add(new HelpCommand());
 
 		abilities.add(new ArmorPierceAbility());
+		abilities.add(new CleaveAbility());
+		abilities.add(new ThornsAbility());
 	}
 
 	public static void saveUserData() {

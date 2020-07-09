@@ -8,7 +8,11 @@ public class ArmorPierceAbility extends Ability {
 
 	@Override
 	public int onAttack(int[] attack, List<int[]> attackTeam, int[] defend, List<int[]> defendTeam) {
-		return (int) (attack[1] / 10.0 + 2.0 * attack[1] / defend[2] + 0.5);
+		int damage = (int) (attack[1] / 10.0 + 2.0 * attack[1] / defend[2] + 0.5);
+		if(damage < 1) {
+			damage = 1;
+		}
+		return damage;
 	}
 
 	@Override
