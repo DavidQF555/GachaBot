@@ -61,13 +61,13 @@ public class Bot {
 		Reflections reflections = new Reflections("com.david.gachabot");
 		for(Class<?> c : reflections.getTypesAnnotatedWith(Command.class)) {
 			try {
-				commands.add((CommandAbstract) c.getConstructor(new Class<?>[0]).newInstance());	
+				commands.add((CommandAbstract) c.getConstructor().newInstance());	
 			}
 			catch(Exception e) {}
 		}
 		for(Class<?> c : reflections.getTypesAnnotatedWith(Ability.class)) {
 			try {
-				abilities.add((AbilityAbstract) c.getConstructor(new Class<?>[0]).newInstance());	
+				abilities.add((AbilityAbstract) c.getConstructor().newInstance());	
 			}
 			catch(Exception e) {}
 		}
