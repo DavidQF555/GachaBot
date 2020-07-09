@@ -1,11 +1,7 @@
 package com.david.gachabot.data;
 
-import java.awt.image.BufferedImage;
 import java.io.Serializable;
-import java.net.URL;
 import java.util.*;
-
-import javax.imageio.ImageIO;
 
 public class LocalCharacterData implements Serializable {
 
@@ -20,7 +16,6 @@ public class LocalCharacterData implements Serializable {
 	private int baseHP;
 	private int baseDefense;
 	private int baseAttack;
-	private BufferedImage image;
 
 	public LocalCharacterData(int set, int id, int member_favorites, double rate, String image_url, String name) {
 		this.set = set;
@@ -30,8 +25,6 @@ public class LocalCharacterData implements Serializable {
 		this.image_url = image_url;
 		this.member_favorites = member_favorites;
 		animeography = new HashSet<Integer>();
-
-		updateImage();
 
 		int totalBase = member_favorites;
 		baseHP = (int) (Math.random() * totalBase * 0.7 + totalBase / 10.0);
@@ -83,10 +76,6 @@ public class LocalCharacterData implements Serializable {
 		return baseAttack;
 	}
 
-	public BufferedImage getImage() {
-		return image;
-	}
-
 	public void setRate(double rate) {
 		this.rate = rate;
 	}
@@ -97,7 +86,6 @@ public class LocalCharacterData implements Serializable {
 
 	public void setImageUrl(String url) {
 		image_url = url;
-		updateImage();
 	}
 
 	public void setMemberFavorites(int fav) {
@@ -124,12 +112,5 @@ public class LocalCharacterData implements Serializable {
 		baseHP = (int) (member_favorites * hp);
 		baseAttack = (int) (member_favorites * att);
 		baseDefense = member_favorites - baseHP - baseAttack;
-	}
-
-	private void updateImage() {
-		try {
-			image = ImageIO.read(new URL(image_url));
-		}
-		catch(Exception e) {}
 	}
 }
