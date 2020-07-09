@@ -17,7 +17,7 @@ public class AddAnimeCommand extends CommandAbstract {
 	public void onCommand(Message m) {
 		String input = m.getContentRaw().substring(Reference.COMMAND.length() + getActivatingName().length() + 1);
 		System.out.println("Getting all related to: " + input);
-		m.getChannel().sendMessage(m.getAuthor().getAsMention() + " Searching for " + input + " and all related series").queue();
+		m.getChannel().sendMessage(m.getAuthor().getAsMention() + " Searching for `" + input + "` and all related series").queue();
 		Anime a = Util.animeSearch(input);
 		List<Anime> uniq = getAllRelated(a, new ArrayList<Anime>());
 		List<Anime> all = uniq.subList(0, uniq.size());
@@ -65,7 +65,7 @@ public class AddAnimeCommand extends CommandAbstract {
 	public String getActivatingName() {
 		return "addanime";
 	}
-	
+
 	@Override
 	public List<String> getAlternativeNames() {
 		return new ArrayList<String>(Arrays.asList("aa"));

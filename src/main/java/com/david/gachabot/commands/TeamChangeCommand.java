@@ -2,7 +2,7 @@ package com.david.gachabot.commands;
 
 import java.util.List;
 
-import com.david.gachabot.*;
+import com.david.gachabot.Bot;
 import com.david.gachabot.data.*;
 
 import net.dv8tion.jda.api.entities.*;
@@ -85,7 +85,7 @@ public class TeamChangeCommand extends CommandAbstract {
 
 	@Override
 	public String getFormat() {
-		return Reference.COMMAND + getActivatingName() + " [add/remove] [character name]";
+		return super.getFormat() + " [add/remove] [character name]";
 	}
 
 	@Override

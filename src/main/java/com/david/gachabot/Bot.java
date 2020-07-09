@@ -21,7 +21,7 @@ public class Bot {
 	public final static Set<CommandAbstract> commands = new HashSet<CommandAbstract>();
 	public final static List<AbilityAbstract> abilities = new ArrayList<AbilityAbstract>();
 	public static Map<Integer, LocalAnimeData> anime = new HashMap<Integer, LocalAnimeData>();
-	public static Map<Integer, LocalCharacterData> characters = new HashMap<Integer, LocalCharacterData>();
+	public static LinkedHashMap<Integer, LocalCharacterData> characters = new LinkedHashMap<Integer, LocalCharacterData>();
 	public static Map<Long, UserData> userData = new HashMap<Long, UserData>();
 	public final static Connector connector = new Connector();
 	public static int current;
@@ -192,7 +192,7 @@ public class Bot {
 		ObjectInputStream ois = null;
 		try {
 			ois = new ObjectInputStream(fis);
-			Map<Integer, LocalCharacterData> data = (Map<Integer, LocalCharacterData>) ois.readObject();
+			LinkedHashMap<Integer, LocalCharacterData> data = (LinkedHashMap<Integer, LocalCharacterData>) ois.readObject();
 			ois.close();
 			fis.close();
 			if(data != null) {

@@ -1,6 +1,7 @@
 package com.david.gachabot.commands;
 
 import com.david.gachabot.*;
+
 import com.david.gachabot.data.*;
 
 import net.dv8tion.jda.api.entities.*;
@@ -73,7 +74,7 @@ public class StartBattleCommand extends CommandAbstract {
 
 	@Override
 	public String getFormat() {
-		return Reference.COMMAND + getActivatingName() + " [opponent name]";
+		return super.getFormat() + " [opponent name]";
 	}
 
 }
