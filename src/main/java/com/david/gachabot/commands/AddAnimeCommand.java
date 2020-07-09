@@ -10,7 +10,8 @@ import com.github.doomsdayrs.jikan4java.types.support.related.*;
 
 import net.dv8tion.jda.api.entities.Message;
 
-public class AddAnimeCommand extends Command {
+@Command
+public class AddAnimeCommand extends CommandAbstract {
 
 	@Override
 	public void onCommand(Message m) {

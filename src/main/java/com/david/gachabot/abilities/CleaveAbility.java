@@ -2,7 +2,8 @@ package com.david.gachabot.abilities;
 
 import java.util.List;
 
-public class CleaveAbility extends Ability {
+@Ability
+public class CleaveAbility extends AbilityAbstract {
 
 	private static final long serialVersionUID = 7;
 

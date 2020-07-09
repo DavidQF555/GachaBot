@@ -6,7 +6,8 @@ import com.david.gachabot.Bot;
 
 import net.dv8tion.jda.api.entities.Message;
 
-public class RetrieveTeamCommand extends Command {
+@Command
+public class RetrieveTeamCommand extends CommandAbstract {
 
 	@Override
 	public void onCommand(Message m) {

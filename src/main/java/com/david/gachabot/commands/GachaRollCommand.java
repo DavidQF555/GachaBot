@@ -7,7 +7,8 @@ import com.david.gachabot.data.*;
 
 import net.dv8tion.jda.api.entities.Message;
 
-public class GachaRollCommand extends Command {
+@Command
+public class GachaRollCommand extends CommandAbstract {
 
 	@Override
 	public void onCommand(Message m) {

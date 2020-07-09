@@ -2,7 +2,8 @@ package com.david.gachabot.abilities;
 
 import java.util.List;
 
-public class ThornsAbility extends Ability {
+@Ability
+public class ThornsAbility extends AbilityAbstract {
 
 	private static final long serialVersionUID = 8;
 

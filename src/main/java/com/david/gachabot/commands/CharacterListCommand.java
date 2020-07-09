@@ -7,7 +7,8 @@ import com.david.gachabot.data.LocalCharacterData;
 
 import net.dv8tion.jda.api.entities.Message;
 
-public class CharacterListCommand extends Command {
+@Command
+public class CharacterListCommand extends CommandAbstract {
 
 	private static int NAME_LENGTH = 25;
 	private static int RATE_LENGTH = 15;

@@ -2,7 +2,7 @@ package com.david.gachabot;
 
 import java.util.*;
 
-import com.david.gachabot.commands.Command;
+import com.david.gachabot.commands.CommandAbstract;
 import com.david.gachabot.data.*;
 
 import net.dv8tion.jda.api.entities.*;
@@ -29,7 +29,7 @@ public class EventListener extends ListenerAdapter {
 		Message m = event.getMessage();
 		String s = m.getContentRaw().toLowerCase();
 		if(!user.isBot()) {
-			for(Command c : Bot.commands) {
+			for(CommandAbstract c : Bot.commands) {
 				if(s.startsWith(Reference.COMMAND) && (s.substring(Reference.COMMAND.length()).startsWith(c.getActivatingName()) || startsWith(s.substring(Reference.COMMAND.length()), c.getAlternativeNames()))) {
 					if(c.hasPermission(m)) {
 						UserData data = Bot.userData.get(id);
@@ -63,7 +63,7 @@ public class EventListener extends ListenerAdapter {
 		Message m = event.getMessage();
 		String s = m.getContentRaw().toLowerCase();
 		if(!user.isBot()) {
-			for(Command c : Bot.commands) {
+			for(CommandAbstract c : Bot.commands) {
 				if(s.startsWith(Reference.COMMAND) && (s.substring(Reference.COMMAND.length()).startsWith(c.getActivatingName()) || startsWith(s.substring(Reference.COMMAND.length()), c.getAlternativeNames()))) {
 					if(c.hasPermission(m)) {
 						UserData data = Bot.userData.get(id);

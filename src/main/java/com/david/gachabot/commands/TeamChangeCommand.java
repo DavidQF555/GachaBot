@@ -7,7 +7,8 @@ import com.david.gachabot.data.*;
 
 import net.dv8tion.jda.api.entities.*;
 
-public class TeamChangeCommand extends Command {
+@Command
+public class TeamChangeCommand extends CommandAbstract {
 
 	@Override
 	public void onCommand(Message m) {

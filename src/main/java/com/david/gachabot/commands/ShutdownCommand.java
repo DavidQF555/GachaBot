@@ -4,7 +4,8 @@ import com.david.gachabot.*;
 
 import net.dv8tion.jda.api.entities.Message;
 
-public class ShutdownCommand extends Command {
+@Command
+public class ShutdownCommand extends CommandAbstract {
 
 	@Override
 	public void onCommand(Message m) {

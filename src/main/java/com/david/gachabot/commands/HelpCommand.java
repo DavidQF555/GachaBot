@@ -8,12 +8,13 @@ import com.david.gachabot.Bot;
 
 import net.dv8tion.jda.api.entities.Message;
 
-public class HelpCommand extends Command {
+@Command
+public class HelpCommand extends CommandAbstract {
 
 	@Override
 	public void onCommand(Message m) {
 		String out = m.getAuthor().getAsMention() + " The following are all commands: ```";
-		for(Command c : Bot.commands) {
+		for(CommandAbstract c : Bot.commands) {
 			out += "\n" + c.getFormat() + ": " + c.getDescription();
 		}
 		m.getChannel().sendMessage(out + "```").queue();

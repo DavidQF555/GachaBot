@@ -2,7 +2,8 @@ package com.david.gachabot.abilities;
 
 import java.util.List;
 
-public class ArmorPierceAbility extends Ability {
+@Ability
+public class ArmorPierceAbility extends AbilityAbstract {
 
 	private static final long serialVersionUID = 6;
 

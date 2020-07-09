@@ -5,6 +5,8 @@ import java.util.*;
 
 import javax.security.auth.login.LoginException;
 
+import org.reflections.Reflections;
+
 import com.david.gachabot.abilities.*;
 import com.david.gachabot.commands.*;
 import com.david.gachabot.data.*;
@@ -16,8 +18,8 @@ import net.dv8tion.jda.api.entities.User;
 
 public class Bot {
 
-	public final static Set<Command> commands = new HashSet<Command>();
-	public final static List<Ability> abilities = new ArrayList<Ability>();
+	public final static Set<CommandAbstract> commands = new HashSet<CommandAbstract>();
+	public final static List<AbilityAbstract> abilities = new ArrayList<AbilityAbstract>();
 	public static Map<Integer, LocalAnimeData> anime = new HashMap<Integer, LocalAnimeData>();
 	public static Map<Integer, LocalCharacterData> characters = new HashMap<Integer, LocalCharacterData>();
 	public static Map<Long, UserData> userData = new HashMap<Long, UserData>();
@@ -56,20 +58,19 @@ public class Bot {
 			data.setBattleOpponent(null);
 		}
 
-		commands.add(new ShutdownCommand());
-		commands.add(new SaveCommand());
-		commands.add(new AddAnimeCommand());
-		commands.add(new CharacterListCommand());
-		commands.add(new GachaRollCommand());
-		commands.add(new RetrieveUserCharacterListCommand());
-		commands.add(new TeamChangeCommand());
-		commands.add(new RetrieveTeamCommand());
-		commands.add(new StartBattleCommand());
-		commands.add(new HelpCommand());
-
-		abilities.add(new ArmorPierceAbility());
-		abilities.add(new CleaveAbility());
-		abilities.add(new ThornsAbility());
+		Reflections reflections = new Reflections("com.david.gachabot");
+		for(Class<?> c : reflections.getTypesAnnotatedWith(Command.class)) {
+			try {
+				commands.add((CommandAbstract) c.getConstructor(new Class<?>[0]).newInstance());	
+			}
+			catch(Exception e) {}
+		}
+		for(Class<?> c : reflections.getTypesAnnotatedWith(Ability.class)) {
+			try {
+				abilities.add((AbilityAbstract) c.getConstructor(new Class<?>[0]).newInstance());	
+			}
+			catch(Exception e) {}
+		}
 	}
 
 	public static void saveUserData() {

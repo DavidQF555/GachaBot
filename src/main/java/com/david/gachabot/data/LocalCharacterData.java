@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import com.david.gachabot.Bot;
-import com.david.gachabot.abilities.Ability;
+import com.david.gachabot.abilities.AbilityAbstract;
 
 public class LocalCharacterData implements Serializable {
 
@@ -19,7 +19,7 @@ public class LocalCharacterData implements Serializable {
 	private int baseHP;
 	private int baseDefense;
 	private int baseAttack;
-	private Ability ability;
+	private AbilityAbstract ability;
 
 	public LocalCharacterData(int set, int id, int member_favorites, double rate, String image_url, String name) {
 		this.set = set;
@@ -82,7 +82,7 @@ public class LocalCharacterData implements Serializable {
 		return baseAttack;
 	}
 
-	public Ability getAbility() {
+	public AbilityAbstract getAbility() {
 		return ability;
 	}
 

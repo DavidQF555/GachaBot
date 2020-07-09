@@ -5,7 +5,8 @@ import com.david.gachabot.data.*;
 
 import net.dv8tion.jda.api.entities.*;
 
-public class StartBattleCommand extends Command {
+@Command
+public class StartBattleCommand extends CommandAbstract {
 
 	@Override
 	public void onCommand(Message m) {
