@@ -14,7 +14,7 @@ import com.github.doomsdayrs.jikan4java.core.Connector;
 import com.github.doomsdayrs.jikan4java.types.main.character.Animeography;
 
 import net.dv8tion.jda.api.*;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 
 public class Bot {
 
@@ -30,7 +30,7 @@ public class Bot {
 
 	public static void main(String[] args) {
 		try {
-			jda = new JDABuilder(Reference.TOKEN).build();
+			jda = new JDABuilder(Reference.TOKEN).setActivity(Activity.watching(" people waste money")).build();
 		} 
 		catch (LoginException e) {
 			System.out.println("Invalid Token");
