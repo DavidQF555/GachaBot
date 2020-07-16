@@ -2,10 +2,13 @@ package com.david.gachabot.data;
 
 import java.util.LinkedHashMap;
 
+import com.david.gachabot.BattleListener;
+
 import net.dv8tion.jda.api.entities.Message;
 
 public class BattleData {
 
+	private int turn;
 	private boolean user1Turn;
 	private Message message;
 	private UserData user1;
@@ -16,6 +19,7 @@ public class BattleData {
 	private int user2Out;
 
 	public BattleData(UserData user1, int user1Out, UserData user2, int user2Out, Message m) {
+		turn = 1;
 		user1Turn = true;
 		message = m;
 		this.user1 = user1;
@@ -34,6 +38,10 @@ public class BattleData {
 		}
 	}
 
+	public int getTurn() {
+		return turn;
+	}
+
 	public Message getMessage() {
 		return message;
 	}
@@ -48,6 +56,10 @@ public class BattleData {
 
 	public int getUser2Out() {
 		return user2Out;
+	}
+
+	public void setTurn(int t) {
+		turn = t;
 	}
 
 	public void setMessage(Message m) {
@@ -82,4 +94,10 @@ public class BattleData {
 		return user2Stats;
 	}
 
+	public void endBattle(int winner) {
+		user1.setBattleOpponent(null);
+		user2.setBattleOpponent(null);
+		BattleListener.battleData.remove(this);
+		BattleListener.timers.get(this).cancel();
+	}
 }

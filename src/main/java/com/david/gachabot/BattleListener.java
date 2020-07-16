@@ -14,6 +14,7 @@ public class BattleListener extends ListenerAdapter {
 
 	public static List<BattleData> battleData = new ArrayList<BattleData>();
 	public static Map<Long, UserData[]> invitations = new HashMap<Long, UserData[]>();
+	public static Map<BattleData, Timer> timers = new HashMap<BattleData, Timer>();
 
 	@Override
 	public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
@@ -27,11 +28,12 @@ public class BattleListener extends ListenerAdapter {
 				UserData[] usDa = invitations.get(mesId);
 				if(usDa[1].equals(Bot.userData.get(id))) {
 					if(emote.equals(Reference.ACCEPT_CODEPOINTS)) {
-						if(usDa[0].getBattleOpponent() == null) {
+						if(usDa[0].getBattleOpponent() == null && usDa[1].getBattleOpponent() == null) {
 							invitations.remove(mesId);
 							BattleData data = new BattleData(usDa[0], 1, usDa[1], 1, null);
-							String name = Bot.jda.getUserById(usDa[0].getID()).getName();
-							Message mes = ch.sendMessage(BattleListener.generateBattleMessage(data, "A battle has started between " + name + " and " + Bot.jda.getUserById(usDa[1].getID()).getName() + "! " + name + " gets the first move!")).complete();
+							User u1 = Bot.jda.getUserById(usDa[0].getID());
+							User u2 = Bot.jda.getUserById(usDa[1].getID());
+							Message mes = ch.sendMessage(BattleListener.generateBattleMessage(data, "A battle has started between " + u1.getName() + " and " + u2.getName() + "! " + u1.getName() + " gets the first move!")).complete();
 							data.setMessage(mes);
 							mes.addReaction(Reference.ATTACK_CODEPOINTS).queue();
 							mes.addReaction(Reference.WAIT_CODEPOINTS).queue();
@@ -41,9 +43,21 @@ public class BattleListener extends ListenerAdapter {
 							usDa[0].setBattleOpponent(usDa[1]);
 							usDa[1].setBattleOpponent(usDa[0]);
 							battleData.add(data);
+							Timer t = new Timer();
+							t.schedule(new TimerTask() {
+								@Override
+								public void run() {
+									if(data.getTurn() == 1 && data.isUser1Turn()) {
+										ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + u1.getName() + " has timed out! " + u2.getName() + " wins!").queue();
+										data.endBattle(2);
+									}
+								}
+							}, 600000);
+							timers.put(data, t);
 						}
 					}
 					else if(emote.equals(Reference.DECLINE_CODEPOINTS)) {
+						ch.retrieveMessageById(mesId).complete().delete().queue();
 						invitations.remove(mesId);
 					}
 				}
@@ -130,16 +144,26 @@ public class BattleListener extends ListenerAdapter {
 						if(lose1 || lose2) {
 							if(lose1 && lose2) {
 								ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " You have tied!").queue();
+								data.endBattle(0);
 							}
 							else if(lose1) {
 								ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + u2.getName() + " wins!").queue();
+								if(swapped) {
+									data.endBattle(1);
+								}
+								else {
+									data.endBattle(2);
+								}
 							}
 							else if(lose2) {
 								ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + u1.getName() + " wins!").queue();
+								if(swapped) {
+									data.endBattle(2);
+								}
+								else {
+									data.endBattle(1);
+								}
 							}
-							battleData.remove(data);
-							user1.setBattleOpponent(null);
-							user2.setBattleOpponent(null);
 							return;
 						}
 					}
@@ -175,7 +199,31 @@ public class BattleListener extends ListenerAdapter {
 						}
 					}
 					data.setIsUser1Turn(!data.isUser1Turn());
+					if(data.isUser1Turn()) {
+						data.setTurn(data.getTurn() + 1);
+					}
 					data.setMessage(m);
+					timers.get(data).schedule(new TimerTask() {
+
+						private final int turn = data.getTurn();
+						private final boolean isUser1 = data.isUser1Turn();
+
+						@Override
+						public void run() {
+							if(data.getTurn() == turn && data.isUser1Turn() == isUser1) {
+								User u1 = Bot.jda.getUserById(data.getUser1().getID());
+								User u2 = Bot.jda.getUserById(data.getUser2().getID());
+								if(isUser1) {
+									ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + u1.getName() + " has timed out! " + u2.getName() + " wins!").queue();
+									data.endBattle(2);
+								}
+								else {
+									ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + u2.getName() + " has timed out! " + u1.getName() + " wins!").queue();
+									data.endBattle(1);
+								}
+							}
+						}
+					}, 120000);
 				}
 			}
 		}

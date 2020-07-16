@@ -1,5 +1,7 @@
 package com.david.gachabot.commands;
 
+import java.util.*;
+
 import com.david.gachabot.*;
 
 import com.david.gachabot.data.*;
@@ -9,6 +11,8 @@ import net.dv8tion.jda.api.entities.*;
 
 @Command
 public class StartBattleCommand extends CommandAbstract {
+
+	private final static Timer inv = new Timer();
 
 	@Override
 	public void onCommand(Message m) {
@@ -40,9 +44,19 @@ public class StartBattleCommand extends CommandAbstract {
 			return;
 		}
 		Message mes = m.getChannel().sendMessage(u2.getAsMention() + " " + u1.getName() + " has challenged you to a battle! Do you accept?").complete();
-		BattleListener.invitations.put(mes.getIdLong(), new UserData[] {user1, user2});
+		long mesId = mes.getIdLong();
+		BattleListener.invitations.put(mesId, new UserData[] {user1, user2});
 		mes.addReaction(Reference.ACCEPT_CODEPOINTS).queue();
 		mes.addReaction(Reference.DECLINE_CODEPOINTS).queue();
+		inv.schedule(new TimerTask() {
+			@Override
+			public void run() {
+				if(BattleListener.invitations.containsKey(mesId)) {
+					mes.delete().queue();
+					BattleListener.invitations.remove(mesId);
+				}
+			}
+		}, 300000);
 	}
 
 	@Override
