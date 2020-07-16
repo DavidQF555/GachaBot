@@ -4,6 +4,7 @@ import com.david.gachabot.*;
 
 import com.david.gachabot.data.*;
 
+import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.*;
 
 @Command
@@ -22,6 +23,10 @@ public class StartBattleCommand extends CommandAbstract {
 		UserData user2 = null;
 		for(Member mem : m.getGuild().getMembers()) {
 			if(mem.getEffectiveName().equalsIgnoreCase(name) || (mem.getNickname() != null && mem.getNickname().equalsIgnoreCase(name))) {
+				if(mem.getOnlineStatus() == OnlineStatus.OFFLINE) {
+					m.getChannel().sendMessage(u1.getAsMention() + " " + mem.getNickname() + " is currently offline").queue();
+					return;
+				}
 				u2 = mem.getUser();
 				user2 = Bot.userData.get(mem.getIdLong());
 			}
@@ -34,17 +39,10 @@ public class StartBattleCommand extends CommandAbstract {
 			m.getChannel().sendMessage(u1.getAsMention() + " " + u2.getName() + " has not started using GachaBot yet").queue();
 			return;
 		}
-		BattleData data = new BattleData(user1, 1, user2, 1, null);
-		Message mes = m.getChannel().sendMessage(BattleListener.generateBattleMessage(data, "A battle has started between " + u1.getName() + " and " + u2.getName() + "! " + u1.getName() + " gets the first move!")).complete();
-		data.setMessage(mes);
-		mes.addReaction(Reference.ATTACK_CODEPOINTS).queue();
-		mes.addReaction(Reference.WAIT_CODEPOINTS).queue();
-		for(int i = 1; i < user1.getTeam().size(); i ++) {
-			mes.addReaction(Reference.SWAP_CODEPOINTS.get(i)).queue();
-		}
-		user1.setBattleOpponent(user2);
-		user2.setBattleOpponent(user1);
-		BattleListener.battleData.add(data);
+		Message mes = m.getChannel().sendMessage(u2.getAsMention() + " " + u1.getName() + " has challenged you to a battle! Do you accept?").complete();
+		BattleListener.invitations.put(mes.getIdLong(), new UserData[] {user1, user2});
+		mes.addReaction(Reference.ACCEPT_CODEPOINTS).queue();
+		mes.addReaction(Reference.DECLINE_CODEPOINTS).queue();
 	}
 
 	@Override

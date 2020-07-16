@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 public class BattleListener extends ListenerAdapter {
 
 	public static List<BattleData> battleData = new ArrayList<BattleData>();
+	public static Map<Long, UserData[]> invitations = new HashMap<Long, UserData[]>();
 
 	@Override
 	public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
@@ -21,7 +22,33 @@ public class BattleListener extends ListenerAdapter {
 			long id = u.getIdLong();
 			String emote = event.getReactionEmote().getAsCodepoints();
 			TextChannel ch = event.getChannel();
-			List<String> swap = Reference.SWAP_CODEPOINTS;
+			long mesId = event.getMessageIdLong();
+			if(invitations.containsKey(mesId)) {
+				UserData[] usDa = invitations.get(mesId);
+				if(usDa[1].equals(Bot.userData.get(id))) {
+					if(emote.equals(Reference.ACCEPT_CODEPOINTS)) {
+						if(usDa[0].getBattleOpponent() == null) {
+							invitations.remove(mesId);
+							BattleData data = new BattleData(usDa[0], 1, usDa[1], 1, null);
+							String name = Bot.jda.getUserById(usDa[0].getID()).getName();
+							Message mes = ch.sendMessage(BattleListener.generateBattleMessage(data, "A battle has started between " + name + " and " + Bot.jda.getUserById(usDa[1].getID()).getName() + "! " + name + " gets the first move!")).complete();
+							data.setMessage(mes);
+							mes.addReaction(Reference.ATTACK_CODEPOINTS).queue();
+							mes.addReaction(Reference.WAIT_CODEPOINTS).queue();
+							for(int i = 1; i < usDa[0].getTeam().size(); i ++) {
+								mes.addReaction(Reference.SWAP_CODEPOINTS.get(i)).queue();
+							}
+							usDa[0].setBattleOpponent(usDa[1]);
+							usDa[1].setBattleOpponent(usDa[0]);
+							battleData.add(data);
+						}
+					}
+					else if(emote.equals(Reference.DECLINE_CODEPOINTS)) {
+						invitations.remove(mesId);
+					}
+				}
+				return;
+			}
 			for(BattleData data : battleData) {
 				UserData user1 = data.getUser1();
 				UserData user2 = data.getUser2();
@@ -116,9 +143,9 @@ public class BattleListener extends ListenerAdapter {
 							return;
 						}
 					}
-					else if(swap.contains(emote)) {
-						for(int i = 0; i < swap.size(); i ++) {
-							if(swap.get(i).equals(emote)) {
+					else if(Reference.SWAP_CODEPOINTS.contains(emote)) {
+						for(int i = 0; i < Reference.SWAP_CODEPOINTS.size(); i ++) {
+							if(Reference.SWAP_CODEPOINTS.get(i).equals(emote)) {
 								if(!swapped) {
 									data.setUser1Out(i + 1);
 								}
@@ -144,7 +171,7 @@ public class BattleListener extends ListenerAdapter {
 					for(int i = 0; i < user2.getTeam().size(); i ++) {
 						int[] stats = stats2.get(i);
 						if(stats[3] > 0 && !stats.equals(out2)) {
-							m.addReaction(swap.get(i)).queue();
+							m.addReaction(Reference.SWAP_CODEPOINTS.get(i)).queue();
 						}
 					}
 					data.setIsUser1Turn(!data.isUser1Turn());
