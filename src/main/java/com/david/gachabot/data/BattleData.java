@@ -1,6 +1,6 @@
 package com.david.gachabot.data;
 
-import java.util.LinkedHashMap;
+import java.util.*;
 
 import com.david.gachabot.BattleListener;
 
@@ -86,11 +86,11 @@ public class BattleData {
 		return user2;
 	}
 
-	public LinkedHashMap<CharacterInstanceData, int[]> getUser1Stats(){
+	public Map<CharacterInstanceData, int[]> getUser1Stats(){
 		return user1Stats;
 	}
 
-	public LinkedHashMap<CharacterInstanceData, int[]> getUser2Stats(){
+	public Map<CharacterInstanceData, int[]> getUser2Stats(){
 		return user2Stats;
 	}
 
@@ -99,5 +99,17 @@ public class BattleData {
 		user2.setBattleOpponent(null);
 		BattleListener.battleData.remove(this);
 		BattleListener.timers.get(this).cancel();
+		if(winner == 1) {
+			user1.setGems(user1.getGems() + 200);
+			user2.setGems(user2.getGems() + 100);
+		}
+		else if(winner == 2) {
+			user1.setGems(user1.getGems() + 100);
+			user2.setGems(user2.getGems() + 200);
+		}
+		else {
+			user1.setGems(user1.getGems() + 150);
+			user2.setGems(user2.getGems() + 150);
+		}
 	}
 }

@@ -10,12 +10,14 @@ public class UserData implements Serializable {
 	private final Map<Integer, CharacterInstanceData> characters;
 	private UserData battleOpponent;
 	private List<Integer> team;
+	private long gems;
 
 	public UserData(long id, Map<Integer, CharacterInstanceData> characters) {
 		this.id = id;
 		this.characters = characters;
 		battleOpponent = null;
 		team = new ArrayList<Integer>();
+		gems = 500;
 	}
 
 	public long getID() {
@@ -25,16 +27,24 @@ public class UserData implements Serializable {
 	public Map<Integer, CharacterInstanceData> getCharacters(){
 		return characters;
 	}
-	
+
 	public UserData getBattleOpponent() {
 		return battleOpponent;
 	}
-	
+
 	public List<Integer> getTeam(){
 		return team;
 	}
-	
+
+	public long getGems() {
+		return gems;
+	}
+
 	public void setBattleOpponent(UserData d) {
 		battleOpponent = d;
+	}
+
+	public void setGems(long g) {
+		gems = g;
 	}
 }
