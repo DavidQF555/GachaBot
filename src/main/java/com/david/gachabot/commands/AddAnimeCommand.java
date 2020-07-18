@@ -109,14 +109,26 @@ public class AddAnimeCommand extends CommandAbstract {
 	private static void addBestCharactersFromAnime(List<Anime> an){
 		List<AnimeCharacter> pos = new ArrayList<AnimeCharacter>();
 		double avg = 0;
-		int aired = 0;
+		int total = 0;
 		for(Anime a : an) {
 			if(!a.status.equals("Not yet aired")) {
-				avg += a.popularity;
-				aired ++;
+				int hours = 0;
+				int minutes = 0;
+				String[] s = a.duration.split(" ");
+				for(int i = 0; i < s.length; i ++) {
+					if(s[i].equals("hr")) {
+						hours = Integer.parseInt(s[i - 1]);
+					}
+					else if(s[i].equals("min")) {
+						minutes = Integer.parseInt(s[i - 1]);
+					}
+				}
+				int time = a.episodes * (hours * 60 + minutes);
+				avg += a.popularity * time;
+				total += time;
 			}
 		}
-		avg /= aired;
+		avg /= total;
 		double limit = avg / 150000 / an.size() + 5;
 		for(Anime a : an) {
 			List<AnimeCharacter> chs = Util.animeCharacters(a);
