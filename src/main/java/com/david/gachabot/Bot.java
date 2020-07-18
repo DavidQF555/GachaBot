@@ -29,17 +29,6 @@ public class Bot {
 	public static User owner;
 
 	public static void main(String[] args) {
-		try {
-			jda = new JDABuilder(Reference.TOKEN).setActivity(Activity.watching(" people waste money")).build();
-		} 
-		catch (LoginException e) {
-			System.out.println("Invalid Token");
-			System.exit(0);
-		}
-		owner = jda.retrieveUserById(Reference.OWNER_ID).complete();
-		jda.addEventListener(new EventListener());
-		jda.addEventListener(new BattleListener());
-
 		readAnimeList();
 		readCharacterList();
 		readUserData();
@@ -71,6 +60,16 @@ public class Bot {
 			}
 			catch(Exception e) {}
 		}
+		try {
+			jda = new JDABuilder(Reference.TOKEN).setActivity(Activity.watching(" people waste money")).build();
+		} 
+		catch (LoginException e) {
+			System.out.println("Invalid Token");
+			System.exit(0);
+		}
+		owner = jda.retrieveUserById(Reference.OWNER_ID).complete();
+		jda.addEventListener(new EventListener());
+		jda.addEventListener(new BattleListener());
 	}
 
 	public static void saveUserData() {
