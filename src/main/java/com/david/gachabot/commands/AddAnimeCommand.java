@@ -1,5 +1,6 @@
 package com.david.gachabot.commands;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.david.gachabot.*;
@@ -123,7 +124,16 @@ public class AddAnimeCommand extends CommandAbstract {
 						minutes = Integer.parseInt(s[i - 1]);
 					}
 				}
-				int time = a.episodes * (hours * 60 + minutes);
+				int episodes = a.episodes;
+				if(a.airing && episodes < 1) {
+					String[] date = a.aired.from.substring(0, 10).split("-");
+					SimpleDateFormat form = new SimpleDateFormat("yyyy MM dd");
+					String[] cur = form.format(new Date(System.currentTimeMillis())).split(" ");
+					int days = (Integer.parseInt(cur[0]) - Integer.parseInt(date[0])) * 365 + (Integer.parseInt(cur[1]) - Integer.parseInt(date[1])) * 30 + Integer.parseInt(cur[2]) - Integer.parseInt(date[2]);
+					episodes = days / 10;
+				}
+				System.out.println(episodes);
+				long time = episodes * (hours * 60 + minutes);
 				avg += a.popularity * time;
 				total += time;
 			}
