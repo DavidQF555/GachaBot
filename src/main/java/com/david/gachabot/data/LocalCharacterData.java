@@ -30,14 +30,27 @@ public class LocalCharacterData implements Serializable {
 		this.member_favorites = member_favorites;
 		animeography = new HashSet<Integer>();
 
-		int totalBase = member_favorites;
-		baseHP = (int) (Math.random() * totalBase * 0.7 + totalBase / 10.0);
-		totalBase -= baseHP;
-		baseAttack = (int) (Math.random() * totalBase * 0.9 + totalBase / 10.0);
-		baseDefense = totalBase - baseAttack;
-		if(baseDefense <= 0) {
-			baseDefense = 1;
+		int totalBase = getBaseTotal();
+		int base = totalBase / 6;
+		baseHP = base;
+		baseAttack = base;
+		baseDefense = base;
+		totalBase -= base * 3;
+		while(totalBase > getBaseTotal() / 10) {
+			int hp = (int) (Math.random() * totalBase + 1);
+			int attack = (int) (Math.random() * totalBase + 1);
+			int defense = (int) (Math.random() * totalBase + 1);
+			if(hp + attack + defense <= totalBase) {
+				baseHP += hp;
+				baseAttack += attack;
+				baseDefense += defense;
+				totalBase -= hp + attack + defense;
+			}
 		}
+		int change = totalBase / 3;
+		baseAttack += change;
+		baseDefense += change;
+		baseHP += totalBase - 2 * change;
 
 		ability = Bot.abilities.get((int) (Math.random() * Bot.abilities.size())); 
 	}
@@ -88,6 +101,7 @@ public class LocalCharacterData implements Serializable {
 
 	public void setRate(double rate) {
 		this.rate = rate;
+		updateStats();
 	}
 
 	public void setName(String name) {
@@ -100,27 +114,19 @@ public class LocalCharacterData implements Serializable {
 
 	public void setMemberFavorites(int fav) {
 		member_favorites = fav;
-		updateStats();
-	}
-
-	public void setBaseHP(int hp) {
-		baseHP = hp;
-	}
-
-	public void setBaseDefense(int def) {
-		baseDefense = def;
-	}
-
-	public void setBaseAttack(int att) {
-		baseAttack = att;
 	}
 
 	private void updateStats() {
 		int total = baseHP + baseAttack + baseDefense;
-		double hp = baseHP * 1.0 / total;
+		double def = baseDefense * 1.0 / total;
 		double att = baseAttack * 1.0 / total;
-		baseHP = (int) (member_favorites * hp);
-		baseAttack = (int) (member_favorites * att);
-		baseDefense = member_favorites - baseHP - baseAttack;
+		int base = getBaseTotal();
+		baseDefense = (int) (base * def);
+		baseAttack = (int) (base * att);
+		baseHP = base - baseDefense - baseAttack;
+	}
+
+	private int getBaseTotal() {
+		return 100 + (int) (100 / rate + 0.5);
 	}
 }
