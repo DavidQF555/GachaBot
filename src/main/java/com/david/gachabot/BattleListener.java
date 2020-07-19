@@ -105,6 +105,7 @@ public class BattleListener extends ListenerAdapter {
 					else {
 						return;
 					}
+					String desc = "";
 					if(emote.equals(Reference.ATTACK_CODEPOINTS) && out1[3] > 0) {
 						LocalCharacterData data1 = Bot.characters.get(char1.getCharacterId());
 						LocalCharacterData data2 = Bot.characters.get(char2.getCharacterId());
@@ -114,58 +115,7 @@ public class BattleListener extends ListenerAdapter {
 						out2[0] -= damage;
 						ab1.attackEffect(damage, out1, stats1, out2, stats2);
 						ab2.defenseEffect(damage, out1, stats1, out2, stats2);
-						ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + data1.getName() + " has dealt " + damage + " damage to " + data2.getName()).queue();
-						boolean lose1 = true;
-						boolean lose2 = true;
-						for(int i = 0; i < stats2.size(); i ++) {
-							int[] stats = stats2.get(i);
-							if(stats[0] <= 0) {
-								if(stats[3] > 0) {
-									stats[3] *= -1;
-									ch.sendMessage(u2.getName() + "'s " + Bot.characters.get(user2Characters.get(i).getCharacterId()).getName() + " has fainted!").queue();
-								}
-							}
-							else {
-								lose2 = false;
-							}
-						}
-						for(int i = 0; i < stats1.size(); i ++) {
-							int[] stats = stats1.get(i);
-							if(stats[0] <= 0) {
-								if(stats[3] > 0) {
-									stats[3] *= -1;
-									ch.sendMessage(u1.getName() + "'s " + Bot.characters.get(user1Characters.get(i).getCharacterId()).getName() + " has fainted!").queue();
-								}
-							}
-							else {
-								lose1 = false;
-							}
-						}
-						if(lose1 || lose2) {
-							if(lose1 && lose2) {
-								ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " You have tied!").queue();
-								data.endBattle(0);
-							}
-							else if(lose1) {
-								ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + u2.getName() + " wins!").queue();
-								if(swapped) {
-									data.endBattle(1);
-								}
-								else {
-									data.endBattle(2);
-								}
-							}
-							else if(lose2) {
-								ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + u1.getName() + " wins!").queue();
-								if(swapped) {
-									data.endBattle(2);
-								}
-								else {
-									data.endBattle(1);
-								}
-							}
-							return;
-						}
+						desc += u1.getName() + "'s " + data1.getName() + " has dealt " + damage + " damage to " + u2.getName() + "'s " + data2.getName() + "! ";
 					}
 					else if(Reference.SWAP_CODEPOINTS.contains(emote)) {
 						for(int i = 0; i < Reference.SWAP_CODEPOINTS.size(); i ++) {
@@ -176,18 +126,69 @@ public class BattleListener extends ListenerAdapter {
 								else {
 									data.setUser2Out(i + 1);
 								}
-								ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + u1.getName() + " has swapped to " + Bot.characters.get(user1Characters.get(i).getCharacterId()).getName()).queue();
+								desc += u1.getName() + " has swapped to " + Bot.characters.get(user1Characters.get(i).getCharacterId()).getName() + ". ";
 								break;
 							}
 						}
 					}
 					else if(emote.equals(Reference.WAIT_CODEPOINTS) && out1[3] > 0) {
-						ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + u1.getName() + " has waited").queue();
+						desc += u1.getName() + " has waited. ";
 					}
 					else {
 						return;
 					}
-					Message m = ch.sendMessage(generateBattleMessage(data, u2.getName() + "'s turn")).complete();
+					boolean lose1 = true;
+					boolean lose2 = true;
+					for(int i = 0; i < stats2.size(); i ++) {
+						int[] stats = stats2.get(i);
+						if(stats[0] <= 0) {
+							if(stats[3] > 0) {
+								stats[3] *= -1;
+								desc += u2.getName() + "'s " + Bot.characters.get(user2Characters.get(i).getCharacterId()).getName() + " has fainted! ";
+							}
+						}
+						else {
+							lose2 = false;
+						}
+					}
+					for(int i = 0; i < stats1.size(); i ++) {
+						int[] stats = stats1.get(i);
+						if(stats[0] <= 0) {
+							if(stats[3] > 0) {
+								stats[3] *= -1;
+								desc += u1.getName() + "'s " + Bot.characters.get(user1Characters.get(i).getCharacterId()).getName() + " has fainted! ";
+							}
+						}
+						else {
+							lose1 = false;
+						}
+					}
+					if(lose1 || lose2) {
+						if(lose1 && lose2) {
+							ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " ```" + desc + "You have tied! ```").queue();
+							data.endBattle(0);
+						}
+						else if(lose1) {
+							ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " ```" + desc + u2.getName() + " wins! ```").queue();
+							if(swapped) {
+								data.endBattle(1);
+							}
+							else {
+								data.endBattle(2);
+							}
+						}
+						else if(lose2) {
+							ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " ```" + desc + u1.getName() + " wins! ```").queue();
+							if(swapped) {
+								data.endBattle(2);
+							}
+							else {
+								data.endBattle(1);
+							}
+						}
+						return;
+					}
+					Message m = ch.sendMessage(generateBattleMessage(data, desc + "It's " + u2.getName() + "'s turn! ")).complete();
 					if(out2[3] > 0) {
 						m.addReaction(Reference.ATTACK_CODEPOINTS).queue();
 						m.addReaction(Reference.WAIT_CODEPOINTS).queue();
