@@ -50,7 +50,7 @@ public class LocalCharacterData implements Serializable {
 		int change = totalBase / 3;
 		baseAttack += change;
 		baseDefense += change;
-		baseHP += totalBase - 2 * change;
+		baseHP += change;
 
 		ability = Bot.abilities.get((int) (Math.random() * Bot.abilities.size())); 
 	}
@@ -118,12 +118,13 @@ public class LocalCharacterData implements Serializable {
 
 	private void updateStats() {
 		int total = baseHP + baseAttack + baseDefense;
+		double hp = baseHP * 1.0 / total;
 		double def = baseDefense * 1.0 / total;
 		double att = baseAttack * 1.0 / total;
 		int base = getBaseTotal();
-		baseDefense = (int) (base * def);
-		baseAttack = (int) (base * att);
-		baseHP = base - baseDefense - baseAttack;
+		baseHP = (int) (base * hp + 0.5);
+		baseDefense = (int) (base * def + 0.5);
+		baseAttack = (int) (base * att + 0.5);
 	}
 
 	private int getBaseTotal() {
