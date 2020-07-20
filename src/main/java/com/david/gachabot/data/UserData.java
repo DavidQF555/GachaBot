@@ -7,16 +7,16 @@ public class UserData implements Serializable {
 
 	private static final long serialVersionUID = 4;
 	private final long id;
-	private final Map<Integer, CharacterInstanceData> characters;
+	private final Map<LocalCharacterData, CharacterInstanceData> characters;
 	private UserData battleOpponent;
-	private List<Integer> team;
+	private List<CharacterInstanceData> team;
 	private long gems;
 
-	public UserData(long id, Map<Integer, CharacterInstanceData> characters) {
+	public UserData(long id, Map<LocalCharacterData, CharacterInstanceData> characters) {
 		this.id = id;
 		this.characters = characters;
 		battleOpponent = null;
-		team = new ArrayList<Integer>();
+		team = new ArrayList<CharacterInstanceData>();
 		gems = 500;
 	}
 
@@ -24,7 +24,7 @@ public class UserData implements Serializable {
 		return id;
 	}
 
-	public Map<Integer, CharacterInstanceData> getCharacters(){
+	public Map<LocalCharacterData, CharacterInstanceData> getCharacters(){
 		return characters;
 	}
 
@@ -32,7 +32,7 @@ public class UserData implements Serializable {
 		return battleOpponent;
 	}
 
-	public List<Integer> getTeam(){
+	public List<CharacterInstanceData> getTeam(){
 		return team;
 	}
 

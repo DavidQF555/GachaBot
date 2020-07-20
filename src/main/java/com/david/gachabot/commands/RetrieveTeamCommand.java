@@ -3,6 +3,7 @@ package com.david.gachabot.commands;
 import java.util.*;
 
 import com.david.gachabot.Bot;
+import com.david.gachabot.data.CharacterInstanceData;
 
 import net.dv8tion.jda.api.entities.Message;
 
@@ -11,11 +12,11 @@ public class RetrieveTeamCommand extends CommandAbstract {
 
 	@Override
 	public void onCommand(Message m) {
-		List<Integer> team = Bot.userData.get(m.getAuthor().getIdLong()).getTeam();
+		List<CharacterInstanceData> team = Bot.userData.get(m.getAuthor().getIdLong()).getTeam();
 		if(!team.isEmpty()) {
 			String mes = m.getAuthor().getAsMention() + " Your team: ```";
-			for(int id : team) {
-				mes += "\n" + Bot.characters.get(id).getName();
+			for(CharacterInstanceData data : team) {
+				mes += "\n" + data.getCharacterData().getName();
 			}
 			m.getChannel().sendMessage(mes + "```").queue();
 			return;

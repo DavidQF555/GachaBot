@@ -27,13 +27,11 @@ public class BattleData {
 		this.user1Out = user1Out;
 		this.user2Out = user2Out;
 		user1Stats = new LinkedHashMap<CharacterInstanceData, int[]>();
-		for(Integer id : user1.getTeam()) {
-			CharacterInstanceData data = user1.getCharacters().get(id);
+		for(CharacterInstanceData data : user1.getTeam()) {
 			user1Stats.put(data, new int[] {data.getHP(), data.getDefense(), data.getAttack(), 1});
 		}
 		user2Stats = new LinkedHashMap<CharacterInstanceData, int[]>();
-		for(Integer id : user2.getTeam()) {
-			CharacterInstanceData data = user2.getCharacters().get(id);
+		for(CharacterInstanceData data : user2.getTeam()) {
 			user2Stats.put(data, new int[] {data.getHP(), data.getDefense(), data.getAttack(), 1});
 		}
 	}

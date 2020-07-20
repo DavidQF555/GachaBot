@@ -24,13 +24,13 @@ public class GachaRollCommand extends CommandAbstract {
 			for(LocalCharacterData data : Bot.characters.values()) {
 				chance += data.getRate();
 				if(roll < chance) {
-					Map<Integer, CharacterInstanceData> chData = Bot.userData.get(userId).getCharacters();
-					if(chData.containsKey(data.getID())) {
-						CharacterInstanceData inst = chData.get(data.getID());
+					Map<LocalCharacterData, CharacterInstanceData> chData = Bot.userData.get(userId).getCharacters();
+					if(chData.containsKey(data)) {
+						CharacterInstanceData inst = chData.get(data);
 						inst.setStars(inst.getStars() + 1);
 					}
 					else {
-						chData.put(data.getID(), new CharacterInstanceData(userId, data.getID()));
+						chData.put(data, new CharacterInstanceData(data, userId));
 					}
 					m.getChannel().sendMessage(m.getAuthor().getAsMention() + " You pulled " + data.getName() + "\n" + data.getImageUrl()).queue();
 					return;

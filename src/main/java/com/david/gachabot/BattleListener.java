@@ -107,8 +107,8 @@ public class BattleListener extends ListenerAdapter {
 					}
 					String desc = "";
 					if(emote.equals(Reference.ATTACK_CODEPOINTS) && out1[3] > 0) {
-						LocalCharacterData data1 = Bot.characters.get(char1.getCharacterId());
-						LocalCharacterData data2 = Bot.characters.get(char2.getCharacterId());
+						LocalCharacterData data1 = char1.getCharacterData();
+						LocalCharacterData data2 = char2.getCharacterData();
 						AbilityAbstract ab1 = data1.getAbility();
 						AbilityAbstract ab2 = data2.getAbility();
 						int damage = ab1.calculateDamage(out1, stats1, out2, stats2, ab2);
@@ -126,7 +126,7 @@ public class BattleListener extends ListenerAdapter {
 								else {
 									data.setUser2Out(i + 1);
 								}
-								desc += u1.getName() + " has swapped to " + Bot.characters.get(user1Characters.get(i).getCharacterId()).getName() + ". ";
+								desc += u1.getName() + " has swapped to " + user1Characters.get(i).getCharacterData().getName() + ". ";
 								break;
 							}
 						}
@@ -144,7 +144,7 @@ public class BattleListener extends ListenerAdapter {
 						if(stats[0] <= 0) {
 							if(stats[3] > 0) {
 								stats[3] *= -1;
-								desc += u2.getName() + "'s " + Bot.characters.get(user2Characters.get(i).getCharacterId()).getName() + " has fainted! ";
+								desc += u2.getName() + "'s " + user2Characters.get(i).getCharacterData().getName() + " has fainted! ";
 							}
 						}
 						else {
@@ -156,7 +156,7 @@ public class BattleListener extends ListenerAdapter {
 						if(stats[0] <= 0) {
 							if(stats[3] > 0) {
 								stats[3] *= -1;
-								desc += u1.getName() + "'s " + Bot.characters.get(user1Characters.get(i).getCharacterId()).getName() + " has fainted! ";
+								desc += u1.getName() + "'s " + user1Characters.get(i).getCharacterData().getName() + " has fainted! ";
 							}
 						}
 						else {
@@ -235,12 +235,10 @@ public class BattleListener extends ListenerAdapter {
 		UserData user2 = data.getUser2();
 		String u1 = Bot.jda.getUserById(user1.getID()).getName();
 		String u2 = Bot.jda.getUserById(user2.getID()).getName();
-		int outID1 = user1.getTeam().get(data.getUser1Out() - 1);
-		int outID2 = user2.getTeam().get(data.getUser2Out() - 1);
-		LocalCharacterData out1 = Bot.characters.get(outID1);
-		LocalCharacterData out2 = Bot.characters.get(outID2);
-		int[] stats1 = data.getUser1Stats().get(user1.getCharacters().get(outID1));
-		int[] stats2 = data.getUser2Stats().get(user2.getCharacters().get(outID2));
+		LocalCharacterData out1 = user1.getTeam().get(data.getUser1Out() - 1).getCharacterData();
+		LocalCharacterData out2 = user2.getTeam().get(data.getUser2Out() - 1).getCharacterData();
+		int[] stats1 = data.getUser1Stats().get(user1.getCharacters().get(out1));
+		int[] stats2 = data.getUser2Stats().get(user2.getCharacters().get(out2));
 		EmbedBuilder eb = new EmbedBuilder()
 				.setTitle("Battle between " + u1 + " and " + u2)
 				.addField(u1 + "'s " + out1.getName(), "HP: " + stats1[0] + "\nAttack: " + stats1[1] + "\nDefense: " + stats1[2], true)

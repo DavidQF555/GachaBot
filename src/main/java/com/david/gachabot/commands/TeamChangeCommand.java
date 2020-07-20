@@ -15,7 +15,7 @@ public class TeamChangeCommand extends CommandAbstract {
 		String[] s = m.getContentRaw().split(" ");
 		User user = m.getAuthor();
 		UserData userData = Bot.userData.get(user.getIdLong());
-		List<Integer> team = userData.getTeam();
+		List<CharacterInstanceData> team = userData.getTeam();
 		if(s[1].equalsIgnoreCase("add")) {
 			if(team.size() < 5) {
 				String name = "";
@@ -25,8 +25,8 @@ public class TeamChangeCommand extends CommandAbstract {
 				name = name.substring(0, name.length() - 1);
 				for(LocalCharacterData data : Bot.characters.values()) {
 					if(data.getName().equalsIgnoreCase(name)) {
-						if(userData.getCharacters().keySet().contains(data.getID())) {
-							team.add(data.getID());
+						if(userData.getCharacters().keySet().contains(data)) {
+							team.add(userData.getCharacters().get(data));
 							m.getChannel().sendMessage(user.getAsMention() + " Added `" + data.getName() + "` to your team").queue();
 						}
 						else {
@@ -49,7 +49,7 @@ public class TeamChangeCommand extends CommandAbstract {
 				}
 				name = name.substring(0, name.length() - 1);
 				for(int i = 0; i < team.size(); i ++) {
-					String dataName = Bot.characters.get(team.get(i)).getName();
+					String dataName = team.get(i).getCharacterData().getName();
 					if(dataName.equalsIgnoreCase(name)) {
 						team.remove(i);
 						m.getChannel().sendMessage(user.getAsMention() + " Removed `" + dataName + "` from your team").queue();

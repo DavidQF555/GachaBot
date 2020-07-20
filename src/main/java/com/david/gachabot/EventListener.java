@@ -31,7 +31,7 @@ public class EventListener extends ListenerAdapter {
 		if(c != null && !user.isBot()) {
 			UserData data = Bot.userData.get(id);
 			if(data == null) {
-				data = new UserData(id, new HashMap<Integer, CharacterInstanceData>());
+				data = new UserData(id, new HashMap<LocalCharacterData, CharacterInstanceData>());
 				Bot.userData.put(id, data);
 			}
 			if(c.hasPermission(m)) {	
@@ -60,7 +60,7 @@ public class EventListener extends ListenerAdapter {
 		if(c != null && !user.isBot()) {
 			UserData data = Bot.userData.get(id);
 			if(data == null) {
-				data = new UserData(id, new HashMap<Integer, CharacterInstanceData>());
+				data = new UserData(id, new HashMap<LocalCharacterData, CharacterInstanceData>());
 				Bot.userData.put(id, data);
 			}
 			if(c.hasPermission(m)) {	
