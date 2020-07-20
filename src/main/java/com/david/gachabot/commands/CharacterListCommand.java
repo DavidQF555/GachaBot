@@ -20,8 +20,13 @@ public class CharacterListCommand extends CommandAbstract {
 
 	@Override
 	public void onCommand(Message m) {
-		int totalPages = Bot.characters.size() / PAGE_ENTRIES;
-		if(Bot.characters.size() % PAGE_ENTRIES > 0) {
+		int size = Bot.characters.size();
+		if(size < 1) {
+			m.getChannel().sendMessage(m.getAuthor().getAsMention() + " No characters are currently added").queue();
+			return;
+		}
+		int totalPages = size / PAGE_ENTRIES;
+		if(size % PAGE_ENTRIES > 0) {
 			totalPages ++;
 		}
 		String[] s = m.getContentRaw().split(" ");
