@@ -7,7 +7,7 @@ import com.github.doomsdayrs.jikan4java.core.search.animemanga.AnimeSearch;
 import com.github.doomsdayrs.jikan4java.types.main.anime.Anime;
 import com.github.doomsdayrs.jikan4java.types.main.anime.character_staff.*;
 
-public class Util {
+public class JikanRetriever {
 
 	public static Anime animeSearch(int id) {
 		AnimeSearch as = new AnimeSearch();

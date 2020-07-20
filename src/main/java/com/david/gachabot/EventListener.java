@@ -15,9 +15,9 @@ public class EventListener extends ListenerAdapter {
 
 	@Override
 	public void onShutdown(ShutdownEvent event) {
-		Bot.saveAnimeList();
-		Bot.saveCharacterList();
-		Bot.saveUserData();
+		FileUtil.saveAnimeList();
+		FileUtil.saveCharacterList();
+		FileUtil.saveUserData();
 		System.out.println("Shutting Down");
 		System.exit(0);
 	}

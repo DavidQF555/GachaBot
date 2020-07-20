@@ -1,6 +1,5 @@
 package com.david.gachabot;
 
-import java.io.*;
 import java.util.*;
 
 import javax.security.auth.login.LoginException;
@@ -29,9 +28,9 @@ public class Bot {
 	public static User owner;
 
 	public static void main(String[] args) {
-		readAnimeList();
-		readCharacterList();
-		readUserData();
+		FileUtil.readAnimeList();
+		FileUtil.readCharacterList();
+		FileUtil.readUserData();
 		updateCharactersList();
 
 		int max = Integer.MIN_VALUE;
@@ -72,142 +71,13 @@ public class Bot {
 		jda.addEventListener(new BattleListener());
 	}
 
-	public static void saveUserData() {
-		FileOutputStream fos = null;
-		try {
-			fos = new FileOutputStream("userdata.txt");
-		} 
-		catch (FileNotFoundException e) {
-			System.out.println("Could not find userdata.txt");
-			return;
-		}
-		ObjectOutputStream oos = null;
-		try {
-			oos = new ObjectOutputStream(fos);
-			oos.writeObject(userData);
-			oos.close();
-			fos.close();
-		} 
-		catch (IOException e) {}
-		System.out.println("Saved User Data");
-	}
-
-	public static void saveAnimeList() {
-		FileOutputStream fos = null;
-		try {
-			fos = new FileOutputStream("animelist.txt");
-		} 
-		catch (FileNotFoundException e) {
-			System.out.println("Could not find animelist.txt");
-			return;
-		}
-		ObjectOutputStream oos = null;
-		try {
-			oos = new ObjectOutputStream(fos);
-			oos.writeObject(anime);
-			oos.close();
-			fos.close();
-		} 
-		catch (IOException e) {}
-		System.out.println("Saved Anime List");
-	}
-
-	public static void saveCharacterList() {
-		FileOutputStream fos = null;
-		try {
-			fos = new FileOutputStream("characterlist.txt");
-		} 
-		catch (FileNotFoundException e) {
-			System.out.println("Could not find characterlist.txt");
-			return;
-		}
-		ObjectOutputStream oos = null;
-		try {
-			oos = new ObjectOutputStream(fos);
-			oos.writeObject(characters);
-			oos.close();
-			fos.close();
-		} 
-		catch (IOException e) {}
-		System.out.println("Saved Character List");
-	}
-
-	@SuppressWarnings("unchecked")
-	private static void readUserData() {
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream("userdata.txt");
-		} 
-		catch (FileNotFoundException e) {
-			System.out.println("Could not find userdata.txt");
-			return;
-		}
-		ObjectInputStream ois = null;
-		try {
-			ois = new ObjectInputStream(fis);
-			Map<Long, UserData> data = (Map<Long, UserData>) ois.readObject();
-			ois.close();
-			fis.close();
-			if(data != null) {
-				userData = data;
-			}
-		}
-		catch (Exception e) {}
-	}
-
-	@SuppressWarnings("unchecked")
-	private static void readAnimeList() {
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream("animelist.txt");
-		} 
-		catch (FileNotFoundException e) {
-			System.out.println("Could not find animelist.txt");
-			return;
-		}
-		ObjectInputStream ois = null;
-		try {
-			ois = new ObjectInputStream(fis);
-			Map<Integer, LocalAnimeData> data = (Map<Integer, LocalAnimeData>) ois.readObject();
-			ois.close();
-			fis.close();
-			if(data != null) {
-				anime = data;
-			}
-		}
-		catch (Exception e) {}
-	}
-
-	@SuppressWarnings("unchecked")
-	private static void readCharacterList() {
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream("characterlist.txt");
-		} 
-		catch (FileNotFoundException e) {
-			System.out.println("Could not find characterlist.txt");
-			return;
-		}
-		ObjectInputStream ois = null;
-		try {
-			ois = new ObjectInputStream(fis);
-			LinkedHashMap<Integer, LocalCharacterData> data = (LinkedHashMap<Integer, LocalCharacterData>) ois.readObject();
-			ois.close();
-			fis.close();
-			if(data != null) {
-				characters = data;
-			}
-		}
-		catch (Exception e) {}
-	}
-
 	//updates by getting new data from MAL page
 	private static void updateCharactersList() {
 		System.out.println("Updating character list");
 		List<com.github.doomsdayrs.jikan4java.types.main.character.Character> chars = new ArrayList<com.github.doomsdayrs.jikan4java.types.main.character.Character>();
 		double totalInv = 0;
 		for(int id : characters.keySet()) {
-			com.github.doomsdayrs.jikan4java.types.main.character.Character c = Util.getCharacter(id);
+			com.github.doomsdayrs.jikan4java.types.main.character.Character c = JikanRetriever.getCharacter(id);
 			totalInv += 1.0 / c.member_favorites;
 			chars.add(c);
 		}

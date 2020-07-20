@@ -19,7 +19,7 @@ public class AddAnimeCommand extends CommandAbstract {
 		String input = m.getContentRaw().substring(Reference.COMMAND.length() + getActivatingName().length() + 1);
 		System.out.println("Getting all related to: " + input);
 		m.getChannel().sendMessage(m.getAuthor().getAsMention() + " Searching for `" + input + "` and all related series").queue();
-		Anime a = Util.animeSearch(input);
+		Anime a = JikanRetriever.animeSearch(input);
 		List<Anime> uniq = getAllRelated(a, new ArrayList<Anime>());
 		List<Anime> all = uniq.subList(0, uniq.size());
 		for(int i = uniq.size() - 1; i >= 0; i --) {
@@ -89,7 +89,7 @@ public class AddAnimeCommand extends CommandAbstract {
 							continue check;
 						}
 					}
-					getAllRelated(Util.animeSearch(type.mal_id), vis);
+					getAllRelated(JikanRetriever.animeSearch(type.mal_id), vis);
 				}
 		}
 		ArrayList<RelatedType> seq = rel.sequels;
@@ -101,7 +101,7 @@ public class AddAnimeCommand extends CommandAbstract {
 							continue check;
 						}
 					}
-					getAllRelated(Util.animeSearch(type.mal_id), vis);
+					getAllRelated(JikanRetriever.animeSearch(type.mal_id), vis);
 				}
 		}
 		return vis;
@@ -140,7 +140,7 @@ public class AddAnimeCommand extends CommandAbstract {
 		avg /= total;
 		double limit = avg / 150000 / an.size() + 5;
 		for(Anime a : an) {
-			List<AnimeCharacter> chs = Util.animeCharacters(a);
+			List<AnimeCharacter> chs = JikanRetriever.animeCharacters(a);
 			int count = 0;
 			check:
 				for(AnimeCharacter c : chs) {
@@ -159,7 +159,7 @@ public class AddAnimeCommand extends CommandAbstract {
 		List<com.github.doomsdayrs.jikan4java.types.main.character.Character> chars = new ArrayList<com.github.doomsdayrs.jikan4java.types.main.character.Character>();
 		double cut = 0;
 		for(AnimeCharacter ac : pos) {
-			com.github.doomsdayrs.jikan4java.types.main.character.Character c = Util.getCharacter(ac.mal_id);
+			com.github.doomsdayrs.jikan4java.types.main.character.Character c = JikanRetriever.getCharacter(ac.mal_id);
 			if(c.member_favorites > 100) {
 				chars.add(c);
 				cut += c.member_favorites;

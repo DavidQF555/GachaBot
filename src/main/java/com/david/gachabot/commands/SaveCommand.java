@@ -9,9 +9,9 @@ public class SaveCommand extends CommandAbstract {
 
 	@Override
 	public void onCommand(Message m) {
-		Bot.saveAnimeList();
-		Bot.saveCharacterList();
-		Bot.saveUserData();
+		FileUtil.saveAnimeList();
+		FileUtil.saveCharacterList();
+		FileUtil.saveUserData();
 		m.getChannel().sendMessage(m.getAuthor().getAsMention() + " Saved all data").queue();
 	}
 
