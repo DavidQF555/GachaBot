@@ -19,9 +19,9 @@ public class Bot {
 
 	public final static Set<CommandAbstract> commands = new HashSet<CommandAbstract>();
 	public final static List<AbilityAbstract> abilities = new ArrayList<AbilityAbstract>();
-	public static Map<Integer, LocalAnimeData> anime = new HashMap<Integer, LocalAnimeData>();
+	public static Map<Integer, LocalAnimeData> anime = new LinkedHashMap<Integer, LocalAnimeData>();
 	public static Map<Integer, LocalCharacterData> characters = new LinkedHashMap<Integer, LocalCharacterData>();
-	public static Map<Long, UserData> userData = new HashMap<Long, UserData>();
+	public static Map<Long, UserData> userData = new LinkedHashMap<Long, UserData>();
 	public final static Connector connector = new Connector();
 	public static int current;
 	public static JDA jda;

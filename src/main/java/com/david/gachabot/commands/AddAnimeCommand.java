@@ -17,7 +17,7 @@ public class AddAnimeCommand extends CommandAbstract {
 	@Override
 	public void onCommand(Message m) {
 		String input = m.getContentRaw().substring(Reference.COMMAND.length() + getActivatingName().length() + 1);
-		System.out.println("Getting all related to: " + input);
+		System.out.println("Adding all related to: " + input);
 		m.getChannel().sendMessage(m.getAuthor().getAsMention() + " Searching for `" + input + "` and all related series").queue();
 		Anime a = JikanRetriever.animeSearch(input);
 		List<Anime> uniq = getAllRelated(a, new ArrayList<Anime>());
@@ -35,7 +35,7 @@ public class AddAnimeCommand extends CommandAbstract {
 		addBestCharactersFromAnime(all);
 		String out = m.getAuthor().getAsMention() + " Added the following series: ```";
 		for(Anime an : uniq) {
-			Bot.anime.put(an.mal_id, new LocalAnimeData(Bot.current, an.mal_id));
+			Bot.anime.put(an.mal_id, new LocalAnimeData(an.title, Bot.current, an.mal_id));
 			out += "\n" + an.title;
 		}
 		m.getChannel().sendMessage(out + "```").queue();
@@ -77,7 +77,7 @@ public class AddAnimeCommand extends CommandAbstract {
 		return "Adds a new anime series and characters";
 	}
 
-	private List<Anime> getAllRelated(Anime st, List<Anime> vis) {
+	protected static List<Anime> getAllRelated(Anime st, List<Anime> vis) {
 		vis.add(st);
 		Related rel = st.related;
 		ArrayList<RelatedType> pre = rel.prequel;

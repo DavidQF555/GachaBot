@@ -126,7 +126,7 @@ public class FileUtil {
 		ObjectInputStream ois = null;
 		try {
 			ois = new ObjectInputStream(fis);
-			LinkedHashMap<Integer, LocalCharacterData> data = (LinkedHashMap<Integer, LocalCharacterData>) ois.readObject();
+			Map<Integer, LocalCharacterData> data = (Map<Integer, LocalCharacterData>) ois.readObject();
 			ois.close();
 			fis.close();
 			if(data != null) {

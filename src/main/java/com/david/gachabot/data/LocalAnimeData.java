@@ -5,10 +5,12 @@ import java.io.Serializable;
 public class LocalAnimeData implements Serializable {
 
 	private static final long serialVersionUID = 2;
+	private String title;
 	private final int set;
 	private final int id;
 
-	public LocalAnimeData(int set, int id) {
+	public LocalAnimeData(String title, int set, int id) {
+		this.title = title;
 		this.set = set;
 		this.id = id;
 	}
@@ -19,6 +21,10 @@ public class LocalAnimeData implements Serializable {
 
 	public int getID() {
 		return id;
+	}
+
+	public String getTitle() {
+		return title;
 	}
 
 }
