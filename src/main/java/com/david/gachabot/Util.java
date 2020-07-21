@@ -1,15 +1,20 @@
 package com.david.gachabot;
 
+import java.awt.Color;
+
 import net.dv8tion.jda.api.EmbedBuilder;
-import net.dv8tion.jda.api.entities.MessageEmbed;
 
 public class Util {
 
-	public static MessageEmbed createMessage(String desc, String imageurl) {
-		return new EmbedBuilder().setTitle(desc).setImage(imageurl).build();
+	public static EmbedBuilder createMessage(String desc, Color c) {
+		return createMessage(desc).setColor(c);
 	}
 
-	public static MessageEmbed createMessage(String desc) {
-		return new EmbedBuilder().setDescription(desc).build();
+	public static EmbedBuilder createMessage(String desc) {
+		return new EmbedBuilder().setDescription(desc).setColor(Color.GREEN);
+	}
+
+	public static EmbedBuilder createFailedMessage(String desc) {
+		return createMessage(desc, Color.RED);
 	}
 }

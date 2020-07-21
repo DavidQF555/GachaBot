@@ -9,7 +9,7 @@ public class ShutdownCommand extends CommandAbstract {
 
 	@Override
 	public void onCommand(Message m) {
-		m.getChannel().sendMessage(Util.createMessage("Shutting Down")).queue();
+		m.getChannel().sendMessage(Util.createMessage("Shutting Down").build()).queue();
 		Bot.jda.shutdown();
 	}
 

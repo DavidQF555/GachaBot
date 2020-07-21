@@ -13,7 +13,7 @@ public class HelpCommand extends CommandAbstract {
 
 	@Override
 	public void onCommand(Message m) {
-		String out = m.getAuthor().getAsMention() + " The following are all commands: ```";
+		String out = "```";
 		for(CommandAbstract c : Bot.commands) {
 			out += "\n" + c.getFormat() + ": " + c.getDescription();
 		}

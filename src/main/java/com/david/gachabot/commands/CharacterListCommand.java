@@ -22,7 +22,7 @@ public class CharacterListCommand extends CommandAbstract {
 	public void onCommand(Message m) {
 		int size = Bot.characters.size();
 		if(size < 1) {
-			m.getChannel().sendMessage(m.getAuthor().getAsMention() + " No characters are currently added").queue();
+			m.getChannel().sendMessage(Util.createFailedMessage("No characters are currently added").build()).queue();
 			return;
 		}
 		int totalPages = size / PAGE_ENTRIES;
@@ -43,7 +43,7 @@ public class CharacterListCommand extends CommandAbstract {
 		else if(page < 1) {
 			page = 1;
 		}
-		String out = m.getAuthor().getAsMention() + "```";
+		String out = "```";
 		String descName = "Name";
 		while(descName.length() < NAME_LENGTH) {
 			descName += " ";
@@ -70,7 +70,7 @@ public class CharacterListCommand extends CommandAbstract {
 		}
 		out += "\n" + descName.substring(0, NAME_LENGTH) + " " + descRate.substring(0, RATE_LENGTH) + " " + descHP.substring(0, HP_LENGTH) + " " + descAtt.substring(0, ATTACK_LENGTH) + " " + descDef.substring(0, DEFENSE_LENGTH) + " " + descAb.substring(0, ABILITY_LENGTH);
 		String div = "\n";
-		while(div.length() < NAME_LENGTH + RATE_LENGTH + HP_LENGTH + ATTACK_LENGTH + DEFENSE_LENGTH + ABILITY_LENGTH + 5) {
+		while(div.length() < NAME_LENGTH + RATE_LENGTH + HP_LENGTH + ATTACK_LENGTH + DEFENSE_LENGTH + ABILITY_LENGTH + 6) {
 			div += "-";
 		}
 		out += div;

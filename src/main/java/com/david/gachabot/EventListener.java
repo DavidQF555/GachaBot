@@ -36,17 +36,17 @@ public class EventListener extends ListenerAdapter {
 			}
 			if(c.hasPermission(m)) {	
 				if(!c.allowInBattle() && data.getBattleOpponent() != null) {
-					event.getChannel().sendMessage(Util.createMessage(user.getName() + ", this command cannot be used while in battle")).queue();
+					event.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", this command cannot be used while in battle").build()).queue();
 				}
 				else if(c.correctFormat(m)) {
 					c.onCommand(m);
 				}
 				else {
-					event.getChannel().sendMessage(Util.createMessage(user.getName() + ", incorrect format. Correct Format: `" + c.getFormat() + "`")).queue();
+					event.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", incorrect format. Correct Format: `" + c.getFormat() + "`").build()).queue();
 				}
 			}
 			else {
-				event.getChannel().sendMessage(Util.createMessage(user.getName() + ", you do not have permission to use this command")).queue();
+				event.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", you do not have permission to use this command").build()).queue();
 			}
 		}
 	}
@@ -65,17 +65,17 @@ public class EventListener extends ListenerAdapter {
 			}
 			if(c.hasPermission(m)) {	
 				if(!c.allowInBattle() && data.getBattleOpponent() != null) {
-					event.getChannel().sendMessage(Util.createMessage(user.getName() + ", this command cannot be used while in battle")).queue();
+					event.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", this command cannot be used while in battle").build()).queue();
 				}
 				else if(c.correctFormat(m)) {
 					c.onPrivateMessage(m);
 				}
 				else {
-					event.getChannel().sendMessage(Util.createMessage(user.getName() + ", incorrect format. Correct Format: `" + c.getFormat() + "`")).queue();
+					event.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", incorrect format. Correct Format: `" + c.getFormat() + "`").build()).queue();
 				}
 			}
 			else {
-				event.getChannel().sendMessage(Util.createMessage(user.getName() + ", you do not have permission to use this command")).queue();
+				event.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", you do not have permission to use this command").build()).queue();
 			}
 		}
 	}

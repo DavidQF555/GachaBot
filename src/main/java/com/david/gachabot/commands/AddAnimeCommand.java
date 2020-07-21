@@ -18,7 +18,7 @@ public class AddAnimeCommand extends CommandAbstract {
 	public void onCommand(Message m) {
 		String input = m.getContentRaw().substring(Reference.COMMAND.length() + getActivatingName().length() + 1);
 		System.out.println("Adding all related to: " + input);
-		m.getChannel().sendMessage(Util.createMessage("Searching for `" + input + "` and all related series")).queue();
+		m.getChannel().sendMessage(Util.createMessage("Searching for `" + input + "` and all related series").build()).queue();
 		Anime a = JikanRetriever.animeSearch(input);
 		List<Anime> uniq = getAllRelated(a, new ArrayList<Anime>());
 		List<Anime> all = uniq.subList(0, uniq.size());
@@ -28,7 +28,7 @@ public class AddAnimeCommand extends CommandAbstract {
 			}
 		}
 		if(uniq.isEmpty()) {
-			m.getChannel().sendMessage(Util.createMessage("Everything related to " + a.title + " is already added")).queue();
+			m.getChannel().sendMessage(Util.createFailedMessage("Everything related to " + a.title + " is already added").build()).queue();
 			return;
 		}
 		String out = "Added the following series: ```";
@@ -48,7 +48,7 @@ public class AddAnimeCommand extends CommandAbstract {
 			out += "\n" + an.title;
 		}
 		addBestCharactersFromAnime(all, series);
-		m.getChannel().sendMessage(Util.createMessage(out + "```")).queue();
+		m.getChannel().sendMessage(Util.createMessage(out + "```").build()).queue();
 	}
 
 	@Override

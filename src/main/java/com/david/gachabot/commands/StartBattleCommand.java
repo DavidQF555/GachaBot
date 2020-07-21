@@ -19,7 +19,7 @@ public class StartBattleCommand extends CommandAbstract {
 		User u1 = m.getAuthor();
 		UserData user1 = Bot.userData.get(u1.getIdLong());
 		if(user1.getTeam().isEmpty()) {
-			m.getChannel().sendMessage(Util.createMessage(u1.getName() + ", your team is empty")).queue();
+			m.getChannel().sendMessage(Util.createFailedMessage(u1.getName() + ", your team is empty").build()).queue();
 			return;
 		}
 		String name = m.getContentRaw().substring(Reference.COMMAND.length() + getActivatingName().length() + 1);
@@ -28,7 +28,7 @@ public class StartBattleCommand extends CommandAbstract {
 		for(Member mem : m.getGuild().getMembers()) {
 			if(mem.getEffectiveName().equalsIgnoreCase(name) || (mem.getNickname() != null && mem.getNickname().equalsIgnoreCase(name))) {
 				if(mem.getOnlineStatus() == OnlineStatus.OFFLINE) {
-					m.getChannel().sendMessage(Util.createMessage(mem.getNickname() + " is currently offline")).queue();
+					m.getChannel().sendMessage(Util.createFailedMessage(mem.getNickname() + " is currently offline").build()).queue();
 					return;
 				}
 				u2 = mem.getUser();
@@ -36,14 +36,14 @@ public class StartBattleCommand extends CommandAbstract {
 			}
 		}
 		if(u2 == null) {
-			m.getChannel().sendMessage(Util.createMessage("Could not find `" + name + "` in this server")).queue();
+			m.getChannel().sendMessage(Util.createFailedMessage("Could not find `" + name + "` in this server").build()).queue();
 			return;
 		}
 		else if(user2 == null) {
-			m.getChannel().sendMessage(Util.createMessage(u2.getName() + " has not started using GachaBot yet")).queue();
+			m.getChannel().sendMessage(Util.createFailedMessage(u2.getName() + " has not started using GachaBot yet").build()).queue();
 			return;
 		}
-		Message mes = m.getChannel().sendMessage(Util.createMessage(u2.getAsMention() + " " + u1.getName() + " has challenged you to a battle! Do you accept?")).complete();
+		Message mes = m.getChannel().sendMessage(Util.createMessage(u2.getAsMention() + " " + u1.getName() + " has challenged you to a battle! Do you accept?").build()).complete();
 		long mesId = mes.getIdLong();
 		BattleListener.invitations.put(mesId, new UserData[] {user1, user2});
 		mes.addReaction(Reference.ACCEPT_CODEPOINTS).queue();
@@ -61,7 +61,7 @@ public class StartBattleCommand extends CommandAbstract {
 
 	@Override
 	public void onPrivateMessage(Message m) {
-		m.getChannel().sendMessage(Util.createMessage("You cannot battle in private chat")).queue();
+		m.getChannel().sendMessage(Util.createFailedMessage("You cannot battle in private chat").build()).queue();
 	}
 
 	@Override

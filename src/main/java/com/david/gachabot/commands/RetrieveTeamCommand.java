@@ -19,10 +19,10 @@ public class RetrieveTeamCommand extends CommandAbstract {
 			for(CharacterInstanceData data : team) {
 				mes += "\n" + data.getCharacterData().getName();
 			}
-			m.getChannel().sendMessage(Util.createMessage(mes + "```")).queue();
+			m.getChannel().sendMessage(Util.createMessage(mes + "```").build()).queue();
 			return;
 		}
-		m.getChannel().sendMessage(Util.createMessage(m.getAuthor().getName() + ", your team is empty")).queue();
+		m.getChannel().sendMessage(Util.createFailedMessage(m.getAuthor().getName() + ", your team is empty").build()).queue();
 	}
 
 	@Override

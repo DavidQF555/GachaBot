@@ -28,18 +28,18 @@ public class TeamChangeCommand extends CommandAbstract {
 					if(data.getName().equalsIgnoreCase(name)) {
 						if(userData.getCharacters().keySet().contains(data)) {
 							team.add(userData.getCharacters().get(data));
-							m.getChannel().sendMessage(Util.createMessage(user.getName() + ", added `" + data.getName() + "` to your team")).queue();
+							m.getChannel().sendMessage(Util.createMessage(user.getName() + ", added `" + data.getName() + "` to your team").build()).queue();
 						}
 						else {
-							m.getChannel().sendMessage(Util.createMessage(user.getName() + ", you do not have `" + data.getName() + "`")).queue();
+							m.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", you do not have `" + data.getName() + "`").build()).queue();
 						}
 						return;
 					}
 				}
-				m.getChannel().sendMessage(Util.createMessage("Could not find `" + name + "`")).queue();
+				m.getChannel().sendMessage(Util.createFailedMessage("Could not find `" + name + "`").build()).queue();
 			}
 			else {
-				m.getChannel().sendMessage(Util.createMessage(user.getName() + ", Your team is already full")).queue();
+				m.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", Your team is already full").build()).queue();
 			}
 		}
 		else if(s[1].equalsIgnoreCase("remove")) {
@@ -53,14 +53,14 @@ public class TeamChangeCommand extends CommandAbstract {
 					String dataName = team.get(i).getCharacterData().getName();
 					if(dataName.equalsIgnoreCase(name)) {
 						team.remove(i);
-						m.getChannel().sendMessage(Util.createMessage(user.getName() + ", removed `" + dataName + "` from your team")).queue();
+						m.getChannel().sendMessage(Util.createMessage(user.getName() + ", removed `" + dataName + "` from your team").build()).queue();
 						return;
 					}
 				}
-				m.getChannel().sendMessage(Util.createMessage(user.getName() + ", could not find `" + name + "` on your team")).queue();
+				m.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", could not find `" + name + "` on your team").build()).queue();
 			}
 			else {
-				m.getChannel().sendMessage(Util.createMessage(user.getName() + ", your team is already empty")).queue();
+				m.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", your team is already empty").build()).queue();
 			}
 		}
 	}

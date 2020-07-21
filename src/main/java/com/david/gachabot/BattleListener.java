@@ -1,5 +1,6 @@
 package com.david.gachabot;
 
+import java.awt.Color;
 import java.util.*;
 
 import com.david.gachabot.abilities.AbilityAbstract;
@@ -11,6 +12,9 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 public class BattleListener extends ListenerAdapter {
+
+	private final static Color USER1_COLOR = Color.BLUE;
+	private final static Color USER2_COLOR = Color.ORANGE;
 
 	public static List<BattleData> battleData = new ArrayList<BattleData>();
 	public static Map<Long, UserData[]> invitations = new HashMap<Long, UserData[]>();
@@ -33,7 +37,7 @@ public class BattleListener extends ListenerAdapter {
 							BattleData data = new BattleData(usDa[0], 1, usDa[1], 1, null);
 							User u1 = Bot.jda.getUserById(usDa[0].getID());
 							User u2 = Bot.jda.getUserById(usDa[1].getID());
-							Message mes = ch.sendMessage(BattleListener.generateBattleMessage(data, "A battle has started between " + u1.getName() + " and " + u2.getName() + "! " + u1.getName() + " gets the first move!")).complete();
+							Message mes = ch.sendMessage(BattleListener.generateBattleMessage(data, "A battle has started between " + u1.getName() + " and " + u2.getName() + "! " + u1.getName() + " gets the first move!", USER1_COLOR)).complete();
 							data.setMessage(mes);
 							mes.addReaction(Reference.ATTACK_CODEPOINTS).queue();
 							mes.addReaction(Reference.WAIT_CODEPOINTS).queue();
@@ -48,7 +52,7 @@ public class BattleListener extends ListenerAdapter {
 								@Override
 								public void run() {
 									if(data.getTurn() == 1 && data.isUser1Turn()) {
-										ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + u1.getName() + " has timed out! " + u2.getName() + " wins!").queue();
+										ch.sendMessage(Util.createMessage(u1.getName() + " has timed out! " + u2.getName() + " wins!").build()).queue();
 										data.endBattle(2);
 									}
 								}
@@ -190,7 +194,11 @@ public class BattleListener extends ListenerAdapter {
 						}
 						return;
 					}
-					Message m = ch.sendMessage(generateBattleMessage(data, desc + "It's " + u2.getName() + "'s turn! ")).complete();
+					Color c = USER2_COLOR;
+					if(swapped) {
+						c = USER1_COLOR;
+					}
+					Message m = ch.sendMessage(generateBattleMessage(data, desc + "It's " + u2.getName() + "'s turn! ", c)).complete();
 					if(out2[3] > 0) {
 						m.addReaction(Reference.ATTACK_CODEPOINTS).queue();
 						m.addReaction(Reference.WAIT_CODEPOINTS).queue();
@@ -217,11 +225,11 @@ public class BattleListener extends ListenerAdapter {
 								User u1 = Bot.jda.getUserById(data.getUser1().getID());
 								User u2 = Bot.jda.getUserById(data.getUser2().getID());
 								if(isUser1) {
-									ch.sendMessage(Util.createMessage(u1.getName() + " has timed out! " + u2.getName() + " wins!")).queue();
+									ch.sendMessage(Util.createMessage(u1.getName() + " has timed out! " + u2.getName() + " wins!").build()).queue();
 									data.endBattle(2);
 								}
 								else {
-									ch.sendMessage(Util.createMessage(u2.getName() + " has timed out! " + u1.getName() + " wins!")).queue();
+									ch.sendMessage(Util.createMessage(u2.getName() + " has timed out! " + u1.getName() + " wins!").build()).queue();
 									data.endBattle(1);
 								}
 							}
@@ -232,7 +240,7 @@ public class BattleListener extends ListenerAdapter {
 		}
 	}
 
-	public static MessageEmbed generateBattleMessage(BattleData data, String desc) {
+	public static MessageEmbed generateBattleMessage(BattleData data, String desc, Color c) {
 		UserData user1 = data.getUser1();
 		UserData user2 = data.getUser2();
 		String u1 = Bot.jda.getUserById(user1.getID()).getName();
@@ -245,7 +253,8 @@ public class BattleListener extends ListenerAdapter {
 				.setTitle(u1 + " vs. " + u2)
 				.addField(u1 + "'s " + out1.getName(), "HP: " + stats1[0] + "\nAttack: " + stats1[1] + "\nDefense: " + stats1[2], true)
 				.addField(u2 + "'s " + out2.getName(), "HP: " + stats2[0] + "\nAttack: " + stats2[1] + "\nDefense: " + stats2[2], true)
-				.setDescription(desc);
+				.setDescription(desc)
+				.setColor(c);
 		return eb.build();
 	}
 }

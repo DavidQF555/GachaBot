@@ -15,12 +15,12 @@ public class RemoveAnimeCommand extends CommandAbstract {
 	public void onCommand(Message m) {
 		String input = m.getContentRaw().substring(Reference.COMMAND.length() + getActivatingName().length() + 1);
 		System.out.println("Removing all related to: " + input);
-		m.getChannel().sendMessage(Util.createMessage("Searching for `" + input + "` and all related series")).queue();
+		m.getChannel().sendMessage(Util.createMessage("Searching for `" + input + "` and all related series").build()).queue();
 		Anime a = JikanRetriever.animeSearch(input);
 		String mes = "Removed the following: ```";
 		LocalAnimeData an = Bot.anime.get(a.mal_id);
 		if(an == null) {
-			m.getChannel().sendMessage(Util.createMessage(a.title + " has not been not added yet")).queue();
+			m.getChannel().sendMessage(Util.createFailedMessage(a.title + " has not been not added yet").build()).queue();
 			return;
 		}
 		SeriesData series = an.getSeries();
@@ -39,7 +39,7 @@ public class RemoveAnimeCommand extends CommandAbstract {
 				}
 			}
 		}
-		m.getChannel().sendMessage(Util.createMessage(mes + "```")).queue();
+		m.getChannel().sendMessage(Util.createMessage(mes + "```").build()).queue();
 	}
 
 	@Override

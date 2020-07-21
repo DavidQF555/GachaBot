@@ -19,10 +19,10 @@ public class RetrieveUserCharacterListCommand extends CommandAbstract {
 			for(CharacterInstanceData data : Bot.userData.get(id).getCharacters().values()) {
 				out += "\n" + data.getCharacterData().getName();
 			}
-			m.getChannel().sendMessage(Util.createMessage(out + "```")).queue();
+			m.getChannel().sendMessage(Util.createMessage(out + "```").build()).queue();
 			return;
 		}
-		m.getChannel().sendMessage(Util.createMessage(m.getAuthor().getName() + ", you have nothing")).queue();
+		m.getChannel().sendMessage(Util.createMessage(m.getAuthor().getName() + ", you have nothing").build()).queue();
 	}
 
 	@Override
