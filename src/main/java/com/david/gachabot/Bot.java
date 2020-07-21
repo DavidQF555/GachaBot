@@ -32,7 +32,6 @@ public class Bot {
 		FileUtil.readCharacterList();
 		FileUtil.readUserData();
 		updateCharactersList();
-		updateSeriesData();
 
 		for(UserData data : userData.values()) {
 			data.setBattleOpponent(null);
@@ -63,8 +62,9 @@ public class Bot {
 		jda.addEventListener(new BattleListener());
 	}
 
-	//updates series data from MAL
-	private static void updateSeriesData() {
+	//updates series data from MAL, chars must be the list of all current characters
+	private static void updateSeriesData(List<com.github.doomsdayrs.jikan4java.types.main.character.Character> chars) {
+		System.out.println("Updating Series Data");
 		//anime
 		List<SeriesData> vis = new ArrayList<SeriesData>();
 		for(LocalAnimeData data : anime.values()) {
@@ -96,8 +96,9 @@ public class Bot {
 		}
 		//characters
 		characters:
-			for(LocalCharacterData data : Bot.characters.values()) {
-				List<Animeography> anime = JikanRetriever.getCharacter(data.getID()).animeography;
+			for(com.github.doomsdayrs.jikan4java.types.main.character.Character c : chars) {
+				List<Animeography> anime = c.animeography;
+				LocalCharacterData data = characters.get(c.mal_id);
 				for(Animeography ani : anime) {
 					for(LocalAnimeData a : data.getSeries().getAnime()) {
 						if(ani.mal_id == a.getID()) {
@@ -136,6 +137,7 @@ public class Bot {
 				data.getAnimeography().add(a.mal_id);
 			}
 		}
+		updateSeriesData(chars);
 		adjustRates();
 		System.out.println("Finished updating character list");
 	}
