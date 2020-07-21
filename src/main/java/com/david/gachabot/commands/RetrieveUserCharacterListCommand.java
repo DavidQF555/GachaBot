@@ -3,6 +3,7 @@ package com.david.gachabot.commands;
 import java.util.*;
 
 import com.david.gachabot.Bot;
+import com.david.gachabot.Util;
 import com.david.gachabot.data.CharacterInstanceData;
 
 import net.dv8tion.jda.api.entities.Message;
@@ -14,14 +15,14 @@ public class RetrieveUserCharacterListCommand extends CommandAbstract {
 	public void onCommand(Message m) {
 		long id = m.getAuthor().getIdLong();
 		if(Bot.userData.containsKey(id)) {
-			String out = m.getAuthor().getAsMention() + " You own the following: ```";
+			String out = m.getAuthor().getName() + ", you own the following: ```";
 			for(CharacterInstanceData data : Bot.userData.get(id).getCharacters().values()) {
 				out += "\n" + data.getCharacterData().getName();
 			}
-			m.getChannel().sendMessage(out + "```").queue();
+			m.getChannel().sendMessage(Util.createMessage(out + "```")).queue();
 			return;
 		}
-		m.getChannel().sendMessage(m.getAuthor().getAsMention() + " You have nothing").queue();
+		m.getChannel().sendMessage(Util.createMessage(m.getAuthor().getName() + ", you have nothing")).queue();
 	}
 
 	@Override

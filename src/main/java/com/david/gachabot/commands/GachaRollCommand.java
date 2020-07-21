@@ -32,13 +32,13 @@ public class GachaRollCommand extends CommandAbstract {
 					else {
 						chData.put(data, new CharacterInstanceData(data, userId));
 					}
-					m.getChannel().sendMessage(m.getAuthor().getAsMention() + " You pulled " + data.getName() + "\n" + data.getImageUrl()).queue();
+					m.getChannel().sendMessage(Util.createMessage(m.getAuthor().getName() + ", you pulled " + data.getName() + "! ", data.getImageUrl())).queue();
 					return;
 				}
 			}
 		}
 		else {
-			m.getChannel().sendMessage(m.getAuthor().getAsMention() + " You do not have enough gems").queue();
+			m.getChannel().sendMessage(Util.createMessage(m.getAuthor().getName() + ", you do not have enough gems")).queue();
 		}
 	}
 

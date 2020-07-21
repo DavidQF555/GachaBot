@@ -15,10 +15,10 @@ public class RemoveAnimeCommand extends CommandAbstract {
 	public void onCommand(Message m) {
 		String input = m.getContentRaw().substring(Reference.COMMAND.length() + getActivatingName().length() + 1);
 		System.out.println("Removing all related to: " + input);
-		m.getChannel().sendMessage(m.getAuthor().getAsMention() + " Searching for `" + input + "` and all related series").queue();
+		m.getChannel().sendMessage(Util.createMessage("Searching for `" + input + "` and all related series")).queue();
 		Anime a = JikanRetriever.animeSearch(input);
 		List<Anime> related = AddAnimeCommand.getAllRelated(a, new ArrayList<Anime>());
-		String mes = m.getAuthor().getAsMention() + " Removed the following: ```";
+		String mes = "Removed the following: ```";
 		Set<Integer> rem = new HashSet<Integer>();
 		for(Anime an : related) {
 			List<LocalAnimeData> anime = new ArrayList<LocalAnimeData>(Bot.anime.values());
@@ -33,7 +33,7 @@ public class RemoveAnimeCommand extends CommandAbstract {
 			}
 		}
 		if(rem.isEmpty()) {
-			m.getChannel().sendMessage(m.getAuthor().getAsMention() + " " + a.title + " has not been not added").queue();
+			m.getChannel().sendMessage(Util.createMessage(a.title + " has not been not added yet")).queue();
 			return;
 		}
 		List<LocalCharacterData> vals = new ArrayList<LocalCharacterData>(Bot.characters.values());
@@ -44,7 +44,7 @@ public class RemoveAnimeCommand extends CommandAbstract {
 				}
 			}
 		}
-		m.getChannel().sendMessage(mes + "```").queue();
+		m.getChannel().sendMessage(Util.createMessage(mes + "```")).queue();
 	}
 
 	@Override

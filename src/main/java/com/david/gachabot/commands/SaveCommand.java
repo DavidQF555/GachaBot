@@ -12,7 +12,7 @@ public class SaveCommand extends CommandAbstract {
 		FileUtil.saveAnimeList();
 		FileUtil.saveCharacterList();
 		FileUtil.saveUserData();
-		m.getChannel().sendMessage(m.getAuthor().getAsMention() + " Saved all data").queue();
+		m.getChannel().sendMessage(Util.createMessage("Saved all data")).queue();
 	}
 
 	@Override

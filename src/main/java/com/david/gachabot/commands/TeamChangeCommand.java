@@ -3,6 +3,7 @@ package com.david.gachabot.commands;
 import java.util.List;
 
 import com.david.gachabot.Bot;
+import com.david.gachabot.Util;
 import com.david.gachabot.data.*;
 
 import net.dv8tion.jda.api.entities.*;
@@ -27,18 +28,18 @@ public class TeamChangeCommand extends CommandAbstract {
 					if(data.getName().equalsIgnoreCase(name)) {
 						if(userData.getCharacters().keySet().contains(data)) {
 							team.add(userData.getCharacters().get(data));
-							m.getChannel().sendMessage(user.getAsMention() + " Added `" + data.getName() + "` to your team").queue();
+							m.getChannel().sendMessage(Util.createMessage(user.getName() + ", added `" + data.getName() + "` to your team")).queue();
 						}
 						else {
-							m.getChannel().sendMessage(user.getAsMention() + " You do not have `" + data.getName() + "`").queue();
+							m.getChannel().sendMessage(Util.createMessage(user.getName() + ", you do not have `" + data.getName() + "`")).queue();
 						}
 						return;
 					}
 				}
-				m.getChannel().sendMessage(user.getAsMention() + " Could not find `" + name + "`").queue();
+				m.getChannel().sendMessage(Util.createMessage("Could not find `" + name + "`")).queue();
 			}
 			else {
-				m.getChannel().sendMessage(user.getAsMention() + " ```Your team is already full```").queue();
+				m.getChannel().sendMessage(Util.createMessage(user.getName() + ", Your team is already full")).queue();
 			}
 		}
 		else if(s[1].equalsIgnoreCase("remove")) {
@@ -52,14 +53,14 @@ public class TeamChangeCommand extends CommandAbstract {
 					String dataName = team.get(i).getCharacterData().getName();
 					if(dataName.equalsIgnoreCase(name)) {
 						team.remove(i);
-						m.getChannel().sendMessage(user.getAsMention() + " Removed `" + dataName + "` from your team").queue();
+						m.getChannel().sendMessage(Util.createMessage(user.getName() + ", removed `" + dataName + "` from your team")).queue();
 						return;
 					}
 				}
-				m.getChannel().sendMessage(user.getAsMention() + " Could not find `" + name + "` on your team").queue();
+				m.getChannel().sendMessage(Util.createMessage(user.getName() + ", could not find `" + name + "` on your team")).queue();
 			}
 			else {
-				m.getChannel().sendMessage(user.getAsMention() + " Your team is already empty").queue();
+				m.getChannel().sendMessage(Util.createMessage(user.getName() + ", your team is already empty")).queue();
 			}
 		}
 	}

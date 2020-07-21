@@ -164,12 +164,14 @@ public class BattleListener extends ListenerAdapter {
 						}
 					}
 					if(lose1 || lose2) {
+						EmbedBuilder b = new EmbedBuilder()
+								.setTitle(u1.getName() + " vs. " + u2.getName());
 						if(lose1 && lose2) {
-							ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " ```" + desc + "You have tied! ```").queue();
+							ch.sendMessage(b.setDescription(desc + "You have tied! ").build()).queue();
 							data.endBattle(0);
 						}
 						else if(lose1) {
-							ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " ```" + desc + u2.getName() + " wins! ```").queue();
+							ch.sendMessage(b.setDescription(desc + u2.getName() + " wins! ").build()).queue();
 							if(swapped) {
 								data.endBattle(1);
 							}
@@ -178,7 +180,7 @@ public class BattleListener extends ListenerAdapter {
 							}
 						}
 						else if(lose2) {
-							ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " ```" + desc + u1.getName() + " wins! ```").queue();
+							ch.sendMessage(b.setDescription(desc + u1.getName() + " wins! ").build()).queue();
 							if(swapped) {
 								data.endBattle(2);
 							}
@@ -215,11 +217,11 @@ public class BattleListener extends ListenerAdapter {
 								User u1 = Bot.jda.getUserById(data.getUser1().getID());
 								User u2 = Bot.jda.getUserById(data.getUser2().getID());
 								if(isUser1) {
-									ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + u1.getName() + " has timed out! " + u2.getName() + " wins!").queue();
+									ch.sendMessage(Util.createMessage(u1.getName() + " has timed out! " + u2.getName() + " wins!")).queue();
 									data.endBattle(2);
 								}
 								else {
-									ch.sendMessage(u1.getAsMention() + u2.getAsMention() + " " + u2.getName() + " has timed out! " + u1.getName() + " wins!").queue();
+									ch.sendMessage(Util.createMessage(u2.getName() + " has timed out! " + u1.getName() + " wins!")).queue();
 									data.endBattle(1);
 								}
 							}
@@ -240,7 +242,7 @@ public class BattleListener extends ListenerAdapter {
 		int[] stats1 = data.getUser1Stats().get(user1.getCharacters().get(out1));
 		int[] stats2 = data.getUser2Stats().get(user2.getCharacters().get(out2));
 		EmbedBuilder eb = new EmbedBuilder()
-				.setTitle("Battle between " + u1 + " and " + u2)
+				.setTitle(u1 + " vs. " + u2)
 				.addField(u1 + "'s " + out1.getName(), "HP: " + stats1[0] + "\nAttack: " + stats1[1] + "\nDefense: " + stats1[2], true)
 				.addField(u2 + "'s " + out2.getName(), "HP: " + stats2[0] + "\nAttack: " + stats2[1] + "\nDefense: " + stats2[2], true)
 				.setDescription(desc);

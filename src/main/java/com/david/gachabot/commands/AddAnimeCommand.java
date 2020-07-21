@@ -18,7 +18,7 @@ public class AddAnimeCommand extends CommandAbstract {
 	public void onCommand(Message m) {
 		String input = m.getContentRaw().substring(Reference.COMMAND.length() + getActivatingName().length() + 1);
 		System.out.println("Adding all related to: " + input);
-		m.getChannel().sendMessage(m.getAuthor().getAsMention() + " Searching for `" + input + "` and all related series").queue();
+		m.getChannel().sendMessage(Util.createMessage("Searching for `" + input + "` and all related series")).queue();
 		Anime a = JikanRetriever.animeSearch(input);
 		List<Anime> uniq = getAllRelated(a, new ArrayList<Anime>());
 		List<Anime> all = uniq.subList(0, uniq.size());
@@ -28,17 +28,17 @@ public class AddAnimeCommand extends CommandAbstract {
 			}
 		}
 		if(uniq.isEmpty()) {
-			m.getChannel().sendMessage(m.getAuthor().getAsMention() + " Everything is already added").queue();
+			m.getChannel().sendMessage(Util.createMessage("Everything related to " + a.title + " is already added")).queue();
 			return;
 		}
 		Bot.current ++;
 		addBestCharactersFromAnime(all);
-		String out = m.getAuthor().getAsMention() + " Added the following series: ```";
+		String out = "Added the following series: ```";
 		for(Anime an : uniq) {
 			Bot.anime.put(an.mal_id, new LocalAnimeData(an.title, Bot.current, an.mal_id));
 			out += "\n" + an.title;
 		}
-		m.getChannel().sendMessage(out + "```").queue();
+		m.getChannel().sendMessage(Util.createMessage(out + "```")).queue();
 	}
 
 	@Override
