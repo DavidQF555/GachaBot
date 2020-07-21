@@ -17,24 +17,21 @@ public class RemoveAnimeCommand extends CommandAbstract {
 		System.out.println("Removing all related to: " + input);
 		m.getChannel().sendMessage(Util.createMessage("Searching for `" + input + "` and all related series")).queue();
 		Anime a = JikanRetriever.animeSearch(input);
-		List<Anime> related = AddAnimeCommand.getAllRelated(a, new ArrayList<Anime>());
 		String mes = "Removed the following: ```";
-		Set<Integer> rem = new HashSet<Integer>();
-		for(Anime an : related) {
-			List<LocalAnimeData> anime = new ArrayList<LocalAnimeData>(Bot.anime.values());
-			for(LocalAnimeData data : anime) {
-				int id = data.getID();
-				if(an.mal_id == id) {
-					rem.add(id);
-					Bot.anime.remove(id);
-					mes += "\n" + data.getTitle();
-					break;
-				}
-			}
-		}
-		if(rem.isEmpty()) {
+		LocalAnimeData an = Bot.anime.get(a.mal_id);
+		if(an == null) {
 			m.getChannel().sendMessage(Util.createMessage(a.title + " has not been not added yet")).queue();
 			return;
+		}
+		List<LocalAnimeData> rel = an.getRelated();
+		List<Integer> rem = new ArrayList<Integer>();
+		for(int id : new ArrayList<Integer>(Bot.anime.keySet())) {
+			LocalAnimeData data = Bot.anime.get(id);
+			if(rel.contains(data)) {
+				Bot.anime.remove(id);
+				mes += data.getTitle();
+				rem.add(id);
+			}
 		}
 		List<LocalCharacterData> vals = new ArrayList<LocalCharacterData>(Bot.characters.values());
 		for(LocalCharacterData data : vals) {
