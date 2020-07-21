@@ -1,23 +1,23 @@
 package com.david.gachabot.data;
 
 import java.io.Serializable;
-import java.util.*;
 
 public class LocalAnimeData implements Serializable {
 
 	private static final long serialVersionUID = 2;
+	private SeriesData series;
 	private String title;
-	private List<LocalAnimeData> related;
 	private final int id;
 
-	public LocalAnimeData(String title, int id) {
+	public LocalAnimeData(SeriesData series, String title, int id) {
+		this.series = series;
+		series.getAnime().add(this);
 		this.title = title;
-		related = new ArrayList<LocalAnimeData>();
 		this.id = id;
 	}
 
-	public List<LocalAnimeData> getRelated() {
-		return related;
+	public SeriesData getSeries() {
+		return series;
 	}
 
 	public int getID() {
@@ -28,4 +28,9 @@ public class LocalAnimeData implements Serializable {
 		return title;
 	}
 
+	public void setSeries(SeriesData series) {
+		series.getAnime().remove(this);
+		this.series = series;
+		series.getAnime().add(this);
+	}
 }

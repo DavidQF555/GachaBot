@@ -10,6 +10,7 @@ import com.david.gachabot.abilities.*;
 import com.david.gachabot.commands.*;
 import com.david.gachabot.data.*;
 import com.github.doomsdayrs.jikan4java.core.Connector;
+import com.github.doomsdayrs.jikan4java.types.main.anime.Anime;
 import com.github.doomsdayrs.jikan4java.types.main.character.Animeography;
 
 import net.dv8tion.jda.api.*;
@@ -31,6 +32,7 @@ public class Bot {
 		FileUtil.readCharacterList();
 		FileUtil.readUserData();
 		updateCharactersList();
+		updateSeriesData();
 
 		for(UserData data : userData.values()) {
 			data.setBattleOpponent(null);
@@ -61,6 +63,58 @@ public class Bot {
 		jda.addEventListener(new BattleListener());
 	}
 
+	//updates series data from MAL
+	private static void updateSeriesData() {
+		//anime
+		List<SeriesData> vis = new ArrayList<SeriesData>();
+		for(LocalAnimeData data : anime.values()) {
+			SeriesData series = data.getSeries();
+			if(!vis.contains(series)) {
+				vis.add(series);
+				List<Anime> related = AddAnimeCommand.getAllRelated(JikanRetriever.animeSearch(data.getID()), new ArrayList<Anime>());
+				check:
+					for(int i = series.getAnime().size() - 1; i >= 0; i --) {
+						LocalAnimeData an = series.getAnime().get(i);
+						for(Anime a : related) {
+							if(a.mal_id == an.getID()) {
+								continue check;
+							}
+						}
+						List<Anime> rel = AddAnimeCommand.getAllRelated(JikanRetriever.animeSearch(an.getID()), new ArrayList<Anime>());
+						for(LocalAnimeData d : anime.values()) {
+							for(Anime ani : rel) {
+								if(d.getID() == ani.mal_id) {
+									an.setSeries(d.getSeries());
+									continue check;
+								}
+							}
+						}
+						an.setSeries(new SeriesData());
+					}
+			}
+
+		}
+		//characters
+		characters:
+			for(LocalCharacterData data : Bot.characters.values()) {
+				List<Animeography> anime = JikanRetriever.getCharacter(data.getID()).animeography;
+				for(Animeography ani : anime) {
+					for(LocalAnimeData a : data.getSeries().getAnime()) {
+						if(ani.mal_id == a.getID()) {
+							continue characters;
+						}
+					}
+					for(LocalAnimeData an : Bot.anime.values()) {
+						if(ani.mal_id == an.getID()) {
+							data.setSeries(an.getSeries());
+							continue characters;
+						}
+					}
+				}
+				data.setSeries(new SeriesData());
+			}
+	}
+
 	//updates by getting new data from MAL page
 	private static void updateCharactersList() {
 		System.out.println("Updating character list");
@@ -86,8 +140,8 @@ public class Bot {
 		System.out.println("Finished updating character list");
 	}
 
-	//updates without looking for MAL page changes, all in add must be from the same series
-	public static void updateExistingCharactersList(List<com.github.doomsdayrs.jikan4java.types.main.character.Character> add) {
+	//updates without looking for MAL page changes, all in add must be in the given series
+	public static void updateExistingCharactersList(List<com.github.doomsdayrs.jikan4java.types.main.character.Character> add, SeriesData series) {
 		List<Integer> chars = new ArrayList<Integer>();
 		double totalInv = 0;
 		for(int id : characters.keySet()) {
@@ -106,7 +160,7 @@ public class Bot {
 				}
 		for(com.github.doomsdayrs.jikan4java.types.main.character.Character c : add) {
 			double rate = 1.0 / c.member_favorites / totalInv;
-			LocalCharacterData data = new LocalCharacterData(c.mal_id, c.member_favorites, rate, c.image_url, c.name);
+			LocalCharacterData data = new LocalCharacterData(series, c.mal_id, c.member_favorites, rate, c.image_url, c.name);
 			for(Animeography a : c.animeography) {
 				data.getAnimeography().add(a.mal_id);
 			}

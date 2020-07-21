@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 import com.david.gachabot.*;
-import com.david.gachabot.data.LocalAnimeData;
+import com.david.gachabot.data.*;
 import com.github.doomsdayrs.jikan4java.types.main.anime.Anime;
 import com.github.doomsdayrs.jikan4java.types.main.anime.character_staff.AnimeCharacter;
 import com.github.doomsdayrs.jikan4java.types.support.related.*;
@@ -32,27 +32,22 @@ public class AddAnimeCommand extends CommandAbstract {
 			return;
 		}
 		String out = "Added the following series: ```";
-		List<LocalAnimeData> rel = new ArrayList<LocalAnimeData>();
-		for(Anime an : all) {
-			if(uniq.contains(an)) {
-				LocalAnimeData data = new LocalAnimeData(an.title, an.mal_id);
-				rel.add(data);
-				Bot.anime.put(an.mal_id, data);
-				out += "\n" + an.title;
-			}
-			else {
-				for(LocalAnimeData data : Bot.anime.values()) {
+		SeriesData series = new SeriesData();
+		series:
+			for(LocalAnimeData data : Bot.anime.values()) {
+				for(Anime an : all) {
 					if(data.getID() == an.mal_id) {
-						rel.add(data);
+						series = data.getSeries();
+						break series;
 					}
 				}
 			}
+		for(Anime an : uniq) {
+			LocalAnimeData data = new LocalAnimeData(series, an.title, an.mal_id);
+			Bot.anime.put(an.mal_id, data);
+			out += "\n" + an.title;
 		}
-		for(LocalAnimeData data : rel) {
-			data.getRelated().clear();
-			data.getRelated().addAll(rel);
-		}
-		addBestCharactersFromAnime(all);
+		addBestCharactersFromAnime(all, series);
 		m.getChannel().sendMessage(Util.createMessage(out + "```")).queue();
 	}
 
@@ -92,7 +87,7 @@ public class AddAnimeCommand extends CommandAbstract {
 		return "Adds a new anime series and characters";
 	}
 
-	protected static List<Anime> getAllRelated(Anime st, List<Anime> vis) {
+	public static List<Anime> getAllRelated(Anime st, List<Anime> vis) {
 		vis.add(st);
 		Related rel = st.related;
 		ArrayList<RelatedType> pre = rel.prequel;
@@ -122,7 +117,7 @@ public class AddAnimeCommand extends CommandAbstract {
 		return vis;
 	}
 
-	private static void addBestCharactersFromAnime(List<Anime> an){
+	private static void addBestCharactersFromAnime(List<Anime> an, SeriesData series){
 		List<AnimeCharacter> pos = new ArrayList<AnimeCharacter>();
 		double avg = 0;
 		int total = 0;
@@ -193,6 +188,6 @@ public class AddAnimeCommand extends CommandAbstract {
 			}
 			cut *= 0.95;
 		}
-		Bot.updateExistingCharactersList(out);
+		Bot.updateExistingCharactersList(out, series);
 	}
 }
