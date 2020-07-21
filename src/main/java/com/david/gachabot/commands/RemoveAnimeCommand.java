@@ -39,6 +39,7 @@ public class RemoveAnimeCommand extends CommandAbstract {
 				}
 			}
 		}
+		Bot.updateExistingCharactersList(null, null);
 		m.getChannel().sendMessage(Util.createMessage(mes + "```").build()).queue();
 	}
 
