@@ -1,22 +1,23 @@
 package com.david.gachabot.data;
 
 import java.io.Serializable;
+import java.util.*;
 
 public class LocalAnimeData implements Serializable {
 
 	private static final long serialVersionUID = 2;
 	private String title;
-	private final int set;
+	private List<LocalAnimeData> related;
 	private final int id;
 
-	public LocalAnimeData(String title, int set, int id) {
+	public LocalAnimeData(String title, int id) {
 		this.title = title;
-		this.set = set;
+		related = new ArrayList<LocalAnimeData>();
 		this.id = id;
 	}
 
-	public int getSet() {
-		return set;
+	public List<LocalAnimeData> getRelated() {
+		return related;
 	}
 
 	public int getID() {

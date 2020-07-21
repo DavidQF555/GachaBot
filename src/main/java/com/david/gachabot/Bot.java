@@ -23,7 +23,6 @@ public class Bot {
 	public static Map<Integer, LocalCharacterData> characters = new LinkedHashMap<Integer, LocalCharacterData>();
 	public static Map<Long, UserData> userData = new LinkedHashMap<Long, UserData>();
 	public final static Connector connector = new Connector();
-	public static int current;
 	public static JDA jda;
 	public static User owner;
 
@@ -32,15 +31,6 @@ public class Bot {
 		FileUtil.readCharacterList();
 		FileUtil.readUserData();
 		updateCharactersList();
-
-		int max = Integer.MIN_VALUE;
-		for(LocalAnimeData data : anime.values()) {
-			int set = data.getSet();
-			if(set > current) {
-				max = set;
-			}
-		}
-		current = max;
 
 		for(UserData data : userData.values()) {
 			data.setBattleOpponent(null);
@@ -104,32 +94,19 @@ public class Bot {
 			chars.add(id);
 			totalInv += 1.0 / characters.get(id).getMemberFavorites();
 		}
-		int set = current;
 		if(add != null) {
 			check:
 				for(int i = add.size() - 1; i >= 0; i --) {
 					for(int id : chars) {
 						if(add.get(i).mal_id == id) {
-							set = characters.get(id).getSet();
 							continue check;
-						}
-						else if(set == current) {
-							animeography: 
-								for(Animeography a : add.get(i).animeography) {
-									for(int al : characters.get(id).getAnimeography()) {
-										if(a.mal_id == al) {
-											set = characters.get(id).getSet();
-											break animeography;
-										}
-									}
-								}
 						}
 					}
 					totalInv += 1.0 / add.get(i).member_favorites;
 				}
 		for(com.github.doomsdayrs.jikan4java.types.main.character.Character c : add) {
 			double rate = 1.0 / c.member_favorites / totalInv;
-			LocalCharacterData data = new LocalCharacterData(set, c.mal_id, c.member_favorites, rate, c.image_url, c.name);
+			LocalCharacterData data = new LocalCharacterData(c.mal_id, c.member_favorites, rate, c.image_url, c.name);
 			for(Animeography a : c.animeography) {
 				data.getAnimeography().add(a.mal_id);
 			}

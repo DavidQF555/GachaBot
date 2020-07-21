@@ -9,7 +9,6 @@ import com.david.gachabot.abilities.AbilityAbstract;
 public class LocalCharacterData implements Serializable {
 
 	private static final long serialVersionUID = 3;
-	private final int set;
 	private final int id;
 	private double rate;
 	private String name;
@@ -21,8 +20,7 @@ public class LocalCharacterData implements Serializable {
 	private int baseAttack;
 	private AbilityAbstract ability;
 
-	public LocalCharacterData(int set, int id, int member_favorites, double rate, String image_url, String name) {
-		this.set = set;
+	public LocalCharacterData(int id, int member_favorites, double rate, String image_url, String name) {
 		this.id = id;
 		this.rate = rate;
 		this.name = name;
@@ -53,10 +51,6 @@ public class LocalCharacterData implements Serializable {
 		baseHP += change;
 
 		ability = Bot.abilities.get((int) (Math.random() * Bot.abilities.size())); 
-	}
-
-	public int getSet() {
-		return set;
 	}
 
 	public int getID() {

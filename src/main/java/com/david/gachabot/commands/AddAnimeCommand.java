@@ -31,13 +31,28 @@ public class AddAnimeCommand extends CommandAbstract {
 			m.getChannel().sendMessage(Util.createMessage("Everything related to " + a.title + " is already added")).queue();
 			return;
 		}
-		Bot.current ++;
-		addBestCharactersFromAnime(all);
 		String out = "Added the following series: ```";
-		for(Anime an : uniq) {
-			Bot.anime.put(an.mal_id, new LocalAnimeData(an.title, Bot.current, an.mal_id));
-			out += "\n" + an.title;
+		List<LocalAnimeData> rel = new ArrayList<LocalAnimeData>();
+		for(Anime an : all) {
+			if(uniq.contains(an)) {
+				LocalAnimeData data = new LocalAnimeData(an.title, an.mal_id);
+				rel.add(data);
+				Bot.anime.put(an.mal_id, data);
+				out += "\n" + an.title;
+			}
+			else {
+				for(LocalAnimeData data : Bot.anime.values()) {
+					if(data.getID() == an.mal_id) {
+						rel.add(data);
+					}
+				}
+			}
 		}
+		for(LocalAnimeData data : rel) {
+			data.getRelated().clear();
+			data.getRelated().addAll(rel);
+		}
+		addBestCharactersFromAnime(all);
 		m.getChannel().sendMessage(Util.createMessage(out + "```")).queue();
 	}
 
