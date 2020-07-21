@@ -1,5 +1,7 @@
 package com.david.gachabot.commands;
 
+import java.util.ArrayList;
+
 import com.david.gachabot.*;
 import com.david.gachabot.data.*;
 import com.github.doomsdayrs.jikan4java.types.main.anime.Anime;
@@ -23,15 +25,15 @@ public class RemoveAnimeCommand extends CommandAbstract {
 		}
 		SeriesData series = an.getSeries();
 		for(LocalAnimeData data : series.getAnime()) {
-			for(int id : Bot.anime.keySet()) {
+			for(int id : new ArrayList<Integer>(Bot.anime.keySet())) {
 				if(data.getID() == id) {
 					Bot.anime.remove(id);
-					mes += data.getTitle();
+					mes += "\n" + data.getTitle();
 				}
 			}
 		}
 		for(LocalCharacterData data : series.getCharacters()) {
-			for(int id : Bot.characters.keySet()) {
+			for(int id : new ArrayList<Integer>(Bot.characters.keySet())) {
 				if(data.getID() == id) {
 					Bot.characters.remove(id);
 				}
