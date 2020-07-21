@@ -22,7 +22,7 @@ public class RetrieveTeamCommand extends CommandAbstract {
 			m.getChannel().sendMessage(Util.createMessage(mes + "```")).queue();
 			return;
 		}
-		m.getChannel().sendMessage(m.getAuthor().getName() + ", your team is empty").queue();
+		m.getChannel().sendMessage(Util.createMessage(m.getAuthor().getName() + ", your team is empty")).queue();
 	}
 
 	@Override
