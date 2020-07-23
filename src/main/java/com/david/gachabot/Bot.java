@@ -1,6 +1,7 @@
 package com.david.gachabot;
 
 import java.util.*;
+import java.util.Map.Entry;
 
 import javax.security.auth.login.LoginException;
 
@@ -173,6 +174,15 @@ public class Bot {
 			LocalCharacterData data = characters.get(id);
 			data.setRate(1.0 / data.getMemberFavorites() / totalInv); 
 		}
+		//sort
+		List<Entry<Integer, LocalCharacterData>> list = new ArrayList<Entry<Integer, LocalCharacterData>>(characters.entrySet());
+		list.sort(Entry.comparingByValue());
+		Map<Integer, LocalCharacterData> sorted = new LinkedHashMap<>();
+		for (Entry<Integer, LocalCharacterData> entry : list) {
+			sorted.put(entry.getKey(), entry.getValue());
+		}
+		Bot.characters = sorted;
+
 		adjustRates();
 		System.out.println("Finished updating character list");
 	}

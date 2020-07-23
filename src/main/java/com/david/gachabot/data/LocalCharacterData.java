@@ -6,7 +6,7 @@ import java.util.*;
 import com.david.gachabot.Bot;
 import com.david.gachabot.abilities.AbilityAbstract;
 
-public class LocalCharacterData implements Serializable {
+public class LocalCharacterData implements Serializable, Comparable<LocalCharacterData> {
 
 	private static final long serialVersionUID = 3;
 	private SeriesData series;
@@ -116,11 +116,16 @@ public class LocalCharacterData implements Serializable {
 	public void setMemberFavorites(int fav) {
 		member_favorites = fav;
 	}
-	
+
 	public void setSeries(SeriesData series) {
 		series.getCharacters().remove(this);
 		this.series = series;
 		series.getCharacters().add(this);
+	}
+
+	@Override
+	public int compareTo(LocalCharacterData o) {
+		return name.compareTo(o.getName());
 	}
 
 	private void updateStats() {
