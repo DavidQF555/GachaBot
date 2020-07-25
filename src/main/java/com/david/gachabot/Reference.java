@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Reference {
 
-	public final static String TOKEN = "NzIyMTEzMTU1NjM5Mjc5NjM2.XueWXw.Veb1HKfyIYR0mV9m6nlnv3kKuC4";
+	public final static String TOKEN = "NzIyMTEzMTU1NjM5Mjc5NjM2.XueWSA.CXiSJCzyrIZesyDhL_pgLFsTwaM";
 	public final static String COMMAND = "?";
 	public final static long OWNER_ID = 269710151890632704L;
 	public final static String ATTACK_CODEPOINTS = "U+1f3f9";
