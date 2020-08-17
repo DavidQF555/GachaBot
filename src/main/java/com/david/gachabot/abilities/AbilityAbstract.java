@@ -1,11 +1,22 @@
 package com.david.gachabot.abilities;
 
+import com.david.gachabot.Bot;
+
 import java.io.Serializable;
 import java.util.List;
 
 public abstract class AbilityAbstract implements Serializable {
 
     private static final long serialVersionUID = 5;
+
+    public static AbilityAbstract get(String name) {
+        for (AbilityAbstract ab : Bot.abilities) {
+            if (ab.getName().equals(name)) {
+                return ab;
+            }
+        }
+        return null;
+    }
 
     public void defenseEffect(int damage, int[] attack, List<int[]> attackTeam, int[] defend, List<int[]> defendTeam) {
     }

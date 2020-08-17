@@ -18,8 +18,7 @@ public class EventListener extends ListenerAdapter {
 
     @Override
     public void onShutdown(@Nonnull ShutdownEvent event) {
-        FileUtil.saveAnimeList();
-        FileUtil.saveCharacterList();
+        FileUtil.saveSeriesData();
         FileUtil.saveUserData();
         System.out.println("Shutting Down");
         System.exit(0);

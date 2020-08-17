@@ -1,15 +1,13 @@
 package com.david.gachabot.data;
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 import com.david.gachabot.Bot;
 import com.david.gachabot.abilities.AbilityAbstract;
 
-public class LocalCharacterData implements Serializable, Comparable<LocalCharacterData> {
+public class LocalCharacterData implements Comparable<LocalCharacterData> {
 
-    private static final long serialVersionUID = 3;
     private SeriesData series;
     private final int id;
     private double rate;
@@ -55,6 +53,21 @@ public class LocalCharacterData implements Serializable, Comparable<LocalCharact
         baseHP += change;
 
         ability = Bot.abilities.get((int) (Math.random() * Bot.abilities.size()));
+    }
+
+    public LocalCharacterData(SeriesData series, int id, int member_favorites, double rate, String image_url, String name, int hp, int attack, int defense, AbilityAbstract ability, Set<Integer> animeography) {
+        this.series = series;
+        series.getCharacters().add(this);
+        this.id = id;
+        this.member_favorites = member_favorites;
+        this.rate = rate;
+        this.image_url = image_url;
+        this.name = name;
+        baseHP = hp;
+        baseAttack = attack;
+        baseDefense = defense;
+        this.ability = ability;
+        this.animeography = animeography;
     }
 
     public SeriesData getSeries() {

@@ -10,8 +10,7 @@ public class SaveCommand extends CommandAbstract {
 
     @Override
     public void onCommand(Message m) {
-        FileUtil.saveAnimeList();
-        FileUtil.saveCharacterList();
+        FileUtil.saveSeriesData();
         FileUtil.saveUserData();
         m.getChannel().sendMessage(Util.createMessage("Saved all data").build()).queue();
     }

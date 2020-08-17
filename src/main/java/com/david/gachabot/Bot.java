@@ -33,11 +33,20 @@ public class Bot {
     public final static Connector connector = new Connector();
     public static JDA jda;
     public static User owner;
+    public static int lastID = Integer.MIN_VALUE;
 
     public static void main(String[] args) {
-        FileUtil.readAnimeList();
-        FileUtil.readCharacterList();
+
+        FileUtil.readSeriesData();
         FileUtil.readUserData();
+
+        for (LocalAnimeData data : anime.values()) {
+            int id = data.getSeries().getID();
+            if (id > lastID) {
+                lastID = id;
+            }
+        }
+
         updateCharactersList();
 
         for (UserData data : userData.values()) {

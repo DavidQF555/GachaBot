@@ -1,132 +1,153 @@
 package com.david.gachabot;
 
+import com.david.gachabot.abilities.AbilityAbstract;
 import com.david.gachabot.data.*;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.*;
-import java.util.Map;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.*;
 
 public class FileUtil {
 
     public static void saveUserData() {
-        FileOutputStream fos;
-        try {
-            fos = new FileOutputStream("userdata.txt");
-        } catch (FileNotFoundException e) {
-            System.out.println("Could not find userdata.txt");
-            return;
+        JSONObject out = new JSONObject();
+        for (UserData data : Bot.userData.values()) {
+            JSONObject ob = new JSONObject();
+            ob.put("gems", data.getGems());
+            JSONObject team = new JSONObject();
+            List<CharacterInstanceData> t = data.getTeam();
+            for (int i = 1; i <= t.size(); i++) {
+                team.put(i, t.get(i - 1).getCharacterData().getID());
+            }
+            ob.put("team", team);
+            JSONObject ch = new JSONObject();
+            Map<LocalCharacterData, CharacterInstanceData> characters = data.getCharacters();
+            for (LocalCharacterData local : characters.keySet()) {
+                CharacterInstanceData inst = characters.get(local);
+                JSONObject character = new JSONObject();
+                character.put("stars", inst.getStars());
+                character.put("level", inst.getLevel());
+                character.put("exp", inst.getExperience());
+                ch.put(local.getID(), character);
+            }
+            ob.put("characters", ch);
+            out.put(data.getID(), ob);
         }
-        ObjectOutputStream oos;
+
         try {
-            oos = new ObjectOutputStream(fos);
-            oos.writeObject(Bot.userData);
-            oos.close();
-            fos.close();
+            BufferedWriter bw = Files.newBufferedWriter(Paths.get("userdata.json"));
+            out.writeJSONString(bw);
+            System.out.println("Saved User Data");
+            bw.close();
         } catch (IOException ignored) {
         }
-        System.out.println("Saved User Data");
     }
 
-    public static void saveAnimeList() {
-        FileOutputStream fos;
-        try {
-            fos = new FileOutputStream("animelist.txt");
-        } catch (FileNotFoundException e) {
-            System.out.println("Could not find animelist.txt");
-            return;
+    public static void saveSeriesData() {
+        JSONObject out = new JSONObject();
+        for (SeriesData data : SeriesData.getSeries()) {
+            JSONObject series = new JSONObject();
+            JSONObject anime = new JSONObject();
+            for (LocalAnimeData a : data.getAnime()) {
+                JSONObject an = new JSONObject();
+                an.put("title", a.getTitle());
+                anime.put(a.getID(), an);
+            }
+            series.put("anime", anime);
+            JSONObject characters = new JSONObject();
+            for (LocalCharacterData c : data.getCharacters()) {
+                JSONObject ch = new JSONObject();
+                ch.put("name", c.getName());
+                ch.put("rate", c.getRate());
+                ch.put("ability", c.getAbility().getName());
+                ch.put("hp", c.getBaseHP());
+                ch.put("attack", c.getBaseAttack());
+                ch.put("defense", c.getBaseDefense());
+                ch.put("favorites", c.getMemberFavorites());
+                ch.put("image", c.getImageUrl());
+                ch.put("animeography", c.getAnimeography());
+                characters.put(c.getID(), ch);
+            }
+            series.put("characters", characters);
+            out.put(data.getID(), series);
         }
-        ObjectOutputStream oos;
         try {
-            oos = new ObjectOutputStream(fos);
-            oos.writeObject(Bot.anime);
-            oos.close();
-            fos.close();
+            BufferedWriter bw = Files.newBufferedWriter(Paths.get("seriesdata.json"));
+            out.writeJSONString(bw);
+            System.out.println("Saved Series Data");
+            bw.close();
         } catch (IOException ignored) {
         }
-        System.out.println("Saved Anime List");
     }
 
-    public static void saveCharacterList() {
-        FileOutputStream fos;
-        try {
-            fos = new FileOutputStream("characterlist.txt");
-        } catch (FileNotFoundException e) {
-            System.out.println("Could not find characterlist.txt");
-            return;
-        }
-        ObjectOutputStream oos;
-        try {
-            oos = new ObjectOutputStream(fos);
-            oos.writeObject(Bot.characters);
-            oos.close();
-            fos.close();
-        } catch (IOException ignored) {
-        }
-        System.out.println("Saved Character List");
-    }
-
-    @SuppressWarnings("unchecked")
     public static void readUserData() {
-        FileInputStream fis;
+        JSONObject ob;
         try {
-            fis = new FileInputStream("userdata.txt");
-        } catch (FileNotFoundException e) {
-            System.out.println("Could not find userdata.txt");
+            BufferedReader reader = Files.newBufferedReader(Paths.get("userdata.json"));
+            JSONParser parser = new JSONParser();
+            ob = (JSONObject) parser.parse(reader);
+        } catch (Exception e) {
             return;
         }
-        ObjectInputStream ois;
-        try {
-            ois = new ObjectInputStream(fis);
-            Map<Long, UserData> data = (Map<Long, UserData>) ois.readObject();
-            ois.close();
-            fis.close();
-            if (data != null) {
-                Bot.userData = data;
+        Set<Map.Entry<String, JSONObject>> entrySet = ob.entrySet();
+        for (Map.Entry<String, JSONObject> entry : entrySet) {
+            long userId = Long.parseLong(entry.getKey());
+            JSONObject value = entry.getValue();
+            Map<LocalCharacterData, CharacterInstanceData> c = new HashMap<>();
+            JSONObject characters = (JSONObject) value.get("characters");
+            Set<Map.Entry<String, JSONObject>> entries = characters.entrySet();
+            for (Map.Entry<String, JSONObject> en : entries) {
+                JSONObject val = en.getValue();
+                LocalCharacterData local = Bot.characters.get(Integer.parseInt(en.getKey()));
+                CharacterInstanceData inst = new CharacterInstanceData(local, userId, (int) val.get("stars"), (int) val.get("level"), (int) val.get("exp"));
+                c.put(local, inst);
             }
-        } catch (Exception ignored) {
+            UserData data = new UserData(userId, c);
+            data.setGems((long) value.get("gems"));
+            List<CharacterInstanceData> team = data.getTeam();
+            team.clear();
+            JSONObject t = (JSONObject) value.get("team");
+            for (int i = 1; i <= 5; i++) {
+                if (t.containsKey(i)) {
+                    team.add(c.get(Bot.characters.get(t.get("i"))));
+                    continue;
+                }
+                break;
+            }
+            Bot.userData.put(userId, data);
         }
+        System.out.println("Finished Reading User Data");
     }
 
-    @SuppressWarnings("unchecked")
-    public static void readAnimeList() {
-        FileInputStream fis;
+    public static void readSeriesData() {
+        JSONObject ob;
         try {
-            fis = new FileInputStream("animelist.txt");
-        } catch (FileNotFoundException e) {
-            System.out.println("Could not find animelist.txt");
+            BufferedReader reader = Files.newBufferedReader(Paths.get("seriesdata.json"));
+            JSONParser parser = new JSONParser();
+            ob = (JSONObject) parser.parse(reader);
+        } catch (Exception e) {
             return;
         }
-        ObjectInputStream ois;
-        try {
-            ois = new ObjectInputStream(fis);
-            Map<Integer, LocalAnimeData> data = (Map<Integer, LocalAnimeData>) ois.readObject();
-            ois.close();
-            fis.close();
-            if (data != null) {
-                Bot.anime = data;
+        for (Object o : ob.values()) {
+            JSONObject value = (JSONObject) o;
+            SeriesData series = new SeriesData();
+            Set<Map.Entry<String, JSONObject>> anime = ((JSONObject) value.get("anime")).entrySet();
+            for (Map.Entry<String, JSONObject> en : anime) {
+                int id = Integer.parseInt(en.getKey());
+                Bot.anime.put(id, new LocalAnimeData(series, (String) en.getValue().get("title"), id));
             }
-        } catch (Exception ignored) {
-        }
-    }
 
-    @SuppressWarnings("unchecked")
-    public static void readCharacterList() {
-        FileInputStream fis;
-        try {
-            fis = new FileInputStream("characterlist.txt");
-        } catch (FileNotFoundException e) {
-            System.out.println("Could not find characterlist.txt");
-            return;
-        }
-        ObjectInputStream ois;
-        try {
-            ois = new ObjectInputStream(fis);
-            Map<Integer, LocalCharacterData> data = (Map<Integer, LocalCharacterData>) ois.readObject();
-            ois.close();
-            fis.close();
-            if (data != null) {
-                Bot.characters = data;
+            Set<Map.Entry<String, JSONObject>> characters = ((JSONObject) value.get("characters")).entrySet();
+            for (Map.Entry<String, JSONObject> en : characters) {
+                int id = Integer.parseInt(en.getKey());
+                JSONObject val = en.getValue();
+                Bot.characters.put(id, new LocalCharacterData(series, id, Integer.parseInt("" + val.get("favorites")), (double) val.get("rate"), (String) val.get("image"), (String) val.get("name"), Integer.parseInt("" + val.get("hp")), Integer.parseInt("" + val.get("attack")), Integer.parseInt("" + val.get("defense")), AbilityAbstract.get((String) val.get("ability")), new HashSet<Integer>((JSONArray) val.get("animeography"))));
             }
-        } catch (Exception ignored) {
         }
+        System.out.println("Finished Reading Series Data");
     }
 }
