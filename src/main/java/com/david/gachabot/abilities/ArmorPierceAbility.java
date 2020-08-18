@@ -3,8 +3,6 @@ package com.david.gachabot.abilities;
 @Ability
 public class ArmorPierceAbility extends AbilityAbstract {
 
-    private static final long serialVersionUID = 6;
-
     @Override
     public double getOpponentDefenseFactor() {
         return 0.5;

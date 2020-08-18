@@ -1,10 +1,7 @@
 package com.david.gachabot.data;
 
-import java.io.Serializable;
+public class LocalAnimeData {
 
-public class LocalAnimeData implements Serializable {
-
-    private static final long serialVersionUID = 2;
     private SeriesData series;
     private final String title;
     private final int id;

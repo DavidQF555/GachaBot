@@ -1,13 +1,11 @@
 package com.david.gachabot.data;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class UserData implements Serializable {
+public class UserData {
 
-    private static final long serialVersionUID = 4;
     private final long id;
     private final Map<LocalCharacterData, CharacterInstanceData> characters;
     private UserData battleOpponent;

@@ -1,10 +1,7 @@
 package com.david.gachabot.data;
 
-import java.io.Serializable;
+public class CharacterInstanceData {
 
-public class CharacterInstanceData implements Serializable {
-
-    private static final long serialVersionUID = 1;
     private final LocalCharacterData data;
     private long owner_id;
     private int stars;

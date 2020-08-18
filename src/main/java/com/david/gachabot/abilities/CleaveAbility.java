@@ -6,8 +6,6 @@ import java.util.List;
 @Ability
 public class CleaveAbility extends AbilityAbstract {
 
-    private static final long serialVersionUID = 7;
-
     @Override
     public void attackEffect(int damage, int[] attack, List<int[]> attackTeam, int[] defend, List<int[]> defendTeam) {
         for (int[] stats : defendTeam) {

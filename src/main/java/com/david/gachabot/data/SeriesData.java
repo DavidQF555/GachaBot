@@ -2,13 +2,11 @@ package com.david.gachabot.data;
 
 import com.david.gachabot.Bot;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SeriesData implements Serializable {
+public class SeriesData {
 
-    private static final long serialVersionUID = 10;
     private final static List<SeriesData> series = new ArrayList<>();
     private final int id;
     private final List<LocalAnimeData> anime;
