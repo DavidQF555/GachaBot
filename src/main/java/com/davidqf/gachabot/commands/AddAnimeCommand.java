@@ -170,7 +170,7 @@ public class AddAnimeCommand extends CommandAbstract {
         double cut = 0;
         for (AnimeCharacter ac : pos) {
             com.github.doomsdayrs.jikan4java.types.main.character.Character c = JikanRetriever.getCharacter(ac.mal_id);
-            if (c.member_favorites > 100) {
+            if (c != null && c.member_favorites > 100) {
                 chars.add(c);
                 cut += c.member_favorites;
             }
