@@ -53,7 +53,7 @@ public class Bot {
             data.setBattleOpponent(null);
         }
 
-        Reflections reflections = new Reflections("com.david.gachabot");
+        Reflections reflections = new Reflections("com.davidqf.gachabot");
         for (Class<?> c : reflections.getTypesAnnotatedWith(Command.class)) {
             try {
                 commands.add((CommandAbstract) c.getConstructor().newInstance());
