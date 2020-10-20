@@ -103,7 +103,7 @@ public class FileUtil {
             for (Map.Entry<String, JSONObject> en : entries) {
                 JSONObject val = en.getValue();
                 LocalCharacterData local = Bot.characters.get(Integer.parseInt(en.getKey()));
-                CharacterInstanceData inst = new CharacterInstanceData(local, userId, (int) val.get("stars"), (int) val.get("level"), (int) val.get("exp"));
+                CharacterInstanceData inst = new CharacterInstanceData(local, userId, ((Long) val.get("stars")).intValue(), ((Long) val.get("level")).intValue(), ((Long) val.get("exp")).intValue());
                 c.put(local, inst);
             }
             UserData data = new UserData(userId, c);
