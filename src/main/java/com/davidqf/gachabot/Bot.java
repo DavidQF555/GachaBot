@@ -37,6 +37,21 @@ public class Bot {
 
     public static void main(String[] args) {
 
+        Reflections reflCom = new Reflections("com.davidqf.gachabot.commands");
+        for (Class<?> c : reflCom.getTypesAnnotatedWith(Command.class)) {
+            try {
+                commands.add((CommandAbstract) c.getConstructor().newInstance());
+            } catch (Exception ignored) {
+            }
+        }
+        Reflections reflAb = new Reflections("com.davidqf.gachabot.abilities");
+        for (Class<?> c : reflAb.getTypesAnnotatedWith(Ability.class)) {
+            try {
+                abilities.add((AbilityAbstract) c.getConstructor().newInstance());
+            } catch (Exception ignored) {
+            }
+        }
+
         FileUtil.readSeriesData();
         FileUtil.readUserData();
 
@@ -53,19 +68,6 @@ public class Bot {
             data.setBattleOpponent(null);
         }
 
-        Reflections reflections = new Reflections("com.davidqf.gachabot");
-        for (Class<?> c : reflections.getTypesAnnotatedWith(Command.class)) {
-            try {
-                commands.add((CommandAbstract) c.getConstructor().newInstance());
-            } catch (Exception ignored) {
-            }
-        }
-        for (Class<?> c : reflections.getTypesAnnotatedWith(Ability.class)) {
-            try {
-                abilities.add((AbilityAbstract) c.getConstructor().newInstance());
-            } catch (Exception ignored) {
-            }
-        }
         try {
             jda = new JDABuilder(Reference.TOKEN).setActivity(Activity.watching(" people waste money")).build();
         } catch (LoginException e) {
