@@ -156,6 +156,7 @@ public class Bot {
         }
         updateSeriesData(chars);
         adjustRates();
+        sortCharacters();
         System.out.println("Finished updating character list");
     }
 
@@ -190,17 +191,20 @@ public class Bot {
             LocalCharacterData data = characters.get(id);
             data.setRate(1.0 / data.getMemberFavorites() / totalInv);
         }
-        //sort
+
+        adjustRates();
+        sortCharacters();
+        System.out.println("Finished updating character list");
+    }
+
+    private static void sortCharacters() {
         List<Entry<Integer, LocalCharacterData>> list = new ArrayList<>(characters.entrySet());
         list.sort(Entry.comparingByValue());
         Map<Integer, LocalCharacterData> sorted = new LinkedHashMap<>();
         for (Entry<Integer, LocalCharacterData> entry : list) {
             sorted.put(entry.getKey(), entry.getValue());
         }
-        Bot.characters = sorted;
-
-        adjustRates();
-        System.out.println("Finished updating character list");
+        characters = sorted;
     }
 
     @SuppressWarnings("unchecked")
