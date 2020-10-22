@@ -112,11 +112,11 @@ public class FileUtil {
             team.clear();
             JSONObject t = (JSONObject) value.get("team");
             for (int i = 1; i <= 5; i++) {
-                if (t.containsKey(i)) {
-                    team.add(c.get(Bot.characters.get(t.get("i"))));
-                    continue;
+                if (t.containsKey("" + i)) {
+                    team.add(c.get(Bot.characters.get(((Long) t.get("" + i)).intValue())));
+                } else {
+                    break;
                 }
-                break;
             }
             Bot.userData.put(userId, data);
         }
