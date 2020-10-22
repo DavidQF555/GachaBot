@@ -198,6 +198,7 @@ public class Bot {
     }
 
     private static void sortCharacters() {
+        System.out.println("Sorting Characters");
         List<Entry<Integer, LocalCharacterData>> list = new ArrayList<>(characters.entrySet());
         list.sort(Entry.comparingByValue());
         Map<Integer, LocalCharacterData> sorted = new LinkedHashMap<>();

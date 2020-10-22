@@ -29,8 +29,13 @@ public class TeamChangeCommand extends CommandAbstract {
                 for (LocalCharacterData data : Bot.characters.values()) {
                     if (data.getName().equalsIgnoreCase(name.toString())) {
                         if (userData.getCharacters().containsKey(data)) {
-                            team.add(userData.getCharacters().get(data));
-                            m.getChannel().sendMessage(Util.createMessage(user.getName() + ", added `" + data.getName() + "` to your team").build()).queue();
+                            CharacterInstanceData inst = userData.getCharacters().get(data);
+                            if (team.contains(inst)) {
+                                m.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", `" + data.getName() + "` is already on your team").build()).queue();
+                            } else {
+                                team.add(inst);
+                                m.getChannel().sendMessage(Util.createMessage(user.getName() + ", added `" + data.getName() + "` to your team").build()).queue();
+                            }
                         } else {
                             m.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", you do not have `" + data.getName() + "`").build()).queue();
                         }

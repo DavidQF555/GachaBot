@@ -31,7 +31,10 @@ public class StartBattleCommand extends CommandAbstract {
         UserData user2 = null;
         for (Member mem : m.getGuild().getMembers()) {
             if (mem.getEffectiveName().equalsIgnoreCase(name) || (mem.getNickname() != null && mem.getNickname().equalsIgnoreCase(name))) {
-                if (mem.getOnlineStatus() == OnlineStatus.OFFLINE) {
+                if (mem.getIdLong() == u1.getIdLong()) {
+                    m.getChannel().sendMessage(Util.createFailedMessage(u1.getName() + ", you cannot battle yourself").build()).queue();
+                    return;
+                } else if (mem.getOnlineStatus() == OnlineStatus.OFFLINE) {
                     m.getChannel().sendMessage(Util.createFailedMessage(mem.getNickname() + " is currently offline").build()).queue();
                     return;
                 }

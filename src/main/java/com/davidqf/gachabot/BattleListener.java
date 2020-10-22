@@ -1,10 +1,6 @@
 package com.davidqf.gachabot;
 
-import java.awt.Color;
-import java.util.*;
-
 import com.davidqf.gachabot.abilities.AbilityAbstract;
-
 import com.davidqf.gachabot.data.BattleData;
 import com.davidqf.gachabot.data.CharacterInstanceData;
 import com.davidqf.gachabot.data.LocalCharacterData;
@@ -13,6 +9,10 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+
+import java.awt.*;
+import java.util.*;
+import java.util.List;
 
 public class BattleListener extends ListenerAdapter {
 
@@ -36,31 +36,38 @@ public class BattleListener extends ListenerAdapter {
                 if (usDa[1].equals(Bot.userData.get(id))) {
                     if (emote.equals(Reference.ACCEPT_CODEPOINTS)) {
                         if (usDa[0].getBattleOpponent() == null && usDa[1].getBattleOpponent() == null) {
-                            invitations.remove(mesId);
-                            BattleData data = new BattleData(usDa[0], 1, usDa[1], 1, null);
-                            User u1 = Bot.jda.getUserById(usDa[0].getID());
-                            User u2 = Bot.jda.getUserById(usDa[1].getID());
-                            Message mes = ch.sendMessage(BattleListener.generateBattleMessage(data, "A battle has started between " + u1.getName() + " and " + u2.getName() + "! " + u1.getName() + " gets the first move!", USER1_COLOR)).complete();
-                            data.setMessage(mes);
-                            mes.addReaction(Reference.ATTACK_CODEPOINTS).queue();
-                            mes.addReaction(Reference.WAIT_CODEPOINTS).queue();
-                            for (int i = 1; i < usDa[0].getTeam().size(); i++) {
-                                mes.addReaction(Reference.SWAP_CODEPOINTS.get(i)).queue();
-                            }
-                            usDa[0].setBattleOpponent(usDa[1]);
-                            usDa[1].setBattleOpponent(usDa[0]);
-                            battleData.add(data);
-                            Timer t = new Timer();
-                            t.schedule(new TimerTask() {
-                                @Override
-                                public void run() {
-                                    if (data.getTurn() == 1 && data.isUser1Turn()) {
-                                        ch.sendMessage(Util.createMessage(u1.getName() + " has timed out! " + u2.getName() + " wins!").build()).queue();
-                                        data.endBattle(2);
-                                    }
+                            if (usDa[0].getTeam().isEmpty()) {
+                                ch.sendMessage(Util.createFailedMessage(u.getName() + ", " + Bot.jda.getUserById(usDa[0].getID()).getName() + "'s team is empty").build()).queue();
+                            } else if (usDa[1].getTeam().isEmpty()) {
+                                ch.sendMessage(Util.createFailedMessage(u.getName() + ", your team is empty").build()).queue();
+                            } else {
+                                invitations.remove(mesId);
+                                ch.retrieveMessageById(mesId).complete().delete().queue();
+                                BattleData data = new BattleData(usDa[0], 1, usDa[1], 1, null);
+                                User u1 = Bot.jda.getUserById(usDa[0].getID());
+                                User u2 = Bot.jda.getUserById(usDa[1].getID());
+                                Message mes = ch.sendMessage(BattleListener.generateBattleMessage(data, "A battle has started between " + u1.getName() + " and " + u2.getName() + "! " + u1.getName() + " gets the first move!", USER1_COLOR)).complete();
+                                data.setMessage(mes);
+                                mes.addReaction(Reference.ATTACK_CODEPOINTS).queue();
+                                mes.addReaction(Reference.WAIT_CODEPOINTS).queue();
+                                for (int i = 1; i < usDa[0].getTeam().size(); i++) {
+                                    mes.addReaction(Reference.SWAP_CODEPOINTS.get(i)).queue();
                                 }
-                            }, 600000);
-                            timers.put(data, t);
+                                usDa[0].setBattleOpponent(usDa[1]);
+                                usDa[1].setBattleOpponent(usDa[0]);
+                                battleData.add(data);
+                                Timer t = new Timer();
+                                t.schedule(new TimerTask() {
+                                    @Override
+                                    public void run() {
+                                        if (data.getTurn() == 1 && data.isUser1Turn()) {
+                                            ch.sendMessage(Util.createMessage(u1.getName() + " has timed out! " + u2.getName() + " wins!").build()).queue();
+                                            data.endBattle(2);
+                                        }
+                                    }
+                                }, 600000);
+                                timers.put(data, t);
+                            }
                         }
                     } else if (emote.equals(Reference.DECLINE_CODEPOINTS)) {
                         ch.retrieveMessageById(mesId).complete().delete().queue();
@@ -84,8 +91,8 @@ public class BattleListener extends ListenerAdapter {
                     List<int[]> stats2 = new ArrayList<>(data.getUser2Stats().values());
                     int[] out1 = stats1.get(data.getUser1Out() - 1);
                     int[] out2 = stats2.get(data.getUser2Out() - 1);
-                    boolean swapped;
-                    if (!(data.isUser1Turn() && id == user1.getID()) && !data.isUser1Turn() && id == user2.getID()) {
+                    boolean swapped = false;
+                    if (!data.isUser1Turn() && id == user2.getID()) {
                         //swap
                         user2 = user1;
                         User tempU = u1;
@@ -104,10 +111,10 @@ public class BattleListener extends ListenerAdapter {
                         out1 = out2;
                         out2 = tempAr;
                         swapped = true;
-                    } else {
+                    } else if (!(data.isUser1Turn() && id == user1.getID())) {
                         return;
                     }
-                    StringBuilder desc = new StringBuilder();
+                    String desc = "";
                     if (emote.equals(Reference.ATTACK_CODEPOINTS) && out1[3] > 0) {
                         LocalCharacterData data1 = char1.getCharacterData();
                         LocalCharacterData data2 = char2.getCharacterData();
@@ -117,7 +124,7 @@ public class BattleListener extends ListenerAdapter {
                         out2[0] -= damage;
                         ab1.attackEffect(damage, out1, stats1, out2, stats2);
                         ab2.defenseEffect(damage, out1, stats1, out2, stats2);
-                        desc.append(u1.getName()).append("'s ").append(data1.getName()).append(" has dealt ").append(damage).append(" damage to ").append(u2.getName()).append("'s ").append(data2.getName()).append("! ");
+                        desc += u1.getName() + "'s " + data1.getName() + " has dealt " + damage + " damage to " + u2.getName() + "'s " + data2.getName() + "! ";
                     } else if (Reference.SWAP_CODEPOINTS.contains(emote)) {
                         for (int i = 0; i < Reference.SWAP_CODEPOINTS.size(); i++) {
                             if (Reference.SWAP_CODEPOINTS.get(i).equals(emote)) {
@@ -126,12 +133,12 @@ public class BattleListener extends ListenerAdapter {
                                 } else {
                                     data.setUser2Out(i + 1);
                                 }
-                                desc.append(u1.getName()).append(" has swapped to ").append(user1Characters.get(i).getCharacterData().getName()).append(". ");
+                                desc += u1.getName() + " has swapped to " + user1Characters.get(i).getCharacterData().getName() + ". ";
                                 break;
                             }
                         }
                     } else if (emote.equals(Reference.WAIT_CODEPOINTS) && out1[3] > 0) {
-                        desc.append(u1.getName()).append(" has waited. ");
+                        desc += u1.getName() + " has waited. ";
                     } else {
                         return;
                     }
@@ -142,7 +149,7 @@ public class BattleListener extends ListenerAdapter {
                         if (stats[0] <= 0) {
                             if (stats[3] > 0) {
                                 stats[3] *= -1;
-                                desc.append(u2.getName()).append("'s ").append(user2Characters.get(i).getCharacterData().getName()).append(" has fainted! ");
+                                desc += u2.getName() + "'s " + user2Characters.get(i).getCharacterData().getName() + " has fainted! ";
                             }
                         } else {
                             lose2 = false;
@@ -153,7 +160,7 @@ public class BattleListener extends ListenerAdapter {
                         if (stats[0] <= 0) {
                             if (stats[3] > 0) {
                                 stats[3] *= -1;
-                                desc.append(u1.getName()).append("'s ").append(user1Characters.get(i).getCharacterData().getName()).append(" has fainted! ");
+                                desc += u1.getName() + "'s " + user1Characters.get(i).getCharacterData().getName() + " has fainted! ";
                             }
                         } else {
                             lose1 = false;
@@ -227,7 +234,7 @@ public class BattleListener extends ListenerAdapter {
         }
     }
 
-    public static MessageEmbed generateBattleMessage(BattleData data, String desc, Color c) {
+    private static MessageEmbed generateBattleMessage(BattleData data, String desc, Color c) {
         UserData user1 = data.getUser1();
         UserData user2 = data.getUser2();
         String u1 = Bot.jda.getUserById(user1.getID()).getName();
