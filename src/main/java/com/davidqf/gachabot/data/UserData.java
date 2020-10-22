@@ -6,6 +6,7 @@ import java.util.Map;
 
 public class UserData {
 
+    private static final int STARTING_GEMS = 2500;
     private final long id;
     private final Map<LocalCharacterData, CharacterInstanceData> characters;
     private UserData battleOpponent;
@@ -17,7 +18,7 @@ public class UserData {
         this.characters = characters;
         battleOpponent = null;
         team = new ArrayList<>();
-        gems = 500;
+        gems = STARTING_GEMS;
     }
 
     public long getID() {

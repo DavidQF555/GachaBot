@@ -15,9 +15,9 @@ public class LocalCharacterData implements Comparable<LocalCharacterData> {
     private String image_url;
     private int member_favorites;
     private final Set<Integer> animeography;
-    private int baseHP;
-    private int baseDefense;
-    private int baseAttack;
+    private double baseHP;
+    private double baseDefense;
+    private double baseAttack;
     private final AbilityAbstract ability;
 
     public LocalCharacterData(SeriesData series, int id, int member_favorites, double rate, String image_url, String name) {
@@ -30,27 +30,25 @@ public class LocalCharacterData implements Comparable<LocalCharacterData> {
         this.member_favorites = member_favorites;
         animeography = new HashSet<>();
 
-        int totalBase = getBaseTotal();
-        int base = totalBase / 6;
-        baseHP = base;
-        baseAttack = base;
-        baseDefense = base;
-        totalBase -= base * 3;
-        while (totalBase > getBaseTotal() / 10) {
-            int hp = (int) (Math.random() * totalBase + 1);
-            int attack = (int) (Math.random() * totalBase + 1);
-            int defense = (int) (Math.random() * totalBase + 1);
-            if (hp + attack + defense <= totalBase) {
-                baseHP += hp;
-                baseAttack += attack;
-                baseDefense += defense;
-                totalBase -= hp + attack + defense;
+        baseHP = 0;
+        baseDefense = 0;
+        baseAttack = 0;
+        double total = 1;
+        do {
+            double cHp = (Math.random() * (total * 0.9)) + total * 0.1;
+            double cDefense = (Math.random() * (total * 0.9)) + total * 0.1;
+            double cAttack = (Math.random() * (total * 0.9)) + total * 0.1;
+            if (cHp + cDefense + cAttack <= 1) {
+                baseHP += total * cHp;
+                baseDefense += total * cDefense;
+                baseAttack += total * cAttack;
+                total = 1 - baseHP - baseDefense - baseAttack;
             }
-        }
-        int change = totalBase / 3;
+        } while (baseHP + baseDefense + baseAttack < 0.8);
+        double change = total / 3;
+        baseHP += total - 2 * change;
         baseAttack += change;
         baseDefense += change;
-        baseHP += change;
 
         ability = Bot.abilities.get((int) (Math.random() * Bot.abilities.size()));
     }
@@ -99,15 +97,15 @@ public class LocalCharacterData implements Comparable<LocalCharacterData> {
     }
 
     public int getBaseHP() {
-        return baseHP;
+        return (int) (getBaseTotal() * baseHP + 0.5);
     }
 
     public int getBaseDefense() {
-        return baseDefense;
+        return (int) (getBaseTotal() * baseDefense + 0.5);
     }
 
     public int getBaseAttack() {
-        return baseAttack;
+        return (int) (getBaseTotal() * baseAttack + 0.5);
     }
 
     public AbilityAbstract getAbility() {
@@ -116,7 +114,6 @@ public class LocalCharacterData implements Comparable<LocalCharacterData> {
 
     public void setRate(double rate) {
         this.rate = rate;
-        updateStats();
     }
 
     public void setName(String name) {
@@ -140,17 +137,6 @@ public class LocalCharacterData implements Comparable<LocalCharacterData> {
     @Override
     public int compareTo(LocalCharacterData o) {
         return name.compareTo(o.getName());
-    }
-
-    private void updateStats() {
-        int total = baseHP + baseAttack + baseDefense;
-        double hp = baseHP * 1.0 / total;
-        double def = baseDefense * 1.0 / total;
-        double att = baseAttack * 1.0 / total;
-        int base = getBaseTotal();
-        baseHP = (int) (base * hp + 0.5);
-        baseDefense = (int) (base * def + 0.5);
-        baseAttack = (int) (base * att + 0.5);
     }
 
     private int getBaseTotal() {
