@@ -38,7 +38,7 @@ public class LocalCharacterData implements Comparable<LocalCharacterData> {
             double cHp = (Math.random() * (total * 0.9)) + total * 0.1;
             double cDefense = (Math.random() * (total * 0.9)) + total * 0.1;
             double cAttack = (Math.random() * (total * 0.9)) + total * 0.1;
-            if (cHp + cDefense + cAttack <= 1) {
+            if (cHp + cDefense + cAttack <= total) {
                 baseHP += total * cHp;
                 baseDefense += total * cDefense;
                 baseAttack += total * cAttack;
