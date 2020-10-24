@@ -11,7 +11,7 @@ import javax.annotation.Nonnull;
 
 public class EventListener extends ListenerAdapter {
 
-    public static final List<Message> messages = new ArrayList<>();
+    public static final Queue<Message> messages = new LinkedList<>();
 
     @Override
     public void onShutdown(@Nonnull ShutdownEvent event) {

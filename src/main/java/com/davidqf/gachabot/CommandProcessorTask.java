@@ -11,9 +11,9 @@ public class CommandProcessorTask extends TimerTask {
 
     @Override
     public void run() {
-        if (!EventListener.messages.isEmpty() && !Bot.commands.isEmpty()) {
-            for (int i = EventListener.messages.size() - 1; i >= 0; i--) {
-                Message message = EventListener.messages.get(i);
+        if (!Bot.commands.isEmpty()) {
+            Message message;
+            while ((message = EventListener.messages.poll()) != null) {
                 User user = message.getAuthor();
                 long id = user.getIdLong();
                 CommandAbstract c = detect(message);
@@ -40,7 +40,6 @@ public class CommandProcessorTask extends TimerTask {
                         message.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", you do not have permission to use this command").build()).queue();
                     }
                 }
-                EventListener.messages.remove(message);
             }
         }
     }
