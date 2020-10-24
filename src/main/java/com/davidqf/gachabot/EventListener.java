@@ -2,19 +2,16 @@ package com.davidqf.gachabot;
 
 import java.util.*;
 
-import com.davidqf.gachabot.commands.CommandAbstract;
-
-import com.davidqf.gachabot.data.UserData;
 import net.dv8tion.jda.api.entities.Message;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.ShutdownEvent;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.priv.PrivateMessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import javax.annotation.Nonnull;
 
 public class EventListener extends ListenerAdapter {
+
+    public static final List<Message> messages = new ArrayList<>();
 
     @Override
     public void onShutdown(@Nonnull ShutdownEvent event) {
@@ -25,73 +22,7 @@ public class EventListener extends ListenerAdapter {
     }
 
     @Override
-    public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
-        User user = event.getAuthor();
-        long id = user.getIdLong();
-        Message m = event.getMessage();
-        CommandAbstract c = detect(m);
-        if (c != null && !user.isBot()) {
-            UserData data = Bot.userData.get(id);
-            if (data == null) {
-                data = new UserData(id, new HashMap<>());
-                Bot.userData.put(id, data);
-            }
-            if (c.hasPermission(m)) {
-                if (!c.allowInBattle() && data.getBattleOpponent() != null) {
-                    event.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", this command cannot be used while in battle").build()).queue();
-                } else if (c.correctFormat(m)) {
-                    c.onCommand(m);
-                } else {
-                    event.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", incorrect format. Correct Format: `" + c.getFormat() + "`").build()).queue();
-                }
-            } else {
-                event.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", you do not have permission to use this command").build()).queue();
-            }
-        }
-    }
-
-    @Override
-    public void onPrivateMessageReceived(PrivateMessageReceivedEvent event) {
-        User user = event.getAuthor();
-        long id = user.getIdLong();
-        Message m = event.getMessage();
-        CommandAbstract c = detect(m);
-        if (c != null && !user.isBot()) {
-            UserData data = Bot.userData.get(id);
-            if (data == null) {
-                data = new UserData(id, new HashMap<>());
-                Bot.userData.put(id, data);
-            }
-            if (c.hasPermission(m)) {
-                if (!c.allowInBattle() && data.getBattleOpponent() != null) {
-                    event.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", this command cannot be used while in battle").build()).queue();
-                } else if (c.correctFormat(m)) {
-                    c.onPrivateMessage(m);
-                } else {
-                    event.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", incorrect format. Correct Format: `" + c.getFormat() + "`").build()).queue();
-                }
-            } else {
-                event.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", you do not have permission to use this command").build()).queue();
-            }
-        }
-    }
-
-    private CommandAbstract detect(Message m) {
-        String s = m.getContentRaw();
-        if (s.toLowerCase().startsWith(Reference.COMMAND.toLowerCase())) {
-            for (CommandAbstract c : Bot.commands) {
-                if (s.toLowerCase().startsWith(c.getActivatingName().toLowerCase(), Reference.COMMAND.length())) {
-                    return c;
-                }
-            }
-            for (CommandAbstract c : Bot.commands) {
-                for (String pref : c.getAlternativeNames()) {
-                    if (s.toLowerCase().startsWith(pref.toLowerCase(), Reference.COMMAND.length())) {
-                        return c;
-                    }
-                }
-            }
-        }
-        return null;
+    public void onMessageReceived(@Nonnull MessageReceivedEvent event) {
+        messages.add(event.getMessage());
     }
 }

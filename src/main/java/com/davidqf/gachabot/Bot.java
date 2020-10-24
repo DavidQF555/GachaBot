@@ -68,6 +68,8 @@ public class Bot {
             data.setBattleOpponent(null);
         }
 
+        new Timer().scheduleAtFixedRate(new CommandProcessorTask(), 0, 500);
+
         try {
             jda = new JDABuilder(Reference.TOKEN).setActivity(Activity.watching(" people waste money")).build();
         } catch (LoginException e) {
