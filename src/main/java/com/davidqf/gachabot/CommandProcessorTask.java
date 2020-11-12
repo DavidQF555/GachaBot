@@ -4,14 +4,28 @@ import com.davidqf.gachabot.commands.CommandAbstract;
 import com.davidqf.gachabot.data.UserData;
 import net.dv8tion.jda.api.entities.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.TimerTask;
 
 public class CommandProcessorTask extends TimerTask {
 
+    private final List<RetrievalThread> retrievalThreads;
+
+    public CommandProcessorTask() {
+        retrievalThreads = new ArrayList<>();
+    }
+
     @Override
     public void run() {
         if (!Bot.commands.isEmpty()) {
+            if (!retrievalThreads.isEmpty()) {
+                RetrievalThread thread = retrievalThreads.get(0);
+                if (!thread.isAlive()) {
+                    thread.start();
+                }
+            }
             Message message;
             while ((message = EventListener.messages.poll()) != null) {
                 User user = message.getAuthor();
@@ -29,9 +43,17 @@ public class CommandProcessorTask extends TimerTask {
                             channel.sendMessage(Util.createFailedMessage(user.getName() + ", this command cannot be used while in battle").build()).queue();
                         } else if (c.correctFormat(message)) {
                             if (channel instanceof TextChannel) {
-                                c.onCommand(message);
+                                if (Bot.retrievalCommands.contains(c)) {
+                                    retrievalThreads.add(new RetrievalThread(c, message));
+                                } else {
+                                    c.onCommand(message);
+                                }
                             } else if (channel instanceof PrivateChannel) {
-                                c.onPrivateMessage(message);
+                                if (Bot.retrievalCommands.contains(c)) {
+                                    retrievalThreads.add(new RetrievalThread(c, message));
+                                } else {
+                                    c.onPrivateMessage(message);
+                                }
                             }
                         } else {
                             message.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", incorrect format. Correct Format: `" + c.getFormat() + "`").build()).queue();
@@ -61,6 +83,23 @@ public class CommandProcessorTask extends TimerTask {
             }
         }
         return null;
+    }
+
+    private class RetrievalThread extends Thread {
+
+        private final CommandAbstract command;
+        private final Message message;
+
+        private RetrievalThread(CommandAbstract command, Message message) {
+            this.command = command;
+            this.message = message;
+        }
+
+        @Override
+        public void run() {
+            command.onCommand(message);
+            retrievalThreads.remove(this);
+        }
     }
 
 }

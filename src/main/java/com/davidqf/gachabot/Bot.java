@@ -26,6 +26,7 @@ import net.dv8tion.jda.api.entities.*;
 public class Bot {
 
     public final static Set<CommandAbstract> commands = new HashSet<>();
+    public final static Set<CommandAbstract> retrievalCommands = new HashSet<>();
     public final static List<AbilityAbstract> abilities = new ArrayList<>();
     public static Map<Integer, LocalAnimeData> anime = new LinkedHashMap<>();
     public static Map<Integer, LocalCharacterData> characters = new LinkedHashMap<>();
@@ -39,8 +40,13 @@ public class Bot {
 
         Reflections reflCom = new Reflections("com.davidqf.gachabot.commands");
         for (Class<?> c : reflCom.getTypesAnnotatedWith(Command.class)) {
+            Command anno = c.getAnnotation(Command.class);
             try {
-                commands.add((CommandAbstract) c.getConstructor().newInstance());
+                CommandAbstract command = (CommandAbstract) c.getConstructor().newInstance();
+                commands.add(command);
+                if (anno.retrieval()) {
+                    retrievalCommands.add(command);
+                }
             } catch (Exception ignored) {
             }
         }

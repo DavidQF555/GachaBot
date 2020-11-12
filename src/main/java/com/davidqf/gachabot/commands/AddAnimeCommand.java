@@ -18,7 +18,7 @@ import com.github.doomsdayrs.jikan4java.types.support.related.*;
 
 import net.dv8tion.jda.api.entities.Message;
 
-@Command
+@Command(retrieval = true)
 public class AddAnimeCommand extends CommandAbstract {
 
     @Override
