@@ -23,15 +23,15 @@ public class CommandProcessorTask extends TimerTask {
                         data = new UserData(id, new HashMap<>());
                         Bot.userData.put(id, data);
                     }
-                    TextChannel channel = message.getTextChannel();
+                    MessageChannel channel = message.getChannel();
                     if (c.hasPermission(message)) {
                         if (!c.allowInBattle() && data.getBattleOpponent() != null) {
                             channel.sendMessage(Util.createFailedMessage(user.getName() + ", this command cannot be used while in battle").build()).queue();
                         } else if (c.correctFormat(message)) {
-                            if (channel instanceof PrivateChannel) {
-                                c.onPrivateMessage(message);
-                            } else {
+                            if (channel instanceof TextChannel) {
                                 c.onCommand(message);
+                            } else if (channel instanceof PrivateChannel) {
+                                c.onPrivateMessage(message);
                             }
                         } else {
                             message.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", incorrect format. Correct Format: `" + c.getFormat() + "`").build()).queue();
