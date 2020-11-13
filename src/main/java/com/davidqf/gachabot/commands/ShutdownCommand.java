@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.Message;
 public class ShutdownCommand extends CommandAbstract {
 
     @Override
-    public void onCommand(Message m) {
+    public void onCommand(Message m, String content) {
         m.getChannel().sendMessage(Util.createMessage("Shutting Down").build()).queue();
         Bot.jda.shutdown();
     }

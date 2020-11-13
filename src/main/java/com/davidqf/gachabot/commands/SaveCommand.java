@@ -9,7 +9,7 @@ import net.dv8tion.jda.api.entities.Message;
 public class SaveCommand extends CommandAbstract {
 
     @Override
-    public void onCommand(Message m) {
+    public void onCommand(Message m, String content) {
         FileUtil.saveSeriesData();
         FileUtil.saveUserData();
         m.getChannel().sendMessage(Util.createMessage("Saved all data").build()).queue();

@@ -4,10 +4,7 @@ import com.davidqf.gachabot.commands.CommandAbstract;
 import com.davidqf.gachabot.data.UserData;
 import net.dv8tion.jda.api.entities.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.TimerTask;
+import java.util.*;
 
 public class CommandProcessorTask extends TimerTask {
 
@@ -30,44 +27,46 @@ public class CommandProcessorTask extends TimerTask {
             while ((message = EventListener.messages.poll()) != null) {
                 User user = message.getAuthor();
                 long id = user.getIdLong();
-                CommandAbstract c = detect(message);
-                if (c != null && !user.isBot()) {
-                    UserData data = Bot.userData.get(id);
-                    if (data == null) {
-                        data = new UserData(id, new HashMap<>());
-                        Bot.userData.put(id, data);
-                    }
-                    MessageChannel channel = message.getChannel();
-                    if (c.hasPermission(message)) {
-                        if (!c.allowInBattle() && data.getBattleOpponent() != null) {
-                            channel.sendMessage(Util.createFailedMessage(user.getName() + ", this command cannot be used while in battle").build()).queue();
-                        } else if (c.correctFormat(message)) {
-                            if (channel instanceof TextChannel) {
-                                if (Bot.retrievalCommands.contains(c)) {
-                                    retrievalThreads.add(new RetrievalThread(c, message));
-                                } else {
-                                    c.onCommand(message);
+                String[] split = message.getContentRaw().split("\n");
+                for (String s : split) {
+                    CommandAbstract c = detect(s);
+                    if (c != null && !user.isBot()) {
+                        UserData data = Bot.userData.get(id);
+                        if (data == null) {
+                            data = new UserData(id, new HashMap<>());
+                            Bot.userData.put(id, data);
+                        }
+                        MessageChannel channel = message.getChannel();
+                        if (c.hasPermission(message)) {
+                            if (!c.allowInBattle() && data.getBattleOpponent() != null) {
+                                channel.sendMessage(Util.createFailedMessage(user.getName() + ", this command cannot be used while in battle").build()).queue();
+                            } else if (c.correctFormat(s)) {
+                                if (channel instanceof TextChannel) {
+                                    if (Bot.retrievalCommands.contains(c)) {
+                                        retrievalThreads.add(new RetrievalThread(c, message, s));
+                                    } else {
+                                        c.onCommand(message, s);
+                                    }
+                                } else if (channel instanceof PrivateChannel) {
+                                    if (Bot.retrievalCommands.contains(c)) {
+                                        retrievalThreads.add(new RetrievalThread(c, message, s));
+                                    } else {
+                                        c.onPrivateMessage(message, s);
+                                    }
                                 }
-                            } else if (channel instanceof PrivateChannel) {
-                                if (Bot.retrievalCommands.contains(c)) {
-                                    retrievalThreads.add(new RetrievalThread(c, message));
-                                } else {
-                                    c.onPrivateMessage(message);
-                                }
+                            } else {
+                                message.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", incorrect format. Correct Format: `" + c.getFormat() + "`").build()).queue();
                             }
                         } else {
-                            message.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", incorrect format. Correct Format: `" + c.getFormat() + "`").build()).queue();
+                            message.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", you do not have permission to use this command").build()).queue();
                         }
-                    } else {
-                        message.getChannel().sendMessage(Util.createFailedMessage(user.getName() + ", you do not have permission to use this command").build()).queue();
                     }
                 }
             }
         }
     }
 
-    private CommandAbstract detect(Message m) {
-        String s = m.getContentRaw();
+    private CommandAbstract detect(String s) {
         if (s.toLowerCase().startsWith(Reference.COMMAND.toLowerCase())) {
             for (CommandAbstract c : Bot.commands) {
                 if (s.toLowerCase().startsWith(c.getActivatingName().toLowerCase(), Reference.COMMAND.length())) {
@@ -89,15 +88,17 @@ public class CommandProcessorTask extends TimerTask {
 
         private final CommandAbstract command;
         private final Message message;
+        private final String content;
 
-        private RetrievalThread(CommandAbstract command, Message message) {
+        private RetrievalThread(CommandAbstract command, Message message, String content) {
             this.command = command;
             this.message = message;
+            this.content = content;
         }
 
         @Override
         public void run() {
-            command.onCommand(message);
+            command.onCommand(message, content);
             retrievalThreads.remove(this);
         }
     }

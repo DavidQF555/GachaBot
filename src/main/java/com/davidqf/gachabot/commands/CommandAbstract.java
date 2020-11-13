@@ -8,18 +8,18 @@ import java.util.List;
 
 public abstract class CommandAbstract {
 
-    public void onCommand(Message m) {
+    public void onCommand(Message m, String content) {
     }
 
-    public void onPrivateMessage(Message m) {
-        onCommand(m);
+    public void onPrivateMessage(Message m, String content) {
+        onCommand(m, content);
     }
 
     public boolean hasPermission(Message m) {
         return true;
     }
 
-    public boolean correctFormat(Message m) {
+    public boolean correctFormat(String m) {
         return true;
     }
 

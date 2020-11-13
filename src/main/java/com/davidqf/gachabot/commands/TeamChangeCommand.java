@@ -14,8 +14,8 @@ import net.dv8tion.jda.api.entities.User;
 public class TeamChangeCommand extends CommandAbstract {
 
     @Override
-    public void onCommand(Message m) {
-        String[] s = m.getContentRaw().split(" ");
+    public void onCommand(Message m, String content) {
+        String[] s = content.split(" ");
         User user = m.getAuthor();
         UserData userData = Bot.userData.get(user.getIdLong());
         List<CharacterInstanceData> team = userData.getTeam();
@@ -79,9 +79,9 @@ public class TeamChangeCommand extends CommandAbstract {
     }
 
     @Override
-    public boolean correctFormat(Message m) {
-        String[] s = m.getContentRaw().split(" ");
-        return s.length >= 3 && (s[1].equalsIgnoreCase("add") || s[1].equalsIgnoreCase("remove"));
+    public boolean correctFormat(String s) {
+        String[] split = s.split(" ");
+        return split.length >= 3 && (split[1].equalsIgnoreCase("add") || split[1].equalsIgnoreCase("remove"));
     }
 
     @Override

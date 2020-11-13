@@ -22,8 +22,8 @@ import net.dv8tion.jda.api.entities.Message;
 public class AddAnimeCommand extends CommandAbstract {
 
     @Override
-    public void onCommand(Message m) {
-        String input = m.getContentRaw().substring(Reference.COMMAND.length() + getActivatingName().length() + 1);
+    public void onCommand(Message m, String content) {
+        String input = content.substring(Reference.COMMAND.length() + getActivatingName().length() + 1);
         System.out.println("Adding all related to: " + input);
         m.getChannel().sendMessage(Util.createMessage("Searching for `" + input + "` and all related series").build()).queue();
         Anime a = JikanRetriever.animeSearch(input);
@@ -59,8 +59,8 @@ public class AddAnimeCommand extends CommandAbstract {
     }
 
     @Override
-    public boolean correctFormat(Message m) {
-        return m.getContentRaw().contains(" ");
+    public boolean correctFormat(String s) {
+        return s.contains(" ");
     }
 
     @Override

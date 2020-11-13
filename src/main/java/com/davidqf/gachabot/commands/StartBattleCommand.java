@@ -19,14 +19,14 @@ public class StartBattleCommand extends CommandAbstract {
     private final static Timer inv = new Timer();
 
     @Override
-    public void onCommand(Message m) {
+    public void onCommand(Message m, String content) {
         User u1 = m.getAuthor();
         UserData user1 = Bot.userData.get(u1.getIdLong());
         if (user1.getTeam().isEmpty()) {
             m.getChannel().sendMessage(Util.createFailedMessage(u1.getName() + ", your team is empty").build()).queue();
             return;
         }
-        String name = m.getContentRaw().substring(Reference.COMMAND.length() + getActivatingName().length() + 1);
+        String name = content.substring(Reference.COMMAND.length() + getActivatingName().length() + 1);
         User u2 = null;
         UserData user2 = null;
         for (Member mem : m.getGuild().getMembers()) {
@@ -66,7 +66,7 @@ public class StartBattleCommand extends CommandAbstract {
     }
 
     @Override
-    public void onPrivateMessage(Message m) {
+    public void onPrivateMessage(Message m, String content) {
         m.getChannel().sendMessage(Util.createFailedMessage("You cannot battle in private chat").build()).queue();
     }
 
@@ -86,8 +86,8 @@ public class StartBattleCommand extends CommandAbstract {
     }
 
     @Override
-    public boolean correctFormat(Message m) {
-        return m.getContentRaw().split(" ").length > 1;
+    public boolean correctFormat(String s) {
+        return s.contains(" ");
     }
 
     @Override

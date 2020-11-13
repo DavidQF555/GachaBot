@@ -14,7 +14,7 @@ import java.util.List;
 public class RetrieveUserCharacterListCommand extends CommandAbstract {
 
     @Override
-    public void onCommand(Message m) {
+    public void onCommand(Message m, String content) {
         long id = m.getAuthor().getIdLong();
         if (Bot.userData.containsKey(id)) {
             StringBuilder out = new StringBuilder(m.getAuthor().getName() + ", you own the following: ```");

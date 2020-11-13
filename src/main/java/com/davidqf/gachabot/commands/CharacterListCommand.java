@@ -22,7 +22,7 @@ public class CharacterListCommand extends CommandAbstract {
     private final static int ABILITY_LENGTH = 15;
 
     @Override
-    public void onCommand(Message m) {
+    public void onCommand(Message m, String content) {
         int size = Bot.characters.size();
         if (size < 1) {
             m.getChannel().sendMessage(Util.createFailedMessage("No characters are currently added").build()).queue();
@@ -32,7 +32,7 @@ public class CharacterListCommand extends CommandAbstract {
         if (size % PAGE_ENTRIES > 0) {
             totalPages++;
         }
-        String[] s = m.getContentRaw().split(" ");
+        String[] s = content.split(" ");
         int page = 1;
         if (s.length >= 2) {
             try {

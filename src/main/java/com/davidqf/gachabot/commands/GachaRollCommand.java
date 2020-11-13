@@ -15,7 +15,7 @@ public class GachaRollCommand extends CommandAbstract {
     private final static long COST = 100;
 
     @Override
-    public void onCommand(Message m) {
+    public void onCommand(Message m, String content) {
         long userId = m.getAuthor().getIdLong();
         UserData user = Bot.userData.get(userId);
         long gems = user.getGems();

@@ -14,7 +14,7 @@ import java.util.List;
 public class RetrieveTeamCommand extends CommandAbstract {
 
     @Override
-    public void onCommand(Message m) {
+    public void onCommand(Message m, String content) {
         List<CharacterInstanceData> team = Bot.userData.get(m.getAuthor().getIdLong()).getTeam();
         if (!team.isEmpty()) {
             StringBuilder mes = new StringBuilder(m.getAuthor().getName() + ", your team: ```");

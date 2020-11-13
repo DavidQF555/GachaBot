@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.entities.Message;
 public class HelpCommand extends CommandAbstract {
 
     @Override
-    public void onCommand(Message m) {
+    public void onCommand(Message m, String content) {
         StringBuilder out = new StringBuilder("```");
         for (CommandAbstract c : Bot.commands) {
             out.append("\n").append(c.getFormat()).append(": ").append(c.getDescription());
