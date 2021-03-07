@@ -3,14 +3,12 @@ package com.davidqf.gachabot.commands;
 import com.davidqf.gachabot.Bot;
 import com.davidqf.gachabot.Util;
 import com.davidqf.gachabot.data.CharacterInstanceData;
-
 import net.dv8tion.jda.api.entities.Message;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Command
 public class RetrieveTeamCommand extends CommandAbstract {
 
     @Override
@@ -28,13 +26,13 @@ public class RetrieveTeamCommand extends CommandAbstract {
     }
 
     @Override
-    public String getActivatingName() {
-        return "myteam";
+    public String getDescription() {
+        return "Retrieves your team";
     }
 
     @Override
-    public String getDescription() {
-        return "Retrieves your team";
+    public CommandType getCommandType() {
+        return CommandType.RETRIEVE_TEAM;
     }
 
     @Override

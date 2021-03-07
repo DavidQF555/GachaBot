@@ -24,19 +24,14 @@ public abstract class CommandAbstract {
     }
 
     public String getFormat() {
-        return Reference.COMMAND + getActivatingName();
+        return Reference.COMMAND + getCommandType().getActivatingName();
     }
 
     public List<String> getAlternativeNames() {
         return new ArrayList<>();
     }
 
-    public boolean allowInBattle() {
-        return true;
-    }
-
-    public abstract String getActivatingName();
-
     public abstract String getDescription();
 
+    public abstract CommandType getCommandType();
 }

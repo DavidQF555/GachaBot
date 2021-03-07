@@ -11,8 +11,8 @@ import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEve
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 
 public class BattleListener extends ListenerAdapter {
 
@@ -22,6 +22,24 @@ public class BattleListener extends ListenerAdapter {
     public static List<BattleData> battleData = new ArrayList<>();
     public static Map<Long, UserData[]> invitations = new HashMap<>();
     public static Map<BattleData, Timer> timers = new HashMap<>();
+
+    private static MessageEmbed generateBattleMessage(BattleData data, String desc, Color c) {
+        UserData user1 = data.getUser1();
+        UserData user2 = data.getUser2();
+        String u1 = Bot.jda.getUserById(user1.getID()).getName();
+        String u2 = Bot.jda.getUserById(user2.getID()).getName();
+        LocalCharacterData out1 = user1.getTeam().get(data.getUser1Out() - 1).getCharacterData();
+        LocalCharacterData out2 = user2.getTeam().get(data.getUser2Out() - 1).getCharacterData();
+        int[] stats1 = data.getUser1Stats().get(user1.getCharacters().get(out1));
+        int[] stats2 = data.getUser2Stats().get(user2.getCharacters().get(out2));
+        EmbedBuilder eb = new EmbedBuilder()
+                .setTitle(u1 + " vs. " + u2)
+                .addField(u1 + "'s " + out1.getName(), "HP: " + stats1[0] + "\nAttack: " + stats1[1] + "\nDefense: " + stats1[2], true)
+                .addField(u2 + "'s " + out2.getName(), "HP: " + stats2[0] + "\nAttack: " + stats2[1] + "\nDefense: " + stats2[2], true)
+                .setDescription(desc)
+                .setColor(c);
+        return eb.build();
+    }
 
     @Override
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event) {
@@ -118,8 +136,8 @@ public class BattleListener extends ListenerAdapter {
                     if (emote.equals(Reference.ATTACK_CODEPOINTS) && out1[3] > 0) {
                         LocalCharacterData data1 = char1.getCharacterData();
                         LocalCharacterData data2 = char2.getCharacterData();
-                        AbilityAbstract ab1 = data1.getAbility();
-                        AbilityAbstract ab2 = data2.getAbility();
+                        AbilityAbstract ab1 = data1.getAbilityType().getAbility();
+                        AbilityAbstract ab2 = data2.getAbilityType().getAbility();
                         int damage = ab1.calculateDamage(out1, stats1, out2, stats2, ab2);
                         out2[0] -= damage;
                         ab1.attackEffect(damage, out1, stats1, out2, stats2);
@@ -232,23 +250,5 @@ public class BattleListener extends ListenerAdapter {
                 }
             }
         }
-    }
-
-    private static MessageEmbed generateBattleMessage(BattleData data, String desc, Color c) {
-        UserData user1 = data.getUser1();
-        UserData user2 = data.getUser2();
-        String u1 = Bot.jda.getUserById(user1.getID()).getName();
-        String u2 = Bot.jda.getUserById(user2.getID()).getName();
-        LocalCharacterData out1 = user1.getTeam().get(data.getUser1Out() - 1).getCharacterData();
-        LocalCharacterData out2 = user2.getTeam().get(data.getUser2Out() - 1).getCharacterData();
-        int[] stats1 = data.getUser1Stats().get(user1.getCharacters().get(out1));
-        int[] stats2 = data.getUser2Stats().get(user2.getCharacters().get(out2));
-        EmbedBuilder eb = new EmbedBuilder()
-                .setTitle(u1 + " vs. " + u2)
-                .addField(u1 + "'s " + out1.getName(), "HP: " + stats1[0] + "\nAttack: " + stats1[1] + "\nDefense: " + stats1[2], true)
-                .addField(u2 + "'s " + out2.getName(), "HP: " + stats2[0] + "\nAttack: " + stats2[1] + "\nDefense: " + stats2[2], true)
-                .setDescription(desc)
-                .setColor(c);
-        return eb.build();
     }
 }

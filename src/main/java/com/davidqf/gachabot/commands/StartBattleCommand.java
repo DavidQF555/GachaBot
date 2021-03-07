@@ -13,7 +13,6 @@ import net.dv8tion.jda.api.entities.User;
 import java.util.Timer;
 import java.util.TimerTask;
 
-@Command
 public class StartBattleCommand extends CommandAbstract {
 
     private final static Timer inv = new Timer();
@@ -26,7 +25,7 @@ public class StartBattleCommand extends CommandAbstract {
             m.getChannel().sendMessage(Util.createFailedMessage(u1.getName() + ", your team is empty").build()).queue();
             return;
         }
-        String name = content.substring(Reference.COMMAND.length() + getActivatingName().length() + 1);
+        String name = content.substring(Reference.COMMAND.length() + getCommandType().getActivatingName().length() + 1);
         User u2 = null;
         UserData user2 = null;
         for (Member mem : m.getGuild().getMembers()) {
@@ -71,18 +70,13 @@ public class StartBattleCommand extends CommandAbstract {
     }
 
     @Override
-    public boolean allowInBattle() {
-        return false;
-    }
-
-    @Override
-    public String getActivatingName() {
-        return "battle";
-    }
-
-    @Override
     public String getDescription() {
         return "Starts a battle";
+    }
+
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.START_BATTLE;
     }
 
     @Override

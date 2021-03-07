@@ -9,8 +9,8 @@ public class UserData {
     private static final int STARTING_GEMS = 2500;
     private final long id;
     private final Map<LocalCharacterData, CharacterInstanceData> characters;
-    private UserData battleOpponent;
     private final List<CharacterInstanceData> team;
+    private UserData battleOpponent;
     private long gems;
 
     public UserData(long id, Map<LocalCharacterData, CharacterInstanceData> characters) {
@@ -33,16 +33,16 @@ public class UserData {
         return battleOpponent;
     }
 
+    public void setBattleOpponent(UserData d) {
+        battleOpponent = d;
+    }
+
     public List<CharacterInstanceData> getTeam() {
         return team;
     }
 
     public long getGems() {
         return gems;
-    }
-
-    public void setBattleOpponent(UserData d) {
-        battleOpponent = d;
     }
 
     public void setGems(long g) {

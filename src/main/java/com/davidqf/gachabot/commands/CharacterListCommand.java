@@ -3,14 +3,12 @@ package com.davidqf.gachabot.commands;
 import com.davidqf.gachabot.Bot;
 import com.davidqf.gachabot.Util;
 import com.davidqf.gachabot.data.LocalCharacterData;
-
 import net.dv8tion.jda.api.entities.Message;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Command
 public class CharacterListCommand extends CommandAbstract {
 
     private final static int PAGE_ENTRIES = 15;
@@ -103,7 +101,7 @@ public class CharacterListCommand extends CommandAbstract {
             while (defense.length() < DEFENSE_LENGTH) {
                 defense.append(" ");
             }
-            StringBuilder ability = new StringBuilder(data.getAbility().getName());
+            StringBuilder ability = new StringBuilder(data.getAbilityType().toString());
             while (ability.length() < ABILITY_LENGTH) {
                 ability.append(" ");
             }
@@ -113,13 +111,13 @@ public class CharacterListCommand extends CommandAbstract {
     }
 
     @Override
-    public String getActivatingName() {
-        return "characters";
+    public String getDescription() {
+        return "Retrieves a list of all characters";
     }
 
     @Override
-    public String getDescription() {
-        return "Retrieves a list of all characters";
+    public CommandType getCommandType() {
+        return CommandType.CHARACTER_LIST;
     }
 
     @Override

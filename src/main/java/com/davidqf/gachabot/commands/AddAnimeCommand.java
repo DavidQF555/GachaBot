@@ -1,11 +1,5 @@
 package com.davidqf.gachabot.commands;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
 import com.davidqf.gachabot.Bot;
 import com.davidqf.gachabot.JikanRetriever;
 import com.davidqf.gachabot.Reference;
@@ -14,79 +8,17 @@ import com.davidqf.gachabot.data.LocalAnimeData;
 import com.davidqf.gachabot.data.SeriesData;
 import com.github.doomsdayrs.jikan4java.types.main.anime.Anime;
 import com.github.doomsdayrs.jikan4java.types.main.anime.character_staff.AnimeCharacter;
-import com.github.doomsdayrs.jikan4java.types.support.related.*;
-
+import com.github.doomsdayrs.jikan4java.types.support.related.Related;
+import com.github.doomsdayrs.jikan4java.types.support.related.RelatedType;
 import net.dv8tion.jda.api.entities.Message;
 
-@Command(retrieval = true)
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+
 public class AddAnimeCommand extends CommandAbstract {
-
-    @Override
-    public void onCommand(Message m, String content) {
-        String input = content.substring(Reference.COMMAND.length() + getActivatingName().length() + 1);
-        System.out.println("Adding all related to: " + input);
-        m.getChannel().sendMessage(Util.createMessage("Searching for `" + input + "` and all related series").build()).queue();
-        Anime a = JikanRetriever.animeSearch(input);
-        List<Anime> uniq = getAllRelated(a, new ArrayList<>());
-        List<Anime> all = uniq.subList(0, uniq.size());
-        for (int i = uniq.size() - 1; i >= 0; i--) {
-            if (Bot.anime.get(uniq.get(i).mal_id) != null) {
-                uniq.remove(i);
-            }
-        }
-        if (uniq.isEmpty()) {
-            m.getChannel().sendMessage(Util.createFailedMessage("Everything related to " + a.title + " is already added").build()).queue();
-            return;
-        }
-        StringBuilder out = new StringBuilder("Added the following series: ```");
-        SeriesData series = new SeriesData();
-        series:
-        for (LocalAnimeData data : Bot.anime.values()) {
-            for (Anime an : all) {
-                if (data.getID() == an.mal_id) {
-                    series = data.getSeries();
-                    break series;
-                }
-            }
-        }
-        for (Anime an : uniq) {
-            LocalAnimeData data = new LocalAnimeData(series, an.title, an.mal_id);
-            Bot.anime.put(an.mal_id, data);
-            out.append("\n").append(an.title);
-        }
-        addBestCharactersFromAnime(all, series);
-        m.getChannel().sendMessage(Util.createMessage(out + "```").build()).queue();
-    }
-
-    @Override
-    public boolean correctFormat(String s) {
-        return s.contains(" ");
-    }
-
-    @Override
-    public boolean hasPermission(Message m) {
-        return m.getAuthor().getIdLong() == Reference.OWNER_ID;
-    }
-
-    @Override
-    public String getFormat() {
-        return Reference.COMMAND + getActivatingName() + " [anime name]";
-    }
-
-    @Override
-    public String getActivatingName() {
-        return "addanime";
-    }
-
-    @Override
-    public List<String> getAlternativeNames() {
-        return new ArrayList<>(Collections.singletonList("aa"));
-    }
-
-    @Override
-    public String getDescription() {
-        return "Adds a new anime series and characters";
-    }
 
     public static List<Anime> getAllRelated(Anime st, List<Anime> vis) {
         vis.add(st);
@@ -189,5 +121,72 @@ public class AddAnimeCommand extends CommandAbstract {
             cut *= 0.95;
         }
         Bot.updateExistingCharactersList(out, series);
+    }
+
+    @Override
+    public void onCommand(Message m, String content) {
+        String input = content.substring(Reference.COMMAND.length() + getCommandType().getActivatingName().length() + 1);
+        System.out.println("Adding all related to: " + input);
+        m.getChannel().sendMessage(Util.createMessage("Searching for `" + input + "` and all related series").build()).queue();
+        Anime a = JikanRetriever.animeSearch(input);
+        List<Anime> uniq = getAllRelated(a, new ArrayList<>());
+        List<Anime> all = uniq.subList(0, uniq.size());
+        for (int i = uniq.size() - 1; i >= 0; i--) {
+            if (Bot.anime.get(uniq.get(i).mal_id) != null) {
+                uniq.remove(i);
+            }
+        }
+        if (uniq.isEmpty()) {
+            m.getChannel().sendMessage(Util.createFailedMessage("Everything related to " + a.title + " is already added").build()).queue();
+            return;
+        }
+        StringBuilder out = new StringBuilder("Added the following series: ```");
+        SeriesData series = new SeriesData();
+        series:
+        for (LocalAnimeData data : Bot.anime.values()) {
+            for (Anime an : all) {
+                if (data.getID() == an.mal_id) {
+                    series = data.getSeries();
+                    break series;
+                }
+            }
+        }
+        for (Anime an : uniq) {
+            LocalAnimeData data = new LocalAnimeData(series, an.title, an.mal_id);
+            Bot.anime.put(an.mal_id, data);
+            out.append("\n").append(an.title);
+        }
+        addBestCharactersFromAnime(all, series);
+        m.getChannel().sendMessage(Util.createMessage(out + "```").build()).queue();
+    }
+
+    @Override
+    public boolean correctFormat(String s) {
+        return s.contains(" ");
+    }
+
+    @Override
+    public boolean hasPermission(Message m) {
+        return m.getAuthor().getIdLong() == Reference.OWNER_ID;
+    }
+
+    @Override
+    public String getFormat() {
+        return super.getFormat() + " [anime name]";
+    }
+
+    @Override
+    public List<String> getAlternativeNames() {
+        return new ArrayList<>(Collections.singletonList("aa"));
+    }
+
+    @Override
+    public String getDescription() {
+        return "Adds a new anime series and characters";
+    }
+
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.ADD_ANIME;
     }
 }

@@ -7,9 +7,11 @@ import com.davidqf.gachabot.data.LocalCharacterData;
 import com.davidqf.gachabot.data.UserData;
 import net.dv8tion.jda.api.entities.Message;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
-@Command
 public class GachaRollCommand extends CommandAbstract {
 
     private final static long COST = 100;
@@ -47,16 +49,6 @@ public class GachaRollCommand extends CommandAbstract {
     }
 
     @Override
-    public boolean allowInBattle() {
-        return false;
-    }
-
-    @Override
-    public String getActivatingName() {
-        return "roll";
-    }
-
-    @Override
     public List<String> getAlternativeNames() {
         return new ArrayList<String>(Collections.singletonList("r"));
     }
@@ -64,5 +56,10 @@ public class GachaRollCommand extends CommandAbstract {
     @Override
     public String getDescription() {
         return "Uses " + COST + " gems to randomly a character";
+    }
+
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.ROLL;
     }
 }

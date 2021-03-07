@@ -1,63 +1,33 @@
 package com.davidqf.gachabot;
 
-import java.util.*;
-import java.util.Map.Entry;
-
-import javax.security.auth.login.LoginException;
-
-import com.davidqf.gachabot.abilities.Ability;
-import com.davidqf.gachabot.abilities.AbilityAbstract;
 import com.davidqf.gachabot.commands.AddAnimeCommand;
-import com.davidqf.gachabot.commands.Command;
-import com.davidqf.gachabot.commands.CommandAbstract;
 import com.davidqf.gachabot.data.LocalAnimeData;
 import com.davidqf.gachabot.data.LocalCharacterData;
 import com.davidqf.gachabot.data.SeriesData;
 import com.davidqf.gachabot.data.UserData;
-import org.reflections.Reflections;
-
 import com.github.doomsdayrs.jikan4java.core.Connector;
 import com.github.doomsdayrs.jikan4java.types.main.anime.Anime;
 import com.github.doomsdayrs.jikan4java.types.main.character.Animeography;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.JDABuilder;
+import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.User;
 
-import net.dv8tion.jda.api.*;
-import net.dv8tion.jda.api.entities.*;
+import javax.security.auth.login.LoginException;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class Bot {
 
-    public final static Set<CommandAbstract> commands = new HashSet<>();
-    public final static Set<CommandAbstract> retrievalCommands = new HashSet<>();
-    public final static List<AbilityAbstract> abilities = new ArrayList<>();
+    public final static Connector connector = new Connector();
     public static Map<Integer, LocalAnimeData> anime = new LinkedHashMap<>();
     public static Map<Integer, LocalCharacterData> characters = new LinkedHashMap<>();
     public static Map<Long, UserData> userData = new LinkedHashMap<>();
-    public final static Connector connector = new Connector();
     public static JDA jda;
     public static User owner;
     public static int lastID = Integer.MIN_VALUE;
 
     public static void main(String[] args) {
-
-        Reflections reflCom = new Reflections("com.davidqf.gachabot.commands");
-        for (Class<?> c : reflCom.getTypesAnnotatedWith(Command.class)) {
-            Command anno = c.getAnnotation(Command.class);
-            try {
-                CommandAbstract command = (CommandAbstract) c.getConstructor().newInstance();
-                commands.add(command);
-                if (anno.retrieval()) {
-                    retrievalCommands.add(command);
-                }
-            } catch (Exception ignored) {
-            }
-        }
-        Reflections reflAb = new Reflections("com.davidqf.gachabot.abilities");
-        for (Class<?> c : reflAb.getTypesAnnotatedWith(Ability.class)) {
-            try {
-                abilities.add((AbilityAbstract) c.getConstructor().newInstance());
-            } catch (Exception ignored) {
-            }
-        }
-
         FileUtil.readSeriesData();
         FileUtil.readUserData();
 

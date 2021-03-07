@@ -1,7 +1,5 @@
 package com.davidqf.gachabot.commands;
 
-import java.util.ArrayList;
-
 import com.davidqf.gachabot.Bot;
 import com.davidqf.gachabot.JikanRetriever;
 import com.davidqf.gachabot.Reference;
@@ -10,15 +8,15 @@ import com.davidqf.gachabot.data.LocalAnimeData;
 import com.davidqf.gachabot.data.LocalCharacterData;
 import com.davidqf.gachabot.data.SeriesData;
 import com.github.doomsdayrs.jikan4java.types.main.anime.Anime;
-
 import net.dv8tion.jda.api.entities.Message;
 
-@Command
+import java.util.ArrayList;
+
 public class RemoveAnimeCommand extends CommandAbstract {
 
     @Override
     public void onCommand(Message m, String content) {
-        String input = content.substring(Reference.COMMAND.length() + getActivatingName().length() + 1);
+        String input = content.substring(Reference.COMMAND.length() + getCommandType().getActivatingName().length() + 1);
         System.out.println("Removing all related to: " + input);
         m.getChannel().sendMessage(Util.createMessage("Searching for `" + input + "` and all related series").build()).queue();
         Anime a = JikanRetriever.animeSearch(input);
@@ -49,13 +47,13 @@ public class RemoveAnimeCommand extends CommandAbstract {
     }
 
     @Override
-    public String getActivatingName() {
-        return "removeanime";
+    public String getDescription() {
+        return "Removes all related anime and characters";
     }
 
     @Override
-    public String getDescription() {
-        return "Removes all related anime and characters";
+    public CommandType getCommandType() {
+        return CommandType.REMOVE_ANIME;
     }
 
     @Override
@@ -70,7 +68,7 @@ public class RemoveAnimeCommand extends CommandAbstract {
 
     @Override
     public String getFormat() {
-        return Reference.COMMAND + getActivatingName() + " [anime name]";
+        return super.getFormat() + " [anime name]";
     }
 
 }

@@ -3,14 +3,12 @@ package com.davidqf.gachabot.commands;
 import com.davidqf.gachabot.Bot;
 import com.davidqf.gachabot.Util;
 import com.davidqf.gachabot.data.CharacterInstanceData;
-
 import net.dv8tion.jda.api.entities.Message;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Command
 public class RetrieveUserCharacterListCommand extends CommandAbstract {
 
     @Override
@@ -28,11 +26,6 @@ public class RetrieveUserCharacterListCommand extends CommandAbstract {
     }
 
     @Override
-    public String getActivatingName() {
-        return "mylist";
-    }
-
-    @Override
     public List<String> getAlternativeNames() {
         return new ArrayList<>(Collections.singletonList("ml"));
     }
@@ -40,6 +33,11 @@ public class RetrieveUserCharacterListCommand extends CommandAbstract {
     @Override
     public String getDescription() {
         return "Retrieves the user's character list";
+    }
+
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.USER_CHARACTER_LIST;
     }
 
 }

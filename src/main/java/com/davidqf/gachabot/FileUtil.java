@@ -1,12 +1,14 @@
 package com.davidqf.gachabot;
 
-import com.davidqf.gachabot.abilities.AbilityAbstract;
+import com.davidqf.gachabot.abilities.AbilityType;
 import com.davidqf.gachabot.data.*;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -63,7 +65,7 @@ public class FileUtil {
                 JSONObject ch = new JSONObject();
                 ch.put("name", c.getName());
                 ch.put("rate", c.getRate());
-                ch.put("ability", c.getAbility().getName());
+                ch.put("ability", c.getAbilityType().toString());
                 ch.put("hp", c.getBaseHP());
                 ch.put("attack", c.getBaseAttack());
                 ch.put("defense", c.getBaseDefense());
@@ -145,7 +147,7 @@ public class FileUtil {
             for (Map.Entry<String, JSONObject> en : characters) {
                 int id = Integer.parseInt(en.getKey());
                 JSONObject val = en.getValue();
-                Bot.characters.put(id, new LocalCharacterData(series, id, Integer.parseInt("" + val.get("favorites")), (double) val.get("rate"), (String) val.get("image"), (String) val.get("name"), Integer.parseInt("" + val.get("hp")), Integer.parseInt("" + val.get("attack")), Integer.parseInt("" + val.get("defense")), AbilityAbstract.get((String) val.get("ability")), new HashSet<Integer>((JSONArray) val.get("animeography"))));
+                Bot.characters.put(id, new LocalCharacterData(series, id, Integer.parseInt("" + val.get("favorites")), (double) val.get("rate"), (String) val.get("image"), (String) val.get("name"), Integer.parseInt("" + val.get("hp")), Integer.parseInt("" + val.get("attack")), Integer.parseInt("" + val.get("defense")), AbilityType.get((String) val.get("ability")), new HashSet<Integer>((JSONArray) val.get("animeography"))));
             }
         }
         System.out.println("Finished Reading Series Data");

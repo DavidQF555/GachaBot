@@ -1,13 +1,13 @@
 package com.davidqf.gachabot;
 
-import java.util.*;
-
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.ShutdownEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 
 import javax.annotation.Nonnull;
+import java.util.LinkedList;
+import java.util.Queue;
 
 public class EventListener extends ListenerAdapter {
 

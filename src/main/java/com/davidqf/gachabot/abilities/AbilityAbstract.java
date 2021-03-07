@@ -1,19 +1,8 @@
 package com.davidqf.gachabot.abilities;
 
-import com.davidqf.gachabot.Bot;
-
 import java.util.List;
 
 public abstract class AbilityAbstract {
-
-    public static AbilityAbstract get(String name) {
-        for (AbilityAbstract ab : Bot.abilities) {
-            if (ab.getName().equals(name)) {
-                return ab;
-            }
-        }
-        return null;
-    }
 
     public void defenseEffect(int damage, int[] attack, List<int[]> attackTeam, int[] defend, List<int[]> defendTeam) {
     }
@@ -44,8 +33,6 @@ public abstract class AbilityAbstract {
     public double getAttackFactor() {
         return 1;
     }
-
-    public abstract String getName();
 
     public abstract String getDescription();
 }

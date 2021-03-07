@@ -5,7 +5,6 @@ import com.davidqf.gachabot.Reference;
 import com.davidqf.gachabot.Util;
 import net.dv8tion.jda.api.entities.Message;
 
-@Command
 public class SaveCommand extends CommandAbstract {
 
     @Override
@@ -21,13 +20,13 @@ public class SaveCommand extends CommandAbstract {
     }
 
     @Override
-    public String getActivatingName() {
-        return "save";
+    public String getDescription() {
+        return "Saves all data";
     }
 
     @Override
-    public String getDescription() {
-        return "Saves all data";
+    public CommandType getCommandType() {
+        return CommandType.SAVE;
     }
 
 }

@@ -28,16 +28,32 @@ public class CharacterInstanceData {
         return owner_id;
     }
 
+    public void setOwnerId(long id) {
+        owner_id = id;
+    }
+
     public int getStars() {
         return stars;
+    }
+
+    public void setStars(int stars) {
+        this.stars = stars;
     }
 
     public int getLevel() {
         return level;
     }
 
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
     public int getExperience() {
         return exp;
+    }
+
+    public void setExperience(int exp) {
+        this.exp = exp;
     }
 
     public int getHP() {
@@ -53,21 +69,5 @@ public class CharacterInstanceData {
     public int getAttack() {
         int base = data.getBaseAttack();
         return (int) (base + base * 0.1 * level);
-    }
-
-    public void setOwnerId(long id) {
-        owner_id = id;
-    }
-
-    public void setStars(int stars) {
-        this.stars = stars;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-
-    public void setExperience(int exp) {
-        this.exp = exp;
     }
 }

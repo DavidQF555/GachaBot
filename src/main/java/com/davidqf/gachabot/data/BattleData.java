@@ -1,20 +1,19 @@
 package com.davidqf.gachabot.data;
 
 import com.davidqf.gachabot.BattleListener;
-
 import net.dv8tion.jda.api.entities.Message;
 
 import java.util.LinkedHashMap;
 
 public class BattleData {
 
-    private int turn;
-    private boolean user1Turn;
-    private Message message;
     private final UserData user1;
     private final UserData user2;
     private final LinkedHashMap<CharacterInstanceData, int[]> user1Stats;
     private final LinkedHashMap<CharacterInstanceData, int[]> user2Stats;
+    private int turn;
+    private boolean user1Turn;
+    private Message message;
     private int user1Out;
     private int user2Out;
 
@@ -40,8 +39,16 @@ public class BattleData {
         return turn;
     }
 
+    public void setTurn(int t) {
+        turn = t;
+    }
+
     public Message getMessage() {
         return message;
+    }
+
+    public void setMessage(Message m) {
+        message = m;
     }
 
     public boolean isUser1Turn() {
@@ -52,28 +59,20 @@ public class BattleData {
         return user1Out;
     }
 
-    public int getUser2Out() {
-        return user2Out;
-    }
-
-    public void setTurn(int t) {
-        turn = t;
-    }
-
-    public void setMessage(Message m) {
-        message = m;
-    }
-
-    public void setIsUser1Turn(boolean b) {
-        user1Turn = b;
-    }
-
     public void setUser1Out(int slot) {
         user1Out = slot;
     }
 
+    public int getUser2Out() {
+        return user2Out;
+    }
+
     public void setUser2Out(int slot) {
         user2Out = slot;
+    }
+
+    public void setIsUser1Turn(boolean b) {
+        user1Turn = b;
     }
 
     public UserData getUser1() {

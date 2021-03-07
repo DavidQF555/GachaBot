@@ -3,7 +3,6 @@ package com.davidqf.gachabot.abilities;
 import java.util.Arrays;
 import java.util.List;
 
-@Ability
 public class CleaveAbility extends AbilityAbstract {
 
     @Override
@@ -13,11 +12,6 @@ public class CleaveAbility extends AbilityAbstract {
                 stats[0] -= 0.05 * damage;
             }
         }
-    }
-
-    @Override
-    public String getName() {
-        return "Cleave";
     }
 
     @Override

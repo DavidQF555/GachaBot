@@ -1,7 +1,5 @@
 package com.davidqf.gachabot.commands;
 
-import java.util.List;
-
 import com.davidqf.gachabot.Bot;
 import com.davidqf.gachabot.Util;
 import com.davidqf.gachabot.data.CharacterInstanceData;
@@ -10,7 +8,8 @@ import com.davidqf.gachabot.data.UserData;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.User;
 
-@Command
+import java.util.List;
+
 public class TeamChangeCommand extends CommandAbstract {
 
     @Override
@@ -69,16 +68,6 @@ public class TeamChangeCommand extends CommandAbstract {
     }
 
     @Override
-    public String getActivatingName() {
-        return "team";
-    }
-
-    @Override
-    public boolean allowInBattle() {
-        return false;
-    }
-
-    @Override
     public boolean correctFormat(String s) {
         String[] split = s.split(" ");
         return split.length >= 3 && (split[1].equalsIgnoreCase("add") || split[1].equalsIgnoreCase("remove"));
@@ -92,5 +81,10 @@ public class TeamChangeCommand extends CommandAbstract {
     @Override
     public String getDescription() {
         return "Adds or removes characters from your team";
+    }
+
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.CHANGE_TEAM;
     }
 }

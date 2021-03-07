@@ -1,8 +1,8 @@
 package com.davidqf.gachabot;
 
-import java.awt.Color;
-
 import net.dv8tion.jda.api.EmbedBuilder;
+
+import java.awt.*;
 
 public class Util {
 

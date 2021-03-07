@@ -1,24 +1,23 @@
 package com.davidqf.gachabot.data;
 
+import com.davidqf.gachabot.abilities.AbilityType;
+
 import java.util.HashSet;
 import java.util.Set;
 
-import com.davidqf.gachabot.Bot;
-import com.davidqf.gachabot.abilities.AbilityAbstract;
-
 public class LocalCharacterData implements Comparable<LocalCharacterData> {
 
-    private SeriesData series;
     private final int id;
-    private double rate;
-    private String name;
-    private String image_url;
-    private int member_favorites;
     private final Set<Integer> animeography;
     private final double baseHP;
     private final double baseDefense;
     private final double baseAttack;
-    private final AbilityAbstract ability;
+    private final AbilityType ability;
+    private SeriesData series;
+    private double rate;
+    private String name;
+    private String image_url;
+    private int member_favorites;
 
     public LocalCharacterData(SeriesData series, int id, int member_favorites, double rate, String image_url, String name) {
         this.series = series;
@@ -38,10 +37,11 @@ public class LocalCharacterData implements Comparable<LocalCharacterData> {
         baseDefense = rDefense / total;
         baseAttack = rAttack / total;
 
-        ability = Bot.abilities.get((int) (Math.random() * Bot.abilities.size()));
+        AbilityType[] abilities = AbilityType.values();
+        ability = abilities[(int) (Math.random() * abilities.length)];
     }
 
-    public LocalCharacterData(SeriesData series, int id, int member_favorites, double rate, String image_url, String name, int hp, int attack, int defense, AbilityAbstract ability, Set<Integer> animeography) {
+    public LocalCharacterData(SeriesData series, int id, int member_favorites, double rate, String image_url, String name, int hp, int attack, int defense, AbilityType ability, Set<Integer> animeography) {
         this.series = series;
         series.getCharacters().add(this);
         this.id = id;
@@ -60,6 +60,12 @@ public class LocalCharacterData implements Comparable<LocalCharacterData> {
         return series;
     }
 
+    public void setSeries(SeriesData series) {
+        series.getCharacters().remove(this);
+        this.series = series;
+        series.getCharacters().add(this);
+    }
+
     public int getID() {
         return id;
     }
@@ -68,16 +74,32 @@ public class LocalCharacterData implements Comparable<LocalCharacterData> {
         return rate;
     }
 
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getImageUrl() {
         return image_url;
     }
 
+    public void setImageUrl(String url) {
+        image_url = url;
+    }
+
     public int getMemberFavorites() {
         return member_favorites;
+    }
+
+    public void setMemberFavorites(int fav) {
+        member_favorites = fav;
     }
 
     public Set<Integer> getAnimeography() {
@@ -96,30 +118,8 @@ public class LocalCharacterData implements Comparable<LocalCharacterData> {
         return (int) (getBaseTotal() * baseAttack + 0.5);
     }
 
-    public AbilityAbstract getAbility() {
+    public AbilityType getAbilityType() {
         return ability;
-    }
-
-    public void setRate(double rate) {
-        this.rate = rate;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setImageUrl(String url) {
-        image_url = url;
-    }
-
-    public void setMemberFavorites(int fav) {
-        member_favorites = fav;
-    }
-
-    public void setSeries(SeriesData series) {
-        series.getCharacters().remove(this);
-        this.series = series;
-        series.getCharacters().add(this);
     }
 
     @Override

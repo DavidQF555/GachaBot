@@ -1,28 +1,21 @@
 package com.davidqf.gachabot.commands;
 
+import net.dv8tion.jda.api.entities.Message;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.davidqf.gachabot.Bot;
-
-import net.dv8tion.jda.api.entities.Message;
-
-@Command
 public class HelpCommand extends CommandAbstract {
 
     @Override
     public void onCommand(Message m, String content) {
         StringBuilder out = new StringBuilder("```");
-        for (CommandAbstract c : Bot.commands) {
+        for (CommandType type : CommandType.values()) {
+            CommandAbstract c = type.getCommand();
             out.append("\n").append(c.getFormat()).append(": ").append(c.getDescription());
         }
         m.getChannel().sendMessage(out + "```").queue();
-    }
-
-    @Override
-    public String getActivatingName() {
-        return "help";
     }
 
     @Override
@@ -33,6 +26,11 @@ public class HelpCommand extends CommandAbstract {
     @Override
     public String getDescription() {
         return "Retrieves a list and description of all commands";
+    }
+
+    @Override
+    public CommandType getCommandType() {
+        return CommandType.HELP;
     }
 
 }
