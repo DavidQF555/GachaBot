@@ -2,7 +2,7 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.davidqf.gachabot</groupId>
+    <groupId>io.github.davidqf555.gachabot</groupId>
     <artifactId>GachaBot</artifactId>
     <version>1</version>
     <build>
